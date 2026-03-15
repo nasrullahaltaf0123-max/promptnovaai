@@ -3,8 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, Image, FileText, Palette, Video,
-  BookmarkCheck, User, Sparkles, Menu, X, LogOut, ChevronRight,
+  Wand2, Film, ImageIcon, Clock, User, Menu, X, LogOut, ChevronRight,
 } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -13,7 +14,10 @@ const navItems = [
   { icon: FileText, label: "Blog Writer", path: "/dashboard/blog" },
   { icon: Palette, label: "Logo Generator", path: "/dashboard/logo" },
   { icon: Video, label: "Script Generator", path: "/dashboard/script" },
-  { icon: BookmarkCheck, label: "Saved Content", path: "/dashboard/saved" },
+  { icon: Wand2, label: "Prompt Generator", path: "/dashboard/prompt" },
+  { icon: Film, label: "Video Script Writer", path: "/dashboard/video-script" },
+  { icon: ImageIcon, label: "Thumbnail Generator", path: "/dashboard/thumbnail" },
+  { icon: Clock, label: "History", path: "/dashboard/history" },
   { icon: User, label: "Account", path: "/dashboard/account" },
 ];
 
@@ -23,7 +27,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -36,16 +39,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 left-0 h-screen w-[260px] bg-sidebar z-50 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-        {/* Sidebar right border */}
         <div className="absolute top-0 right-0 bottom-0 w-px bg-sidebar-border" />
 
         <div className="p-5 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center">
-              <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="PromptNova AI" className="w-7 h-7 rounded-lg" />
             <span className="font-semibold tracking-tight text-foreground text-body">PromptNova</span>
           </Link>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-muted-foreground hover:text-foreground transition-colors">
@@ -62,9 +61,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2 rounded-xl text-caption transition-all duration-200 group relative ${
-                  active
-                    ? "text-foreground font-medium"
-                    : "text-sidebar-foreground hover:text-foreground"
+                  active ? "text-foreground font-medium" : "text-sidebar-foreground hover:text-foreground"
                 }`}
               >
                 {active && (
@@ -96,7 +93,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </aside>
 
-      {/* Main */}
       <div className="flex-1 min-w-0">
         <header className="sticky top-0 z-30 glass-strong h-14 flex items-center px-6 lg:hidden">
           <button onClick={() => setSidebarOpen(true)} className="text-muted-foreground hover:text-foreground transition-colors">
