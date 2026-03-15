@@ -168,7 +168,7 @@ const translations = {
   },
 } as const;
 
-type Translations = typeof translations.en;
+type Translations = Record<string, string | string[]>;
 
 interface I18nContextType {
   lang: Lang;
