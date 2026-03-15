@@ -1,67 +1,65 @@
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const tools = [
-  { icon: MessageSquare, title: "AI Chat", description: "Have intelligent conversations and get instant answers to any question.", color: "from-primary to-primary/60" },
-  { icon: Image, title: "AI Image Generator", description: "Generate stunning visuals from text descriptions in seconds.", color: "from-accent to-accent/60" },
-  { icon: FileText, title: "AI Blog Writer", description: "Create SEO-optimized blog articles with perfect structure.", color: "from-primary to-accent" },
-  { icon: Palette, title: "AI Logo Generator", description: "Design professional brand logos with AI-powered creativity.", color: "from-accent to-primary" },
-  { icon: Video, title: "AI Script Generator", description: "Write engaging video scripts for any platform or audience.", color: "from-primary/80 to-accent/80" },
+  { icon: MessageSquare, title: "AI Chat", description: "Intelligent conversations with context-aware responses.", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
+  { icon: Image, title: "Image Generator", description: "Generate stunning visuals from natural language.", path: "/dashboard/image", gradient: "from-cyan-500/20 to-cyan-500/5" },
+  { icon: FileText, title: "Blog Writer", description: "SEO-optimized articles with perfect structure.", path: "/dashboard/blog", gradient: "from-blue-500/20 to-blue-500/5" },
+  { icon: Palette, title: "Logo Generator", description: "Professional brand logos in seconds.", path: "/dashboard/logo", gradient: "from-purple-500/20 to-purple-500/5" },
+  { icon: Video, title: "Script Generator", description: "Engaging video scripts for any platform.", path: "/dashboard/script", gradient: "from-teal-500/20 to-teal-500/5" },
 ];
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
 
 const FeaturesSection = () => {
   return (
-    <section id="features" className="py-32 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="features" className="py-32 sm:py-40 px-6 relative">
+      {/* Ambient background */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse 80% 40% at 50% 0%, hsl(259 75% 62% / 0.03), transparent)"
+      }} />
+
+      <div className="max-w-5xl mx-auto relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground mb-4">
-            Powerful AI Tools
+          <p className="text-micro font-medium text-primary uppercase tracking-widest mb-4">Tools</p>
+          <h2 className="text-display text-foreground mb-5">
+            Everything you need
           </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">
-            Everything you need to create, generate, and innovate — all in one place.
+          <p className="text-subheading text-muted-foreground max-w-md mx-auto">
+            Five powerful AI tools, one seamless workspace.
           </p>
         </motion.div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {tools.map((tool) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {tools.map((tool, i) => (
             <motion.div
               key={tool.title}
-              variants={item}
-              className="group glass rounded-2xl p-6 hover:glow-violet transition-all duration-500 cursor-pointer relative overflow-hidden"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <tool.icon className="w-6 h-6 text-primary-foreground" />
+              <Link
+                to={tool.path}
+                className="group block glass-card-highlight rounded-2xl p-6 h-full transition-all duration-500 hover:glow-violet-sm hover:-translate-y-0.5"
+              >
+                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110`}>
+                  <tool.icon className="w-5 h-5 text-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{tool.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{tool.description}</p>
-              </div>
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="text-body-lg font-semibold text-foreground">{tool.title}</h3>
+                  <ArrowUpRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+                <p className="text-caption text-muted-foreground leading-relaxed">{tool.description}</p>
+              </Link>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
