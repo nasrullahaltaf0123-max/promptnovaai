@@ -11,57 +11,74 @@ const GradientMeshBackground = () => {
 
     let animationId: number;
     let time = 0;
+    let dpr = window.devicePixelRatio || 1;
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
     };
     resize();
     window.addEventListener("resize", resize);
 
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; color: string }[] = [];
-    for (let i = 0; i < 50; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 2 + 0.5,
-        color: Math.random() > 0.5 ? "139, 92, 246" : "6, 182, 212",
-      });
-    }
+    const w = () => window.innerWidth;
+    const h = () => window.innerHeight;
 
     const animate = () => {
-      time += 0.005;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time += 0.003;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w(), h());
 
-      // Gradient mesh orbs
+      // Large ambient orbs — very subtle, Apple-like
       const orbs = [
-        { x: canvas.width * 0.3 + Math.sin(time) * 100, y: canvas.height * 0.4 + Math.cos(time * 0.7) * 80, r: 300, color: "139, 92, 246" },
-        { x: canvas.width * 0.7 + Math.cos(time * 0.8) * 120, y: canvas.height * 0.6 + Math.sin(time * 0.5) * 100, r: 250, color: "6, 182, 212" },
-        { x: canvas.width * 0.5 + Math.sin(time * 0.6) * 80, y: canvas.height * 0.3 + Math.cos(time * 0.9) * 60, r: 200, color: "139, 92, 246" },
+        {
+          x: w() * 0.25 + Math.sin(time * 0.8) * w() * 0.05,
+          y: h() * 0.35 + Math.cos(time * 0.6) * h() * 0.04,
+          r: Math.min(w(), h()) * 0.5,
+          color: [120, 80, 220],
+          opacity: 0.08,
+        },
+        {
+          x: w() * 0.75 + Math.cos(time * 0.5) * w() * 0.06,
+          y: h() * 0.55 + Math.sin(time * 0.4) * h() * 0.05,
+          r: Math.min(w(), h()) * 0.45,
+          color: [6, 182, 212],
+          opacity: 0.06,
+        },
+        {
+          x: w() * 0.5 + Math.sin(time * 0.7) * w() * 0.04,
+          y: h() * 0.25 + Math.cos(time * 0.9) * h() * 0.03,
+          r: Math.min(w(), h()) * 0.35,
+          color: [100, 60, 200],
+          opacity: 0.05,
+        },
       ];
 
-      orbs.forEach((orb) => {
+      for (const orb of orbs) {
         const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
-        gradient.addColorStop(0, `rgba(${orb.color}, 0.15)`);
-        gradient.addColorStop(1, `rgba(${orb.color}, 0)`);
+        gradient.addColorStop(0, `rgba(${orb.color.join(",")}, ${orb.opacity})`);
+        gradient.addColorStop(0.5, `rgba(${orb.color.join(",")}, ${orb.opacity * 0.4})`);
+        gradient.addColorStop(1, `rgba(${orb.color.join(",")}, 0)`);
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      });
+        ctx.fillRect(0, 0, w(), h());
+      }
 
-      // Particles
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
+      // Subtle floating particles
+      for (let i = 0; i < 30; i++) {
+        const px = (Math.sin(time * 0.3 + i * 1.7) * 0.5 + 0.5) * w();
+        const py = (Math.cos(time * 0.2 + i * 2.3) * 0.5 + 0.5) * h();
+        const size = 0.8 + Math.sin(time + i) * 0.4;
+        const alpha = 0.15 + Math.sin(time * 1.5 + i * 0.8) * 0.1;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color}, ${0.3 + Math.sin(time * 2 + p.x) * 0.2})`;
+        ctx.arc(px, py, size, 0, Math.PI * 2);
+        ctx.fillStyle = i % 3 === 0
+          ? `rgba(6, 182, 212, ${alpha})`
+          : `rgba(139, 92, 246, ${alpha})`;
         ctx.fill();
-      });
+      }
 
       animationId = requestAnimationFrame(animate);
     };
@@ -73,7 +90,7 @@ const GradientMeshBackground = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+  return <canvas ref={canvasRef} className="absolute inset-0" />;
 };
 
 export default GradientMeshBackground;

@@ -1,45 +1,60 @@
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-border py-16 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
-              </div>
-              <span className="font-bold tracking-tighter text-foreground">PromptNova AI</span>
-            </div>
-            <p className="text-sm text-muted-foreground">All the AI tools you need in one powerful workspace.</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3">Product</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
-              <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
-              <li><a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3">Company</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/" className="hover:text-foreground transition-colors">About</Link></li>
-              <li><Link to="/" className="hover:text-foreground transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3">Legal</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/" className="hover:text-foreground transition-colors">Privacy</Link></li>
-              <li><Link to="/" className="hover:text-foreground transition-colors">Terms</Link></li>
-            </ul>
-          </div>
+    <footer className="relative">
+      {/* CTA Banner */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="py-28 px-6 text-center relative overflow-hidden"
+      >
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 50% 60% at 50% 100%, hsl(259 75% 62% / 0.06), transparent)"
+        }} />
+        <div className="relative max-w-lg mx-auto">
+          <h2 className="text-heading sm:text-display text-foreground mb-4">
+            Ready to create?
+          </h2>
+          <p className="text-subheading text-muted-foreground mb-8">
+            Join thousands of creators using PromptNova AI.
+          </p>
+          <Link
+            to="/signup"
+            className="group inline-flex items-center gap-2 bg-foreground text-background font-medium px-7 py-3 rounded-xl hover:bg-foreground/90 transition-all duration-200 text-body"
+          >
+            Get started free
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
         </div>
-        <div className="border-t border-border pt-6 text-center text-xs text-muted-foreground">
-          © 2026 PromptNova AI. All rights reserved.
+      </motion.section>
+
+      {/* Footer links */}
+      <div className="border-t border-border/50 py-12 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <Sparkles className="w-3 h-3 text-primary-foreground" />
+            </div>
+            <span className="text-body font-semibold tracking-tight text-foreground">PromptNova AI</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            {["About", "Privacy", "Terms", "Contact"].map((link) => (
+              <Link key={link} to="/" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
+                {link}
+              </Link>
+            ))}
+          </div>
+
+          <p className="text-micro text-muted-foreground/50">
+            © 2026 PromptNova AI
+          </p>
         </div>
       </div>
     </footer>
