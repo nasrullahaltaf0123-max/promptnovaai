@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Zap, Clock, Sparkles, ArrowUpRight } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight } from "lucide-react";
 
 const quickTools = [
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
@@ -8,6 +8,9 @@ const quickTools = [
   { icon: FileText, title: "Blog Writer", path: "/dashboard/blog", gradient: "from-blue-500/20 to-blue-500/5" },
   { icon: Palette, title: "Logo Gen", path: "/dashboard/logo", gradient: "from-purple-500/20 to-purple-500/5" },
   { icon: Video, title: "Script Gen", path: "/dashboard/script", gradient: "from-teal-500/20 to-teal-500/5" },
+  { icon: Wand2, title: "Prompt Gen", path: "/dashboard/prompt", gradient: "from-pink-500/20 to-pink-500/5" },
+  { icon: Film, title: "Video Script", path: "/dashboard/video-script", gradient: "from-orange-500/20 to-orange-500/5" },
+  { icon: ImageIcon, title: "Thumbnails", path: "/dashboard/thumbnail", gradient: "from-emerald-500/20 to-emerald-500/5" },
 ];
 
 const recentItems = [
@@ -29,7 +32,6 @@ const DashboardHome = () => {
   return (
     <div className="max-w-5xl mx-auto">
       <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
-        {/* Welcome */}
         <motion.div variants={item} className="glass-card-highlight rounded-2xl p-7 relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30" style={{
             background: "radial-gradient(circle, hsl(259 75% 62% / 0.15), transparent)"
@@ -40,11 +42,10 @@ const DashboardHome = () => {
           </div>
         </motion.div>
 
-        {/* Stats */}
         <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {stats.map((s) => (
             <div key={s.label} className="glass-card rounded-2xl p-5 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <s.icon className="w-5 h-5 text-primary" />
               </div>
               <div>
@@ -55,10 +56,9 @@ const DashboardHome = () => {
           ))}
         </motion.div>
 
-        {/* Quick Tools */}
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
             {quickTools.map((tool) => (
               <Link
                 key={tool.path}
@@ -74,7 +74,6 @@ const DashboardHome = () => {
           </div>
         </motion.div>
 
-        {/* Recent */}
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Recent creations</h2>
           <div className="space-y-2">

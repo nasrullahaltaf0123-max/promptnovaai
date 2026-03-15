@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import logo from "@/assets/logo.png";
 
 const Navbar = () => {
+  const { lang, setLang, t } = useI18n();
+
   return (
     <motion.nav
       initial={{ y: -10, opacity: 0 }}
@@ -13,38 +16,47 @@ const Navbar = () => {
       <div className="mx-auto max-w-screen-xl px-6">
         <div className="mt-4 rounded-2xl glass-strong px-5 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-              <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="PromptNova AI" className="w-7 h-7 rounded-lg transition-transform duration-300 group-hover:scale-105" />
             <span className="text-body font-semibold tracking-tight text-foreground">
               PromptNova
             </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-1">
-            {["Features", "Pricing", "How It Works"].map((item) => (
+            {[
+              { label: t.features as string, href: "#features" },
+              { label: t.pricing as string, href: "#pricing" },
+              { label: t.howItWorks as string, href: "#how-it-works" },
+            ].map((item) => (
               <a
-                key={item}
-                href={`#${item.toLowerCase().replace(/ /g, "-")}`}
+                key={item.href}
+                href={item.href}
                 className="text-caption text-muted-foreground hover:text-foreground px-3.5 py-1.5 rounded-lg transition-all duration-200 hover:bg-secondary/50"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Language toggle */}
+            <button
+              onClick={() => setLang(lang === "en" ? "bn" : "en")}
+              className="text-micro font-medium text-muted-foreground hover:text-foreground px-2.5 py-1.5 rounded-lg transition-all duration-200 hover:bg-secondary/50 border border-border/30"
+            >
+              {lang === "en" ? "বাং" : "EN"}
+            </button>
             <Link
               to="/login"
               className="text-caption text-muted-foreground hover:text-foreground px-4 py-1.5 rounded-lg transition-all duration-200 hover:bg-secondary/50"
             >
-              Log in
+              {t.logIn}
             </Link>
             <Link
               to="/signup"
               className="text-caption font-medium bg-foreground text-background px-4 py-1.5 rounded-lg hover:bg-foreground/90 transition-all duration-200"
             >
-              Start free
+              {t.startFree}
             </Link>
           </div>
         </div>
