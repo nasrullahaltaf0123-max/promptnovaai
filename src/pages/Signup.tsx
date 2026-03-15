@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Eye, EyeOff } from "lucide-react";
+import { Sparkles, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -16,76 +16,61 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 relative overflow-hidden">
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-accent/5 blur-3xl" />
+      <div className="absolute w-[500px] h-[500px] rounded-full opacity-60 pointer-events-none" style={{
+        top: "20%", left: "20%",
+        background: "radial-gradient(circle, hsl(259 75% 62% / 0.04), transparent)",
+        animation: "orb-float-1 20s ease-in-out infinite",
+      }} />
+      <div className="absolute w-[400px] h-[400px] rounded-full opacity-60 pointer-events-none" style={{
+        bottom: "20%", right: "20%",
+        background: "radial-gradient(circle, hsl(187 92% 43% / 0.03), transparent)",
+        animation: "orb-float-2 25s ease-in-out infinite",
+      }} />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-sm relative"
       >
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+        <div className="text-center mb-10">
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold tracking-tighter text-foreground">PromptNova AI</span>
+            <span className="text-body-lg font-semibold tracking-tight text-foreground">PromptNova AI</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tighter text-foreground">Create your account</h1>
-          <p className="text-sm text-muted-foreground mt-1">Start creating with AI in seconds</p>
+          <h1 className="text-heading text-foreground">Create your account</h1>
+          <p className="text-caption text-muted-foreground mt-2">Start creating with AI in seconds</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="glass-card-highlight rounded-2xl p-6 space-y-5">
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Full Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="John Doe"
-              className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-              required
-            />
+            <label className="text-caption font-medium text-foreground mb-2 block">Full name</label>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" required />
           </div>
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-              required
-            />
+            <label className="text-caption font-medium text-foreground mb-2 block">Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" required />
           </div>
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Password</label>
+            <label className="text-caption font-medium text-foreground mb-2 block">Password</label>
             <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all pr-10"
-                required
-              />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all pr-10" required />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-muted-foreground transition-colors">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold py-2.5 rounded-xl hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 text-sm"
-          >
-            Create Account
+          <button type="submit" className="group w-full flex items-center justify-center gap-2 bg-foreground text-background font-medium py-2.5 rounded-xl hover:bg-foreground/90 transition-all duration-200 text-caption">
+            Create account
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
+        <p className="text-center text-caption text-muted-foreground mt-8">
           Already have an account?{" "}
-          <Link to="/login" className="text-primary hover:underline font-medium">Sign in</Link>
+          <Link to="/login" className="text-foreground hover:text-primary font-medium transition-colors">Sign in</Link>
         </p>
       </motion.div>
     </div>
