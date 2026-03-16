@@ -62,8 +62,10 @@ serve(async (req) => {
     }
 
     const stream = toolType === "chat";
-    const endpoint = stream ? "streamGenerateContent?alt=sse" : "generateContent";
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:${endpoint}&key=${GEMINI_API_KEY}`;
+    const baseUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}`;
+    const url = stream
+      ? `${baseUrl}:streamGenerateContent?alt=sse&key=${GEMINI_API_KEY}`
+      : `${baseUrl}:generateContent?key=${GEMINI_API_KEY}`;
 
     const geminiResponse = await fetch(url, {
       method: "POST",
