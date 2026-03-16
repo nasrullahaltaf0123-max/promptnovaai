@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, Check, Loader2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/lib/auth";
+import { generateContent } from "@/lib/ai";
+import { incrementUsage, getDailyUsage, getLimit, saveToHistory } from "@/lib/usage";
+import { toast } from "@/hooks/use-toast";
 
 const tones = ["Professional", "Casual", "Humorous", "Academic", "Persuasive"];
 const wordCounts = ["300", "500", "800", "1200"];
@@ -9,27 +14,46 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const BlogWriter = () => {
+  const { user } = useAuth();
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState(tones[0]);
   const [wordCount, setWordCount] = useState(wordCounts[1]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
+  const [usage, setUsage] = useState(0);
+  const limit = getLimit("blog");
 
-  const handleGenerate = () => {
-    if (!topic.trim()) return;
+  useEffect(() => {
+    if (user) getDailyUsage(user.id, "blog").then(setUsage);
+  }, [user]);
+
+  const handleGenerate = async () => {
+    if (!topic.trim() || !user) return;
+    if (usage >= limit) {
+      toast({ title: "Daily limit reached", description: `You've used all ${limit} blog generations for today.`, variant: "destructive" });
+      return;
+    }
     setIsGenerating(true);
-    setTimeout(() => {
-      setOutput(`# ${topic}\n\nA ${tone.toLowerCase()} article about "${topic}".\n\n## Introduction\n\nThis is a demo article. Connect Lovable Cloud for real AI-generated content.\n\n## Key Takeaways\n\n1. First insight about ${topic}\n2. Second perspective worth exploring\n3. Third actionable takeaway\n\n## Conclusion\n\n${topic} is a subject that deserves attention and deeper exploration.`);
-      setIsGenerating(false);
-    }, 2000);
+    const ok = await incrementUsage(user.id, "blog");
+    if (!ok) { setIsGenerating(false); toast({ title: "Limit reached", variant: "destructive" }); return; }
+    setUsage((u) => u + 1);
+
+    const { result, error } = await generateContent("blog", topic, { tone, wordCount });
+    setIsGenerating(false);
+    if (error) { toast({ title: "Error", description: error, variant: "destructive" }); return; }
+    setOutput(result || "");
+    await saveToHistory(user.id, "blog", topic, `${tone}, ${wordCount} words`, result || "");
   };
 
   const copyOutput = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 2000); };
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-heading text-foreground mb-6">Blog Writer</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-heading text-foreground">Blog Writer</h1>
+        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="glass-card-highlight rounded-2xl p-6 space-y-5">
           <div>
@@ -56,7 +80,9 @@ const BlogWriter = () => {
           {isGenerating ? (
             <div className="space-y-3">{[...Array(8)].map((_, i) => <div key={i} className="shimmer h-3.5 rounded" style={{ width: `${65 + Math.random() * 35}%` }} />)}</div>
           ) : output ? (
-            <div className="text-caption text-muted-foreground whitespace-pre-wrap leading-relaxed max-h-[500px] overflow-y-auto">{output}</div>
+            <div className="text-caption text-muted-foreground leading-relaxed max-h-[500px] overflow-y-auto prose prose-sm prose-invert max-w-none">
+              <ReactMarkdown>{output}</ReactMarkdown>
+            </div>
           ) : (
             <div className="h-64 flex items-center justify-center"><p className="text-micro text-muted-foreground/40">Your article will appear here</p></div>
           )}

@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, Check, Loader2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/lib/auth";
+import { generateContent } from "@/lib/ai";
+import { incrementUsage, getDailyUsage, getLimit, saveToHistory } from "@/lib/usage";
+import { toast } from "@/hooks/use-toast";
 
 const scriptLengths = ["30 seconds", "1 minute", "2 minutes", "5 minutes"];
 const toneStyles = ["Professional", "Casual", "Energetic", "Storytelling", "Educational"];
@@ -9,27 +14,45 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const ScriptGenerator = () => {
+  const { user } = useAuth();
   const [topic, setTopic] = useState("");
   const [length, setLength] = useState(scriptLengths[1]);
   const [tone, setTone] = useState(toneStyles[0]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
+  const [usage, setUsage] = useState(0);
+  const limit = getLimit("script");
 
-  const handleGenerate = () => {
-    if (!topic.trim()) return;
+  useEffect(() => {
+    if (user) getDailyUsage(user.id, "script").then(setUsage);
+  }, [user]);
+
+  const handleGenerate = async () => {
+    if (!topic.trim() || !user) return;
+    if (usage >= limit) {
+      toast({ title: "Daily limit reached", variant: "destructive" });
+      return;
+    }
     setIsGenerating(true);
-    setTimeout(() => {
-      setOutput(`📹 ${topic.toUpperCase()}\n⏱ ${length} · ${tone}\n\n[HOOK]\n"${topic} is about to change everything."\n\n[INTRO]\nHey everyone — today we're breaking down ${topic}.\n\n[BODY]\n1. Why ${topic} matters right now\n2. How to get started\n3. What the future holds\n\n[CTA]\nLike, subscribe, and let me know your thoughts.\n\n—\nDemo script. Connect Lovable Cloud for real AI.`);
-      setIsGenerating(false);
-    }, 2000);
+    await incrementUsage(user.id, "script");
+    setUsage((u) => u + 1);
+
+    const { result, error } = await generateContent("script", topic, { length, tone });
+    setIsGenerating(false);
+    if (error) { toast({ title: "Error", description: error, variant: "destructive" }); return; }
+    setOutput(result || "");
+    await saveToHistory(user.id, "script", topic, `${length}, ${tone}`, result || "");
   };
 
   const copyOutput = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 2000); };
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-heading text-foreground mb-6">Script Generator</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-heading text-foreground">Script Generator</h1>
+        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="glass-card-highlight rounded-2xl p-6 space-y-5">
           <div>
@@ -56,7 +79,9 @@ const ScriptGenerator = () => {
           {isGenerating ? (
             <div className="space-y-3">{[...Array(10)].map((_, i) => <div key={i} className="shimmer h-3.5 rounded" style={{ width: `${55 + Math.random() * 45}%` }} />)}</div>
           ) : output ? (
-            <div className="text-caption text-muted-foreground whitespace-pre-wrap leading-relaxed max-h-[500px] overflow-y-auto">{output}</div>
+            <div className="text-caption text-muted-foreground leading-relaxed max-h-[500px] overflow-y-auto prose prose-sm prose-invert max-w-none">
+              <ReactMarkdown>{output}</ReactMarkdown>
+            </div>
           ) : (
             <div className="h-64 flex items-center justify-center"><p className="text-micro text-muted-foreground/40">Your script will appear here</p></div>
           )}

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, Image, FileText, Palette, Video,
   Wand2, Film, ImageIcon, Clock, User, Menu, X, LogOut, ChevronRight,
 } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useAuth } from "@/lib/auth";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -24,6 +25,13 @@ const navItems = [
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -41,7 +49,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
       <aside className={`fixed lg:sticky top-0 left-0 h-screen w-[260px] bg-sidebar z-50 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         <div className="absolute top-0 right-0 bottom-0 w-px bg-sidebar-border" />
-
         <div className="p-5 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <img src={logo} alt="PromptNova AI" className="w-7 h-7 rounded-lg" />
@@ -83,13 +90,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
         <div className="p-3 mt-auto">
           <div className="h-px bg-sidebar-border mb-3" />
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-3 py-2 rounded-xl text-caption text-sidebar-foreground hover:text-foreground transition-all group"
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-caption text-sidebar-foreground hover:text-foreground transition-all group w-full"
           >
             <LogOut className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
             Log out
-          </Link>
+          </button>
         </div>
       </aside>
 

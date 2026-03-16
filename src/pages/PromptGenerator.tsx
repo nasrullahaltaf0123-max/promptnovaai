@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, Check, Loader2, Wand2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/lib/auth";
+import { generateContent } from "@/lib/ai";
+import { incrementUsage, getDailyUsage, getLimit, saveToHistory } from "@/lib/usage";
+import { toast } from "@/hooks/use-toast";
 
 const categories = ["Marketing", "Coding", "Writing", "Design", "Business", "Social Media"];
 const complexities = ["Simple", "Detailed", "Expert"];
@@ -9,27 +14,45 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const PromptGenerator = () => {
+  const { user } = useAuth();
   const [idea, setIdea] = useState("");
   const [category, setCategory] = useState(categories[0]);
   const [complexity, setComplexity] = useState(complexities[1]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
+  const [usage, setUsage] = useState(0);
+  const limit = getLimit("prompt");
 
-  const handleGenerate = () => {
-    if (!idea.trim()) return;
+  useEffect(() => {
+    if (user) getDailyUsage(user.id, "prompt").then(setUsage);
+  }, [user]);
+
+  const handleGenerate = async () => {
+    if (!idea.trim() || !user) return;
+    if (usage >= limit) {
+      toast({ title: "Daily limit reached", variant: "destructive" });
+      return;
+    }
     setIsGenerating(true);
-    setTimeout(() => {
-      setOutput(`🎯 Generated Prompt for "${idea}"\n\nCategory: ${category} | Complexity: ${complexity}\n\n---\n\nYou are an expert ${category.toLowerCase()} specialist. I need your help with "${idea}".\n\nPlease provide:\n1. A comprehensive analysis of the topic\n2. Step-by-step actionable recommendations\n3. Best practices and common pitfalls to avoid\n4. Real-world examples and case studies\n5. A summary with key takeaways\n\nFormat your response with clear headings, bullet points, and actionable insights.\n\n---\n\nDemo prompt. Connect Lovable Cloud for real AI generation.`);
-      setIsGenerating(false);
-    }, 1500);
+    await incrementUsage(user.id, "prompt");
+    setUsage((u) => u + 1);
+
+    const { result, error } = await generateContent("prompt", idea, { category, complexity });
+    setIsGenerating(false);
+    if (error) { toast({ title: "Error", description: error, variant: "destructive" }); return; }
+    setOutput(result || "");
+    await saveToHistory(user.id, "prompt", idea, `${category}, ${complexity}`, result || "");
   };
 
   const copyOutput = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 2000); };
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-heading text-foreground mb-6">Prompt Generator</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-heading text-foreground">Prompt Generator</h1>
+        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="glass-card-highlight rounded-2xl p-6 space-y-5">
           <div>
@@ -56,7 +79,9 @@ const PromptGenerator = () => {
           {isGenerating ? (
             <div className="space-y-3">{[...Array(8)].map((_, i) => <div key={i} className="shimmer h-3.5 rounded" style={{ width: `${55 + Math.random() * 45}%` }} />)}</div>
           ) : output ? (
-            <div className="text-caption text-muted-foreground whitespace-pre-wrap leading-relaxed max-h-[500px] overflow-y-auto">{output}</div>
+            <div className="text-caption text-muted-foreground leading-relaxed max-h-[500px] overflow-y-auto prose prose-sm prose-invert max-w-none">
+              <ReactMarkdown>{output}</ReactMarkdown>
+            </div>
           ) : (
             <div className="h-64 flex items-center justify-center"><p className="text-micro text-muted-foreground/40">Your generated prompt will appear here</p></div>
           )}
