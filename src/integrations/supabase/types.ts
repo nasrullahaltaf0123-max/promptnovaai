@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      generation_history: {
+        Row: {
+          created_at: string
+          id: string
+          prompt: string | null
+          result: string | null
+          title: string
+          tool_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt?: string | null
+          result?: string | null
+          title: string
+          tool_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt?: string | null
+          result?: string | null
+          title?: string
+          tool_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          plan: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          plan?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          plan?: string
+        }
+        Relationships: []
+      }
+      usage_tracking: {
+        Row: {
+          count: number
+          id: string
+          tool_type: string
+          used_at: string
+          user_id: string
+        }
+        Insert: {
+          count?: number
+          id?: string
+          tool_type: string
+          used_at?: string
+          user_id: string
+        }
+        Update: {
+          count?: number
+          id?: string
+          tool_type?: string
+          used_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
