@@ -1,6 +1,16 @@
-import { User } from "lucide-react";
+import { User, LogOut } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { useNavigate } from "react-router-dom";
 
 const Account = () => {
+  const { profile, user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-heading text-foreground mb-6">Account</h1>
@@ -10,27 +20,30 @@ const Account = () => {
             <User className="w-7 h-7 text-foreground/60" />
           </div>
           <div>
-            <h2 className="text-body-lg font-semibold text-foreground">Demo User</h2>
-            <p className="text-caption text-muted-foreground">demo@promptnova.ai</p>
+            <h2 className="text-body-lg font-semibold text-foreground">{profile?.full_name || "User"}</h2>
+            <p className="text-caption text-muted-foreground">{profile?.email || user?.email}</p>
           </div>
         </div>
         <div className="h-px bg-border/50" />
         <div className="space-y-4">
           {[
-            { label: "Plan", value: "Pro", badge: true },
-            { label: "Credits remaining", value: "250" },
-            { label: "Member since", value: "March 2026" },
+            { label: "Plan", value: (profile?.plan || "free").charAt(0).toUpperCase() + (profile?.plan || "free").slice(1), badge: true },
+            { label: "Member since", value: profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "—" },
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between">
               <span className="text-caption text-muted-foreground">{item.label}</span>
               {item.badge ? (
-                <span className="text-micro font-medium text-primary bg-primary/8 px-3 py-1 rounded-lg">{item.value}</span>
+                <span className="text-micro font-medium text-primary bg-primary/10 px-3 py-1 rounded-lg">{item.value}</span>
               ) : (
                 <span className="text-caption font-medium text-foreground">{item.value}</span>
               )}
             </div>
           ))}
         </div>
+        <div className="h-px bg-border/50" />
+        <button onClick={handleSignOut} className="flex items-center gap-2 text-caption text-destructive hover:text-destructive/80 transition-colors">
+          <LogOut className="w-4 h-4" /> Sign out
+        </button>
       </div>
     </div>
   );

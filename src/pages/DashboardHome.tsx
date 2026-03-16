@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { getAllDailyUsage, getLimit } from "@/lib/usage";
+import { supabase } from "@/integrations/supabase/client";
 
 const quickTools = [
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
@@ -13,22 +17,58 @@ const quickTools = [
   { icon: ImageIcon, title: "Thumbnails", path: "/dashboard/thumbnail", gradient: "from-emerald-500/20 to-emerald-500/5" },
 ];
 
-const recentItems = [
-  { type: "Chat", title: "Marketing strategy ideas", time: "2h ago" },
-  { type: "Image", title: "Sunset landscape", time: "5h ago" },
-  { type: "Blog", title: "10 Tips for Productivity", time: "Yesterday" },
-];
-
-const stats = [
-  { icon: Zap, label: "Credits", value: "250", sublabel: "remaining" },
-  { icon: Sparkles, label: "Generated", value: "12", sublabel: "today" },
-  { icon: Clock, label: "Saved", value: "34", sublabel: "items" },
-];
-
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } } };
 
 const DashboardHome = () => {
+  const { user, profile } = useAuth();
+  const [usage, setUsage] = useState<Record<string, number>>({});
+  const [recentItems, setRecentItems] = useState<any[]>([]);
+  const [totalGenerated, setTotalGenerated] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    getAllDailyUsage(user.id).then(setUsage);
+    
+    supabase
+      .from("generation_history")
+      .select("tool_type, title, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(5)
+      .then(({ data }) => {
+        if (data) setRecentItems(data as any[]);
+      });
+
+    supabase
+      .from("generation_history")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .then(({ count }) => setTotalGenerated(count || 0));
+  }, [user]);
+
+  const totalUsedToday = Object.values(usage).reduce((a, b) => a + b, 0);
+  const chatRemaining = getLimit("chat") - (usage.chat || 0);
+  const imageRemaining = getLimit("image") - (usage.image || 0);
+  const blogRemaining = getLimit("blog") - (usage.blog || 0);
+
+  const stats = [
+    { icon: Zap, label: "Chat", value: `${chatRemaining}`, sublabel: "remaining" },
+    { icon: Image, label: "Images", value: `${imageRemaining}`, sublabel: "remaining" },
+    { icon: FileText, label: "Blogs", value: `${blogRemaining}`, sublabel: "remaining" },
+    { icon: Sparkles, label: "Generated", value: `${totalUsedToday}`, sublabel: "today" },
+    { icon: Clock, label: "Total", value: `${totalGenerated}`, sublabel: "all time" },
+  ];
+
+  const formatTime = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return `${Math.floor(hrs / 24)}d ago`;
+  };
+
   return (
     <div className="max-w-5xl mx-auto">
       <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
@@ -37,20 +77,22 @@ const DashboardHome = () => {
             background: "radial-gradient(circle, hsl(259 75% 62% / 0.15), transparent)"
           }} />
           <div className="relative">
-            <h1 className="text-heading text-foreground mb-1.5">Welcome back 👋</h1>
+            <h1 className="text-heading text-foreground mb-1.5">
+              Welcome back{profile?.full_name ? `, ${profile.full_name}` : ""} 👋
+            </h1>
             <p className="text-caption text-muted-foreground">What would you like to create today?</p>
           </div>
         </motion.div>
 
-        <motion.div variants={item} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <motion.div variants={item} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {stats.map((s) => (
-            <div key={s.label} className="glass-card rounded-2xl p-5 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <s.icon className="w-5 h-5 text-primary" />
+            <div key={s.label} className="glass-card rounded-2xl p-4 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <s.icon className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="text-micro text-muted-foreground">{s.label} {s.sublabel}</p>
-                <p className="text-heading text-foreground">{s.value}</p>
+                <p className="text-micro text-muted-foreground">{s.label}</p>
+                <p className="text-body-lg font-semibold text-foreground">{s.value}</p>
               </div>
             </div>
           ))}
@@ -60,11 +102,7 @@ const DashboardHome = () => {
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
             {quickTools.map((tool) => (
-              <Link
-                key={tool.path}
-                to={tool.path}
-                className="group glass-card rounded-2xl p-5 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5"
-              >
+              <Link key={tool.path} to={tool.path} className="group glass-card rounded-2xl p-5 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5">
                 <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mx-auto mb-3 transition-transform duration-300 group-hover:scale-110`}>
                   <tool.icon className="w-5 h-5 text-foreground" />
                 </div>
@@ -76,20 +114,26 @@ const DashboardHome = () => {
 
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Recent creations</h2>
-          <div className="space-y-2">
-            {recentItems.map((ri, i) => (
-              <div key={i} className="glass-card rounded-xl px-5 py-3.5 flex items-center justify-between group cursor-pointer hover:-translate-y-0.5 transition-all duration-300">
-                <div className="flex items-center gap-3">
-                  <span className="text-micro text-muted-foreground/60 font-medium uppercase w-10">{ri.type}</span>
-                  <span className="text-caption font-medium text-foreground">{ri.title}</span>
+          {recentItems.length > 0 ? (
+            <div className="space-y-2">
+              {recentItems.map((ri, i) => (
+                <div key={i} className="glass-card rounded-xl px-5 py-3.5 flex items-center justify-between group cursor-pointer hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="flex items-center gap-3">
+                    <span className="text-micro text-muted-foreground/60 font-medium uppercase w-12">{ri.tool_type}</span>
+                    <span className="text-caption font-medium text-foreground">{ri.title}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-micro text-muted-foreground/50">{formatTime(ri.created_at)}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-muted-foreground transition-colors" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-micro text-muted-foreground/50">{ri.time}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-muted-foreground transition-colors" />
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="glass-card rounded-xl px-5 py-8 text-center">
+              <p className="text-caption text-muted-foreground/50">No creations yet. Start using the tools above!</p>
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </div>
