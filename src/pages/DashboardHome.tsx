@@ -82,6 +82,11 @@ const DashboardHome = () => {
             <Link to="/dashboard/referrals" className="hidden sm:flex items-center gap-2 bg-primary/10 text-primary text-micro font-medium px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
               <Gift className="w-3.5 h-3.5" /> Refer & Earn
             </Link>
+            {plan === "free" && (
+              <Link to="/dashboard/upgrade" className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity">
+                <Crown className="w-3.5 h-3.5" /> Upgrade
+              </Link>
+            )}
           </div>
         </motion.div>
 

@@ -23,6 +23,7 @@ const navItems = [
   { icon: Type, label: "Viral Captions", path: "/dashboard/caption" },
   { icon: Clapperboard, label: "TikTok Scripts", path: "/dashboard/tiktok-script" },
   { icon: Gift, label: "Refer & Earn", path: "/dashboard/referrals" },
+  { icon: Crown, label: "Upgrade to Pro", path: "/dashboard/upgrade" },
   { icon: Clock, label: "History", path: "/dashboard/history" },
   { icon: User, label: "Account", path: "/dashboard/account" },
 ];
