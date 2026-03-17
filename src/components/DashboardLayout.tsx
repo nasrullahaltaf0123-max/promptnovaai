@@ -5,7 +5,7 @@ import {
   LayoutDashboard, MessageSquare, Image, FileText, Palette, Video,
   Wand2, Film, ImageIcon, Clock, User, Menu, X, LogOut, ChevronRight,
 } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoPn from "@/assets/logo-pn.png";
 import { useAuth } from "@/lib/auth";
 
 const navItems = [

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import GradientMeshBackground from "./GradientMeshBackground";
+import logoFull from "@/assets/logo-full.png";
 
 const HeroSection = () => {
   const { t } = useI18n();
