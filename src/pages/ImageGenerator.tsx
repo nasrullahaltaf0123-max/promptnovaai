@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Download, Loader2, ImageIcon, Sparkles } from "lucide-react";
+import { Download, Loader2, ImageIcon, Sparkles, X, ZoomIn } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { generateContent } from "@/lib/ai";
 import { incrementUsage, getDailyUsage, getLimit, saveToHistory } from "@/lib/usage";
@@ -18,6 +18,7 @@ const ImageGenerator = () => {
   const [style, setStyle] = useState(styles[0]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [usage, setUsage] = useState(0);
   const [error, setError] = useState("");
   const limit = getLimit("image");
@@ -171,7 +172,9 @@ const ImageGenerator = () => {
                     className="w-full aspect-square object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-                    <span className="text-micro text-white/80 font-medium">Image {i + 1}</span>
+                    <button onClick={() => setPreviewImage(img)} className="bg-white/20 backdrop-blur-sm text-white p-1.5 rounded-lg hover:bg-white/30 transition-colors">
+                      <ZoomIn className="w-3.5 h-3.5" />
+                    </button>
                     <button
                       onClick={() => downloadImage(img, i)}
                       className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-micro px-3 py-1.5 rounded-lg hover:bg-white/30 transition-colors"
@@ -201,6 +204,25 @@ const ImageGenerator = () => {
               ))}
             </div>
             <p className="text-micro text-muted-foreground/40 text-center mt-4">Your generated images will appear here</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Preview Modal */}
+      <AnimatePresence>
+        {previewImage && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setPreviewImage(null)}>
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="relative max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
+              <button onClick={() => setPreviewImage(null)} className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+              <img src={previewImage} alt="Preview" className="w-full rounded-2xl" />
+              <div className="absolute bottom-4 right-4">
+                <button onClick={() => downloadImage(previewImage, 0)} className="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
+                  <Download className="w-4 h-4" /> Download
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
