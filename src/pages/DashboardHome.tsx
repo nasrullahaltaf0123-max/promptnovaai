@@ -50,16 +50,9 @@ const DashboardHome = () => {
       .then(({ count }) => setTotalGenerated(count || 0));
   }, [user]);
 
-  const totalUsedToday = Object.values(usage).reduce((a, b) => a + b, 0);
-  const chatRemaining = getLimit("chat") - (usage.chat || 0);
-  const imageRemaining = getLimit("image") - (usage.image || 0);
-  const blogRemaining = getLimit("blog") - (usage.blog || 0);
-
   const stats = [
-    { icon: Zap, label: "Chat", value: `${chatRemaining}`, sublabel: "remaining" },
-    { icon: Image, label: "Images", value: `${imageRemaining}`, sublabel: "remaining" },
-    { icon: FileText, label: "Blogs", value: `${blogRemaining}`, sublabel: "remaining" },
-    { icon: Sparkles, label: "Generated", value: `${totalUsedToday}`, sublabel: "today" },
+    { icon: Zap, label: "Credits", value: `${remaining}`, sublabel: "remaining" },
+    { icon: Sparkles, label: "Limit", value: `${dailyLimit}`, sublabel: "per day" },
     { icon: Clock, label: "Total", value: `${totalGenerated}`, sublabel: "all time" },
   ];
 
