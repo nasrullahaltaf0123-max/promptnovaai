@@ -227,6 +227,7 @@ const ImageGenerator = () => {
         )}
       </AnimatePresence>
     </div>
+  );
 };
 
 export default ImageGenerator;
