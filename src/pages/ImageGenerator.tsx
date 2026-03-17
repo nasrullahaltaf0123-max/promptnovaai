@@ -172,7 +172,9 @@ const ImageGenerator = () => {
                     className="w-full aspect-square object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-                    <span className="text-micro text-white/80 font-medium">Image {i + 1}</span>
+                    <button onClick={() => setPreviewImage(img)} className="bg-white/20 backdrop-blur-sm text-white p-1.5 rounded-lg hover:bg-white/30 transition-colors">
+                      <ZoomIn className="w-3.5 h-3.5" />
+                    </button>
                     <button
                       onClick={() => downloadImage(img, i)}
                       className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-micro px-3 py-1.5 rounded-lg hover:bg-white/30 transition-colors"
