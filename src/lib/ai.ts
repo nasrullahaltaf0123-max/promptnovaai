@@ -67,7 +67,7 @@ export async function generateContent(
   type: string,
   prompt: string,
   options?: Record<string, string>
-): Promise<{ result?: string; error?: string }> {
+): Promise<{ result?: string; images?: string[]; error?: string }> {
   try {
     const resp = await fetch(AI_URL, {
       method: "POST",
@@ -84,7 +84,7 @@ export async function generateContent(
     }
 
     const data = await resp.json();
-    return { result: data.result };
+    return { result: data.result, images: data.images };
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Unknown error" };
   }

@@ -58,6 +58,20 @@ serve(async (req) => {
     }
 
     const stream = toolType === "chat";
+    const isImageGen = toolType === "image";
+
+    const requestBody: any = {
+      model: isImageGen ? "google/gemini-2.5-flash-image" : MODEL,
+      messages: chatMessages,
+      stream,
+      max_tokens: toolType === "blog" ? 4096 : 2048,
+      temperature: toolType === "chat" ? 0.7 : 0.8,
+    };
+
+    if (isImageGen) {
+      requestBody.modalities = ["image", "text"];
+      requestBody.stream = false;
+    }
 
     const gatewayResponse = await fetch(GATEWAY_URL, {
       method: "POST",
@@ -65,13 +79,7 @@ serve(async (req) => {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: chatMessages,
-        stream,
-        max_tokens: toolType === "blog" ? 4096 : 2048,
-        temperature: toolType === "chat" ? 0.7 : 0.8,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!gatewayResponse.ok) {
@@ -100,6 +108,14 @@ serve(async (req) => {
     if (stream) {
       return new Response(gatewayResponse.body, {
         headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      });
+    } else if (isImageGen) {
+      const data = await gatewayResponse.json();
+      const message = data.choices?.[0]?.message;
+      const images = message?.images?.map((img: any) => img?.image_url?.url) || [];
+      const text = message?.content || "";
+      return new Response(JSON.stringify({ result: text, images }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
       const data = await gatewayResponse.json();
