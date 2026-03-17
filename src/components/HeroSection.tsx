@@ -29,9 +29,15 @@ const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="mb-8"
+            className="mb-10"
           >
-            <img src={logoFull} alt="PromptNova AI" className="h-16 sm:h-20 mx-auto object-contain" />
+            <motion.img
+              src={logoFull}
+              alt="PromptNova AI"
+              className="h-20 sm:h-28 lg:h-32 mx-auto object-contain drop-shadow-[0_0_30px_hsl(250_80%_65%/0.3)]"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
           </motion.div>
 
           {/* Headline */}
