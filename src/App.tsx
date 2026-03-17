@@ -22,6 +22,7 @@ import TikTokScriptGenerator from "./pages/TikTokScriptGenerator";
 import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
+import Upgrade from "./pages/Upgrade";
 import DashboardLayout from "./components/DashboardLayout";
 import NotFound from "./pages/NotFound";
 
