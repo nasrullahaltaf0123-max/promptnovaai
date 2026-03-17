@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import logoPn from "@/assets/logo-pn.png";
 import { useAuth } from "@/lib/auth";
+import { useCredits } from "@/hooks/use-credits";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -31,6 +32,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { remaining, dailyLimit, plan } = useCredits();
 
   const handleLogout = async () => {
     await signOut();
@@ -93,6 +95,23 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         </nav>
 
         <div className="p-3 mt-auto">
+          <div className="mx-3 mb-3 p-3 rounded-xl bg-primary/10 border border-primary/20">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-micro font-medium text-muted-foreground">Credits</span>
+              <span className="text-micro font-semibold text-primary">{remaining}/{dailyLimit}</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+                style={{ width: `${Math.min(100, (remaining / dailyLimit) * 100)}%` }}
+              />
+            </div>
+            {plan === "free" && (
+              <p className="text-micro text-muted-foreground mt-1.5">
+                <Link to="/dashboard/account" className="text-primary hover:underline">Upgrade to Pro</Link> for unlimited
+              </p>
+            )}
+          </div>
           <div className="h-px bg-sidebar-border mb-3" />
           <button
             onClick={handleLogout}

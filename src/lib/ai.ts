@@ -4,6 +4,17 @@ const AI_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-generate`;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+async function getAuthHeaders(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.access_token) {
+    throw new Error("Please log in to use AI tools");
+  }
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${session.access_token}`,
+  };
+}
+
 export async function streamChat({
   messages,
   onDelta,
@@ -15,12 +26,17 @@ export async function streamChat({
   onDone: () => void;
   onError: (err: string) => void;
 }) {
+  let headers: Record<string, string>;
+  try {
+    headers = await getAuthHeaders();
+  } catch (e) {
+    onError(e instanceof Error ? e.message : "Auth error");
+    return;
+  }
+
   const resp = await fetch(AI_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-    },
+    headers,
     body: JSON.stringify({ type: "chat", messages }),
   });
 
@@ -54,7 +70,6 @@ export async function streamChat({
         const text = parsed.choices?.[0]?.delta?.content;
         if (text) onDelta(text);
       } catch {
-        // partial JSON, wait for more
         buffer = line + "\n" + buffer;
         break;
       }
@@ -69,12 +84,10 @@ export async function generateContent(
   options?: Record<string, string>
 ): Promise<{ result?: string; images?: string[]; error?: string }> {
   try {
+    const headers = await getAuthHeaders();
     const resp = await fetch(AI_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
+      headers,
       body: JSON.stringify({ type, prompt, options }),
     });
 
