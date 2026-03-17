@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import logo from "@/assets/logo.png";
+import logoPn from "@/assets/logo-pn.png";
 
 const Footer = () => {
   const { t } = useI18n();
@@ -37,7 +37,7 @@ const Footer = () => {
       <div className="border-t border-border/40 py-10 px-6">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="PromptNova AI" className="w-6 h-6 rounded-md" />
+            <img src={logoPn} alt="PromptNova AI" className="w-6 h-6 rounded-md" />
             <span className="text-body font-semibold tracking-tight text-foreground">PromptNova AI</span>
           </div>
 

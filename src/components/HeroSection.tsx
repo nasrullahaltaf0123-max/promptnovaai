@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import GradientMeshBackground from "./GradientMeshBackground";
+import logoFull from "@/assets/logo-full.png";
 
 const HeroSection = () => {
   const { t } = useI18n();
@@ -23,17 +24,14 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Badge */}
+          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 mb-8"
+            className="mb-8"
           >
-            <Sparkles className="w-3.5 h-3.5 text-accent" />
-            <span className="text-micro font-medium text-muted-foreground tracking-wide">
-              {t.heroBadge}
-            </span>
+            <img src={logoFull} alt="PromptNova AI" className="h-16 sm:h-20 mx-auto object-contain" />
           </motion.div>
 
           {/* Headline */}
