@@ -1,37 +1,57 @@
 import { motion } from "framer-motion";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useI18n } from "@/lib/i18n";
 
 const PricingSection = () => {
-  const { t } = useI18n();
-
   const plans = [
     {
-      name: t.free,
+      name: "Free",
       price: "$0",
       period: "forever",
-      description: t.freeDesc,
-      features: t.freeFeatures as readonly string[],
-      cta: t.getStarted,
+      description: "Get started with limited daily credits",
+      features: [
+        "100 AI chat messages/day",
+        "10 image generations/day",
+        "2 blog posts/day",
+        "5 logo designs/day",
+        "Basic AI models",
+        "Community support",
+      ],
+      cta: "Start Free",
       popular: false,
     },
     {
-      name: t.pro,
-      price: t.proPrice,
+      name: "Pro",
+      price: "$19",
       period: "/mo",
-      description: t.proDesc,
-      features: t.proFeatures as readonly string[],
-      cta: t.startTrial,
+      description: "Unlimited creative power for serious creators",
+      features: [
+        "Unlimited AI chat",
+        "100 image generations/day",
+        "Unlimited blog posts",
+        "Unlimited logo designs",
+        "Premium AI models",
+        "Priority support",
+        "No watermarks",
+        "Early access to new tools",
+      ],
+      cta: "Upgrade to Pro",
       popular: true,
     },
     {
-      name: t.creator,
-      price: t.creatorPrice,
+      name: "Creator",
+      price: "$49",
       period: "/mo",
-      description: t.creatorDesc,
-      features: t.creatorFeatures as readonly string[],
-      cta: t.contactSales,
+      description: "For teams and professional creators",
+      features: [
+        "Everything in Pro",
+        "API access",
+        "Team collaboration",
+        "Custom brand presets",
+        "Analytics dashboard",
+        "Dedicated support",
+      ],
+      cta: "Contact Sales",
       popular: false,
     },
   ];
@@ -50,15 +70,26 @@ const PricingSection = () => {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
         >
-          <p className="text-micro font-semibold text-primary uppercase tracking-widest mb-3">{t.pricingLabel}</p>
-          <h2 className="text-heading sm:text-display text-foreground mb-4">{t.pricingTitle}</h2>
-          <p className="text-body-lg text-muted-foreground max-w-md mx-auto">{t.pricingSubtitle}</p>
+          <p className="text-micro font-semibold text-primary uppercase tracking-widest mb-3">PRICING</p>
+          <h2 className="text-heading sm:text-display text-foreground mb-4">Simple, Transparent Pricing</h2>
+          <p className="text-body-lg text-muted-foreground max-w-md mx-auto">Start free, upgrade when you need more power</p>
+        </motion.div>
+
+        {/* Urgency banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="glass-card-highlight rounded-xl p-3 mb-8 flex items-center justify-center gap-2 text-caption text-muted-foreground"
+        >
+          <Zap className="w-4 h-4 text-primary" />
+          <span>⚡ Limited free credits daily — <span className="text-foreground font-medium">Upgrade to unlock full power</span></span>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {plans.map((plan, i) => (
             <motion.div
-              key={String(plan.name)}
+              key={plan.name}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -70,18 +101,18 @@ const PricingSection = () => {
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3.5 py-1 rounded-full shadow-lg shadow-primary/25">
-                    {t.mostPopular}
+                    Most Popular
                   </span>
                 </div>
               )}
 
               <div className="mb-6">
-                <h3 className="text-body-lg font-semibold text-foreground mb-1">{String(plan.name)}</h3>
-                <p className="text-caption text-muted-foreground">{String(plan.description)}</p>
+                <h3 className="text-body-lg font-semibold text-foreground mb-1">{plan.name}</h3>
+                <p className="text-caption text-muted-foreground">{plan.description}</p>
               </div>
 
               <div className="mb-7">
-                <span className="text-display font-extrabold text-foreground">{String(plan.price)}</span>
+                <span className="text-display font-extrabold text-foreground">{plan.price}</span>
                 <span className="text-caption text-muted-foreground ml-1">{plan.period}</span>
               </div>
 
@@ -100,11 +131,11 @@ const PricingSection = () => {
                 to="/signup"
                 className={`group flex items-center justify-center gap-2 py-2.5 rounded-xl text-body font-medium transition-all duration-300 ${
                   plan.popular
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20"
+                    ? "bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
                     : "bg-secondary hover:bg-secondary/80 text-foreground"
                 }`}
               >
-                {String(plan.cta)}
+                {plan.cta}
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </motion.div>
