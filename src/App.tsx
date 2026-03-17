@@ -59,6 +59,7 @@ const App = () => (
               <Route path="/dashboard/caption" element={<ProtectedRoute><DashboardLayout><CaptionGenerator /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/tiktok-script" element={<ProtectedRoute><DashboardLayout><TikTokScriptGenerator /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/upgrade" element={<ProtectedRoute><DashboardLayout><Upgrade /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/account" element={<ProtectedRoute><DashboardLayout><Account /></DashboardLayout></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
