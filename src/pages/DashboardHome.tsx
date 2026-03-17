@@ -110,6 +110,12 @@ const DashboardHome = () => {
           </motion.div>
         </div>
 
+        {plan === "free" && (
+          <motion.div variants={item}>
+            <UpgradeBanner />
+          </motion.div>
+        )}
+
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
