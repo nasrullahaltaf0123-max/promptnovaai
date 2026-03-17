@@ -18,6 +18,7 @@ const ImageGenerator = () => {
   const [style, setStyle] = useState(styles[0]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [usage, setUsage] = useState(0);
   const [error, setError] = useState("");
   const limit = getLimit("image");
