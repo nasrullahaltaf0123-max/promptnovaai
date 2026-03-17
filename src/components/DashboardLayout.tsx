@@ -51,7 +51,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="absolute top-0 right-0 bottom-0 w-px bg-sidebar-border" />
         <div className="p-5 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <img src={logo} alt="PromptNova AI" className="w-7 h-7 rounded-lg" />
+            <img src={logoPn} alt="PromptNova AI" className="w-7 h-7 rounded-lg" />
             <span className="font-semibold tracking-tight text-foreground text-body">PromptNova</span>
           </Link>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-muted-foreground hover:text-foreground transition-colors">
