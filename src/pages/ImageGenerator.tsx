@@ -158,6 +158,10 @@ const ImageGenerator = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-caption text-muted-foreground">{images.length} image(s) generated</p>
+              <ShareButton title={prompt} toolType="image" />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {images.map((img, i) => (
                 <motion.div
