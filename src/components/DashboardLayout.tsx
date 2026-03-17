@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, Image, FileText, Palette, Video,
   Wand2, Film, ImageIcon, Clock, User, Menu, X, LogOut, ChevronRight,
+  Type, Clapperboard, Gift,
 } from "lucide-react";
 import logoPn from "@/assets/logo-pn.png";
 import { useAuth } from "@/lib/auth";
@@ -17,7 +18,10 @@ const navItems = [
   { icon: Video, label: "Script Generator", path: "/dashboard/script" },
   { icon: Wand2, label: "Prompt Generator", path: "/dashboard/prompt" },
   { icon: Film, label: "Video Script Writer", path: "/dashboard/video-script" },
-  { icon: ImageIcon, label: "Thumbnail Generator", path: "/dashboard/thumbnail" },
+  { icon: ImageIcon, label: "Thumbnails", path: "/dashboard/thumbnail" },
+  { icon: Type, label: "Viral Captions", path: "/dashboard/caption" },
+  { icon: Clapperboard, label: "TikTok Scripts", path: "/dashboard/tiktok-script" },
+  { icon: Gift, label: "Refer & Earn", path: "/dashboard/referrals" },
   { icon: Clock, label: "History", path: "/dashboard/history" },
   { icon: User, label: "Account", path: "/dashboard/account" },
 ];

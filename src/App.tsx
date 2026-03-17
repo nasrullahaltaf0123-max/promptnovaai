@@ -17,6 +17,9 @@ import ScriptGenerator from "./pages/ScriptGenerator";
 import PromptGenerator from "./pages/PromptGenerator";
 import VideoScriptWriter from "./pages/VideoScriptWriter";
 import ThumbnailGenerator from "./pages/ThumbnailGenerator";
+import CaptionGenerator from "./pages/CaptionGenerator";
+import TikTokScriptGenerator from "./pages/TikTokScriptGenerator";
+import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
 import DashboardLayout from "./components/DashboardLayout";
@@ -52,6 +55,9 @@ const App = () => (
               <Route path="/dashboard/prompt" element={<ProtectedRoute><DashboardLayout><PromptGenerator /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/video-script" element={<ProtectedRoute><DashboardLayout><VideoScriptWriter /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/thumbnail" element={<ProtectedRoute><DashboardLayout><ThumbnailGenerator /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/caption" element={<ProtectedRoute><DashboardLayout><CaptionGenerator /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/tiktok-script" element={<ProtectedRoute><DashboardLayout><TikTokScriptGenerator /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/account" element={<ProtectedRoute><DashboardLayout><Account /></DashboardLayout></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
