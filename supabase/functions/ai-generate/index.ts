@@ -6,7 +6,8 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const MODEL = "google/gemini-3-flash-preview";
 
 const systemPrompts: Record<string, string> = {
   chat: "You are PromptNova AI, a helpful, friendly, and knowledgeable AI assistant. Provide clear, well-structured answers using markdown formatting when appropriate. Be concise but thorough.",
@@ -23,9 +24,9 @@ serve(async (req) => {
   }
 
   try {
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: "GEMINI_API_KEY is not configured" }), {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY is not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -35,17 +36,12 @@ serve(async (req) => {
     const toolType = type || "chat";
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
-    // Build Gemini request contents
-    let contents: any[] = [];
+    // Build OpenAI-compatible messages
+    const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
 
     if (toolType === "chat" && messages) {
-      // Chat mode: send conversation history
-      contents = messages.map((msg: any) => ({
-        role: msg.role === "assistant" ? "model" : "user",
-        parts: [{ text: msg.content }],
-      }));
+      chatMessages.push(...messages);
     } else {
-      // Single generation mode: build prompt from options
       let userPrompt = prompt || "";
       if (toolType === "blog" && options) {
         userPrompt = `Write a ${options.wordCount || 500}-word ${options.tone || "Professional"} blog article about: ${prompt}`;
@@ -58,46 +54,56 @@ serve(async (req) => {
       } else if (toolType === "image" && options) {
         userPrompt = `Create image concepts in ${options.style || "Photorealistic"} style at ${options.resolution || "1024x1024"} resolution for: ${prompt}`;
       }
-      contents = [{ role: "user", parts: [{ text: userPrompt }] }];
+      chatMessages.push({ role: "user", content: userPrompt });
     }
 
     const stream = toolType === "chat";
-    const baseUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}`;
-    const url = stream
-      ? `${baseUrl}:streamGenerateContent?alt=sse&key=${GEMINI_API_KEY}`
-      : `${baseUrl}:generateContent?key=${GEMINI_API_KEY}`;
 
-    const geminiResponse = await fetch(url, {
+    const gatewayResponse = await fetch(GATEWAY_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        contents,
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          temperature: toolType === "chat" ? 0.7 : 0.8,
-          maxOutputTokens: toolType === "blog" ? 4096 : 2048,
-        },
+        model: MODEL,
+        messages: chatMessages,
+        stream,
+        max_tokens: toolType === "blog" ? 4096 : 2048,
+        temperature: toolType === "chat" ? 0.7 : 0.8,
       }),
     });
 
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text();
-      console.error("Gemini API error:", geminiResponse.status, errorText);
-      return new Response(JSON.stringify({ error: "AI generation failed", details: errorText }), {
-        status: geminiResponse.status === 429 ? 429 : 500,
+    if (!gatewayResponse.ok) {
+      const errorText = await gatewayResponse.text();
+      console.error("AI Gateway error:", gatewayResponse.status, errorText);
+
+      if (gatewayResponse.status === 429) {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (gatewayResponse.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(JSON.stringify({ error: "AI generation failed" }), {
+        status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     if (stream) {
-      // Return SSE stream for chat
-      return new Response(geminiResponse.body, {
+      return new Response(gatewayResponse.body, {
         headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
       });
     } else {
-      // Return JSON for other tools
-      const data = await geminiResponse.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No content generated.";
+      const data = await gatewayResponse.json();
+      const text = data.choices?.[0]?.message?.content || "No content generated.";
       return new Response(JSON.stringify({ result: text }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

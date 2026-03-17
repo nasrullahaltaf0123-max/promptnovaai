@@ -51,7 +51,7 @@ export async function streamChat({
       if (jsonStr === "[DONE]") { onDone(); return; }
       try {
         const parsed = JSON.parse(jsonStr);
-        const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+        const text = parsed.choices?.[0]?.delta?.content;
         if (text) onDelta(text);
       } catch {
         // partial JSON, wait for more
