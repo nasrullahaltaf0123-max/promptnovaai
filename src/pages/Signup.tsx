@@ -29,10 +29,10 @@ const Signup = () => {
       if (refCode) {
         try {
           // Find referrer by code
-          const { data: referrer } = await supabase
+          const { data: referrer } = await (supabase
             .from("profiles")
-            .select("id")
-            .eq("referral_code" as any, refCode)
+            .select("id") as any)
+            .eq("referral_code", refCode)
             .maybeSingle();
           if (referrer) {
             // We'll store the ref code in localStorage; the referral is credited on first login
