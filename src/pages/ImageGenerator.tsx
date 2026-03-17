@@ -207,8 +207,26 @@ const ImageGenerator = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Preview Modal */}
+      <AnimatePresence>
+        {previewImage && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setPreviewImage(null)}>
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="relative max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
+              <button onClick={() => setPreviewImage(null)} className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+              <img src={previewImage} alt="Preview" className="w-full rounded-2xl" />
+              <div className="absolute bottom-4 right-4">
+                <button onClick={() => downloadImage(previewImage, 0)} className="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
+                  <Download className="w-4 h-4" /> Download
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  );
 };
 
 export default ImageGenerator;
