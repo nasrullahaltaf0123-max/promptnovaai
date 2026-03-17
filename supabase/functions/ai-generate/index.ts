@@ -15,7 +15,7 @@ const systemPrompts: Record<string, string> = {
   script: "You are PromptNova AI Script Generator. Write a professional video script with clear sections: [HOOK], [INTRO], [BODY], [CTA], [OUTRO]. Use engaging language appropriate for the requested tone.",
   prompt: "You are PromptNova AI Prompt Generator. Create a detailed, highly effective AI prompt based on the user's idea. The prompt should be clear, specific, and designed to get the best possible output from an AI model.",
   logo: "You are PromptNova AI Logo Designer. Describe 4 unique logo concepts in detail. For each concept, describe: the visual elements, color palette (with hex codes), typography suggestions, and the brand feeling it conveys. Format with markdown.",
-  image: "You are PromptNova AI Image Concept Designer. Based on the user's description, create 4 detailed image descriptions that could be used as prompts for image generation. Each description should be vivid, specific, and artistic. Format with markdown.",
+  image: "You are an AI image generator. Generate the image the user describes. Do not describe images in text — actually generate visual images.",
 };
 
 serve(async (req) => {
@@ -52,12 +52,26 @@ serve(async (req) => {
       } else if (toolType === "logo" && options) {
         userPrompt = `Design logo concepts for brand "${prompt}" in the ${options.industry || "Technology"} industry with a ${options.style || "Minimal"} style.`;
       } else if (toolType === "image" && options) {
-        userPrompt = `Create image concepts in ${options.style || "Photorealistic"} style at ${options.resolution || "1024x1024"} resolution for: ${prompt}`;
+        userPrompt = `Generate a ${options.style || "photorealistic"} image of: ${prompt}`;
       }
       chatMessages.push({ role: "user", content: userPrompt });
     }
 
     const stream = toolType === "chat";
+    const isImageGen = toolType === "image";
+
+    const requestBody: any = {
+      model: isImageGen ? "google/gemini-2.5-flash-image" : MODEL,
+      messages: chatMessages,
+      stream,
+      max_tokens: toolType === "blog" ? 4096 : 2048,
+      temperature: toolType === "chat" ? 0.7 : 0.8,
+    };
+
+    if (isImageGen) {
+      requestBody.modalities = ["image", "text"];
+      requestBody.stream = false;
+    }
 
     const gatewayResponse = await fetch(GATEWAY_URL, {
       method: "POST",
@@ -65,13 +79,7 @@ serve(async (req) => {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: chatMessages,
-        stream,
-        max_tokens: toolType === "blog" ? 4096 : 2048,
-        temperature: toolType === "chat" ? 0.7 : 0.8,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!gatewayResponse.ok) {
@@ -100,6 +108,14 @@ serve(async (req) => {
     if (stream) {
       return new Response(gatewayResponse.body, {
         headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      });
+    } else if (isImageGen) {
+      const data = await gatewayResponse.json();
+      const message = data.choices?.[0]?.message;
+      const images = message?.images?.map((img: any) => img?.image_url?.url) || [];
+      const text = message?.content || "";
+      return new Response(JSON.stringify({ result: text, images }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
       const data = await gatewayResponse.json();
