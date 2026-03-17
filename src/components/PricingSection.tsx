@@ -37,9 +37,9 @@ const PricingSection = () => {
   ];
 
   return (
-    <section id="pricing" className="py-32 sm:py-40 px-6 relative">
+    <section id="pricing" className="py-24 sm:py-32 px-6 relative">
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 70% 40% at 50% 50%, hsl(259 75% 62% / 0.025), transparent)"
+        background: "radial-gradient(ellipse 60% 35% at 50% 50%, hsl(250 80% 65% / 0.03), transparent)"
       }} />
 
       <div className="max-w-5xl mx-auto relative">
@@ -48,11 +48,11 @@ const PricingSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
-          <p className="text-micro font-medium text-primary uppercase tracking-widest mb-4">{t.pricingLabel}</p>
-          <h2 className="text-display text-foreground mb-5">{t.pricingTitle}</h2>
-          <p className="text-subheading text-muted-foreground max-w-md mx-auto">{t.pricingSubtitle}</p>
+          <p className="text-micro font-semibold text-primary uppercase tracking-widest mb-3">{t.pricingLabel}</p>
+          <h2 className="text-heading sm:text-display text-foreground mb-4">{t.pricingTitle}</h2>
+          <p className="text-body-lg text-muted-foreground max-w-md mx-auto">{t.pricingSubtitle}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -69,7 +69,7 @@ const PricingSection = () => {
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3.5 py-1 rounded-full shadow-lg shadow-primary/20">
+                  <span className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3.5 py-1 rounded-full shadow-lg shadow-primary/25">
                     {t.mostPopular}
                   </span>
                 </div>
@@ -100,7 +100,7 @@ const PricingSection = () => {
                 to="/signup"
                 className={`group flex items-center justify-center gap-2 py-2.5 rounded-xl text-body font-medium transition-all duration-300 ${
                   plan.popular
-                    ? "bg-foreground text-background hover:bg-foreground/90"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20"
                     : "bg-secondary hover:bg-secondary/80 text-foreground"
                 }`}
               >
