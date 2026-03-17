@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Download, Loader2, ImageIcon, Sparkles } from "lucide-react";
+import { Download, Loader2, ImageIcon, Sparkles, X, ZoomIn } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { generateContent } from "@/lib/ai";
 import { incrementUsage, getDailyUsage, getLimit, saveToHistory } from "@/lib/usage";
