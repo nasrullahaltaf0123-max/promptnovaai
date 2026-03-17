@@ -26,21 +26,20 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // User client for auth validation
+    // Validate user via getUser (server-side JWT verification)
     const supabaseUser = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabaseUser.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    const { data: { user }, error: userError } = await supabaseUser.auth.getUser();
+    if (userError || !user) {
       return new Response(JSON.stringify({ error: "Invalid session" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const userId = claimsData.claims.sub as string;
+    const userId = user.id;
     const { action, paymentId, transactionId } = await req.json();
 
     // Admin client for privileged operations
@@ -112,29 +111,64 @@ serve(async (req) => {
         });
       }
 
-      // In production: call bKash Execute Payment / Query Payment API
-      // to verify the transactionId is legitimate and matches the amount.
-      // For simulation, we accept any transactionId as valid.
-      const isValid = transactionId.length >= 4;
+      // Validate transaction ID format (alphanumeric, 6-30 chars)
+      const txIdRegex = /^[A-Za-z0-9]{6,30}$/;
+      if (!txIdRegex.test(transactionId)) {
+        // Log failed attempt
+        await supabaseAdmin
+          .from("payments")
+          .update({ status: "failed", transaction_id: transactionId })
+          .eq("id", paymentId);
 
-      if (!isValid) {
-        return new Response(JSON.stringify({ error: "Invalid transaction ID" }), {
+        return new Response(JSON.stringify({ error: "Invalid transaction ID format" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
+      // Check for duplicate transaction ID (prevent reuse)
+      const { data: existingTx } = await supabaseAdmin
+        .from("payments")
+        .select("id")
+        .eq("transaction_id", transactionId)
+        .eq("status", "completed")
+        .maybeSingle();
+
+      if (existingTx) {
+        await supabaseAdmin
+          .from("payments")
+          .update({ status: "failed", transaction_id: transactionId })
+          .eq("id", paymentId);
+
+        return new Response(JSON.stringify({ error: "Transaction ID already used" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // In production: call bKash Execute/Query Payment API here
+      // to verify transactionId is legitimate and matches amount.
+      // For simulation, we accept valid-format IDs.
+
       // Mark payment as completed
-      await supabaseAdmin
+      const { error: updateError } = await supabaseAdmin
         .from("payments")
         .update({
           status: "completed",
           transaction_id: transactionId,
           verified_at: new Date().toISOString(),
         })
-        .eq("id", paymentId);
+        .eq("id", paymentId)
+        .eq("status", "pending"); // Only update if still pending (race condition guard)
 
-      // Upgrade user to pro
+      if (updateError) {
+        return new Response(JSON.stringify({ error: "Failed to verify payment" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Upgrade user to pro ONLY after successful payment update
       await supabaseAdmin
         .from("profiles")
         .update({ plan: "pro" })
