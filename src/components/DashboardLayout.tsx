@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import logoPn from "@/assets/logo-pn.png";
 import { useAuth } from "@/lib/auth";
+import { useCredits } from "@/hooks/use-credits";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
