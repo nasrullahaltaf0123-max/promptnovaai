@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import logo from "@/assets/logo.png";
+import logoPn from "@/assets/logo-pn.png";
 
 const Footer = () => {
   const { t } = useI18n();
