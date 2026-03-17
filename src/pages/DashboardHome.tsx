@@ -26,7 +26,7 @@ const item = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transitio
 
 const DashboardHome = () => {
   const { user, profile } = useAuth();
-  const [usage, setUsage] = useState<Record<string, number>>({});
+  const { remaining, dailyLimit, plan } = useCredits();
   const [recentItems, setRecentItems] = useState<any[]>([]);
   const [totalGenerated, setTotalGenerated] = useState(0);
 
