@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import logoPn from "@/assets/logo-pn.png";
+import logoFull from "@/assets/logo-full.png";
 
 const Navbar = () => {
   const { lang, setLang, t } = useI18n();
@@ -15,11 +15,12 @@ const Navbar = () => {
     >
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6">
         <div className="mt-3 sm:mt-4 rounded-2xl glass-strong px-4 sm:px-5 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <img src={logoPn} alt="PromptNova AI" className="w-7 h-7 rounded-lg transition-transform duration-300 group-hover:scale-105" />
-            <span className="text-body font-semibold tracking-tight text-foreground hidden sm:inline">
-              PromptNova
-            </span>
+          <Link to="/" className="flex items-center group">
+            <img
+              src={logoFull}
+              alt="PromptNova AI"
+              className="h-8 sm:h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_0_8px_hsl(250_80%_65%/0.15)]"
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-1">
