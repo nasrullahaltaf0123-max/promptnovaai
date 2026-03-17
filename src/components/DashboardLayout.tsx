@@ -32,6 +32,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { remaining, dailyLimit, plan } = useCredits();
 
   const handleLogout = async () => {
     await signOut();
