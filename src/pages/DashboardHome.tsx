@@ -32,7 +32,6 @@ const DashboardHome = () => {
 
   useEffect(() => {
     if (!user) return;
-    getAllDailyUsage(user.id).then(setUsage);
     
     supabase
       .from("generation_history")
