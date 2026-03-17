@@ -68,6 +68,36 @@ export type Database = {
         }
         Relationships: []
       }
+      study_history: {
+        Row: {
+          content: string | null
+          created_at: string
+          favorite: boolean | null
+          id: number
+          title: string | null
+          tool_name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          favorite?: boolean | null
+          id?: number
+          title?: string | null
+          tool_name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          favorite?: boolean | null
+          id?: number
+          title?: string | null
+          tool_name?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       usage_tracking: {
         Row: {
           count: number
