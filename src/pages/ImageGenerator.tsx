@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Download, Loader2, ImageIcon, Sparkles, X, ZoomIn } from "lucide-react";
+import { Download, Loader2, ImageIcon, Sparkles, X, ZoomIn, Share2 } from "lucide-react";
+import ShareButton from "@/components/ShareButton";
 import { useAuth } from "@/lib/auth";
 import { generateContent } from "@/lib/ai";
 import { incrementUsage, getDailyUsage, getLimit, saveToHistory } from "@/lib/usage";
@@ -157,6 +158,10 @@ const ImageGenerator = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-caption text-muted-foreground">{images.length} image(s) generated</p>
+              <ShareButton title={prompt} toolType="image" />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {images.map((img, i) => (
                 <motion.div

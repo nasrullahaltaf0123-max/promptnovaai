@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { getAllDailyUsage, getLimit } from "@/lib/usage";
 import { supabase } from "@/integrations/supabase/client";
+import GamificationWidget from "@/components/GamificationWidget";
 
 const quickTools = [
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
@@ -15,6 +16,8 @@ const quickTools = [
   { icon: Wand2, title: "Prompt Gen", path: "/dashboard/prompt", gradient: "from-pink-500/20 to-pink-500/5" },
   { icon: Film, title: "Video Script", path: "/dashboard/video-script", gradient: "from-orange-500/20 to-orange-500/5" },
   { icon: ImageIcon, title: "Thumbnails", path: "/dashboard/thumbnail", gradient: "from-emerald-500/20 to-emerald-500/5" },
+  { icon: Type, title: "Viral Captions", path: "/dashboard/caption", gradient: "from-rose-500/20 to-rose-500/5" },
+  { icon: Clapperboard, title: "TikTok Script", path: "/dashboard/tiktok-script", gradient: "from-fuchsia-500/20 to-fuchsia-500/5" },
 ];
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -76,37 +79,48 @@ const DashboardHome = () => {
           <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30" style={{
             background: "radial-gradient(circle, hsl(259 75% 62% / 0.15), transparent)"
           }} />
-          <div className="relative">
-            <h1 className="text-heading text-foreground mb-1.5">
-              Welcome back{profile?.full_name ? `, ${profile.full_name}` : ""} 👋
-            </h1>
-            <p className="text-caption text-muted-foreground">What would you like to create today?</p>
+          <div className="relative flex items-center justify-between">
+            <div>
+              <h1 className="text-heading text-foreground mb-1.5">
+                Welcome back{profile?.full_name ? `, ${profile.full_name}` : ""} 👋
+              </h1>
+              <p className="text-caption text-muted-foreground">What would you like to create today?</p>
+            </div>
+            <Link to="/dashboard/referrals" className="hidden sm:flex items-center gap-2 bg-primary/10 text-primary text-micro font-medium px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
+              <Gift className="w-3.5 h-3.5" /> Refer & Earn
+            </Link>
           </div>
         </motion.div>
 
-        <motion.div variants={item} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {stats.map((s) => (
-            <div key={s.label} className="glass-card rounded-2xl p-4 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <s.icon className="w-4 h-4 text-primary" />
+        {/* Gamification + Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <motion.div variants={item} className="lg:col-span-2">
+            <GamificationWidget />
+          </motion.div>
+          <motion.div variants={item} className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-3 content-start">
+            {stats.map((s) => (
+              <div key={s.label} className="glass-card rounded-2xl p-4 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <s.icon className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-micro text-muted-foreground">{s.label}</p>
+                  <p className="text-body-lg font-semibold text-foreground">{s.value}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-micro text-muted-foreground">{s.label}</p>
-                <p className="text-body-lg font-semibold text-foreground">{s.value}</p>
-              </div>
-            </div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {quickTools.map((tool) => (
-              <Link key={tool.path} to={tool.path} className="group glass-card rounded-2xl p-5 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5">
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mx-auto mb-3 transition-transform duration-300 group-hover:scale-110`}>
-                  <tool.icon className="w-5 h-5 text-foreground" />
+              <Link key={tool.path} to={tool.path} className="group glass-card rounded-2xl p-4 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5">
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mx-auto mb-2.5 transition-transform duration-300 group-hover:scale-110`}>
+                  <tool.icon className="w-4.5 h-4.5 text-foreground" />
                 </div>
-                <p className="text-caption font-medium text-foreground">{tool.title}</p>
+                <p className="text-micro font-medium text-foreground">{tool.title}</p>
               </Link>
             ))}
           </div>

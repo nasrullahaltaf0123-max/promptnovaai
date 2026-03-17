@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -13,6 +14,8 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const refCode = searchParams.get("ref");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +25,21 @@ const Signup = () => {
     if (error) {
       toast({ title: "Signup failed", description: error, variant: "destructive" });
     } else {
+      // Handle referral after signup
+      if (refCode) {
+        try {
+          // Find referrer by code
+          const { data: referrer } = await (supabase
+            .from("profiles")
+            .select("id") as any)
+            .eq("referral_code", refCode)
+            .maybeSingle();
+          if (referrer) {
+            // We'll store the ref code in localStorage; the referral is credited on first login
+            localStorage.setItem("pn_referral_code", refCode);
+          }
+        } catch {}
+      }
       toast({ title: "Account created!", description: "Please check your email to verify your account." });
       navigate("/login");
     }
