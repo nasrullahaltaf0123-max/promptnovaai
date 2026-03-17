@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { getAllDailyUsage, getLimit } from "@/lib/usage";
 import { supabase } from "@/integrations/supabase/client";
+import { useCredits } from "@/hooks/use-credits";
 import GamificationWidget from "@/components/GamificationWidget";
+import { UpgradeBanner } from "@/components/UpgradePrompt";
 
 const quickTools = [
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
