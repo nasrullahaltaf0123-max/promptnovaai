@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import logo from "@/assets/logo.png";
+import logoPn from "@/assets/logo-pn.png";
 
 const Navbar = () => {
   const { lang, setLang, t } = useI18n();
