@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, Image, FileText, Palette, Video,
   Wand2, Film, ImageIcon, Clock, User, Menu, X, LogOut, ChevronRight,
-  Type, Clapperboard, Gift,
+  Type, Clapperboard, Gift, Crown,
 } from "lucide-react";
 import logoPn from "@/assets/logo-pn.png";
 import { useAuth } from "@/lib/auth";
@@ -23,6 +23,7 @@ const navItems = [
   { icon: Type, label: "Viral Captions", path: "/dashboard/caption" },
   { icon: Clapperboard, label: "TikTok Scripts", path: "/dashboard/tiktok-script" },
   { icon: Gift, label: "Refer & Earn", path: "/dashboard/referrals" },
+  { icon: Crown, label: "Upgrade to Pro", path: "/dashboard/upgrade" },
   { icon: Clock, label: "History", path: "/dashboard/history" },
   { icon: User, label: "Account", path: "/dashboard/account" },
 ];

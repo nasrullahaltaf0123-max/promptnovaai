@@ -22,6 +22,7 @@ import TikTokScriptGenerator from "./pages/TikTokScriptGenerator";
 import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
+import Upgrade from "./pages/Upgrade";
 import DashboardLayout from "./components/DashboardLayout";
 import NotFound from "./pages/NotFound";
 
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/dashboard/caption" element={<ProtectedRoute><DashboardLayout><CaptionGenerator /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/tiktok-script" element={<ProtectedRoute><DashboardLayout><TikTokScriptGenerator /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/upgrade" element={<ProtectedRoute><DashboardLayout><Upgrade /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/account" element={<ProtectedRoute><DashboardLayout><Account /></DashboardLayout></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />

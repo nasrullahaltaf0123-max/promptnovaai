@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { getAllDailyUsage, getLimit } from "@/lib/usage";
 import { supabase } from "@/integrations/supabase/client";
+import { useCredits } from "@/hooks/use-credits";
 import GamificationWidget from "@/components/GamificationWidget";
+import { UpgradeBanner } from "@/components/UpgradePrompt";
 
 const quickTools = [
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
@@ -25,13 +26,12 @@ const item = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transitio
 
 const DashboardHome = () => {
   const { user, profile } = useAuth();
-  const [usage, setUsage] = useState<Record<string, number>>({});
+  const { remaining, dailyLimit, plan } = useCredits();
   const [recentItems, setRecentItems] = useState<any[]>([]);
   const [totalGenerated, setTotalGenerated] = useState(0);
 
   useEffect(() => {
     if (!user) return;
-    getAllDailyUsage(user.id).then(setUsage);
     
     supabase
       .from("generation_history")
@@ -50,16 +50,9 @@ const DashboardHome = () => {
       .then(({ count }) => setTotalGenerated(count || 0));
   }, [user]);
 
-  const totalUsedToday = Object.values(usage).reduce((a, b) => a + b, 0);
-  const chatRemaining = getLimit("chat") - (usage.chat || 0);
-  const imageRemaining = getLimit("image") - (usage.image || 0);
-  const blogRemaining = getLimit("blog") - (usage.blog || 0);
-
   const stats = [
-    { icon: Zap, label: "Chat", value: `${chatRemaining}`, sublabel: "remaining" },
-    { icon: Image, label: "Images", value: `${imageRemaining}`, sublabel: "remaining" },
-    { icon: FileText, label: "Blogs", value: `${blogRemaining}`, sublabel: "remaining" },
-    { icon: Sparkles, label: "Generated", value: `${totalUsedToday}`, sublabel: "today" },
+    { icon: Zap, label: "Credits", value: `${remaining}`, sublabel: "remaining" },
+    { icon: Sparkles, label: "Limit", value: `${dailyLimit}`, sublabel: "per day" },
     { icon: Clock, label: "Total", value: `${totalGenerated}`, sublabel: "all time" },
   ];
 
@@ -89,6 +82,11 @@ const DashboardHome = () => {
             <Link to="/dashboard/referrals" className="hidden sm:flex items-center gap-2 bg-primary/10 text-primary text-micro font-medium px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
               <Gift className="w-3.5 h-3.5" /> Refer & Earn
             </Link>
+            {plan === "free" && (
+              <Link to="/dashboard/upgrade" className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity">
+                <Crown className="w-3.5 h-3.5" /> Upgrade
+              </Link>
+            )}
           </div>
         </motion.div>
 
@@ -111,6 +109,12 @@ const DashboardHome = () => {
             ))}
           </motion.div>
         </div>
+
+        {plan === "free" && (
+          <motion.div variants={item}>
+            <UpgradeBanner />
+          </motion.div>
+        )}
 
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
