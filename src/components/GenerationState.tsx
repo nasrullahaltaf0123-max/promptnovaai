@@ -47,7 +47,7 @@ const GenerationState = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          className="flex items-center gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
+          className="flex items-center gap-3 p-4 rounded-xl bg-accent/10 border border-accent/20"
         >
           <motion.div
             initial={{ scale: 0 }}
