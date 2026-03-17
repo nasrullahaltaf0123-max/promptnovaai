@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      daily_rewards: {
+        Row: {
+          claimed_at: string
+          credits_earned: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string
+          credits_earned?: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string
+          credits_earned?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       generation_history: {
         Row: {
           created_at: string
@@ -46,25 +67,64 @@ export type Database = {
       }
       profiles: {
         Row: {
+          bonus_credits: number
           created_at: string
           email: string | null
           full_name: string | null
           id: string
+          last_active_date: string | null
           plan: string
+          referral_code: string | null
+          streak_count: number
+          total_xp: number
         }
         Insert: {
+          bonus_credits?: number
           created_at?: string
           email?: string | null
           full_name?: string | null
           id: string
+          last_active_date?: string | null
           plan?: string
+          referral_code?: string | null
+          streak_count?: number
+          total_xp?: number
         }
         Update: {
+          bonus_credits?: number
           created_at?: string
           email?: string | null
           full_name?: string | null
           id?: string
+          last_active_date?: string | null
           plan?: string
+          referral_code?: string | null
+          streak_count?: number
+          total_xp?: number
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          bonus_credited: boolean
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          bonus_credited?: boolean
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          bonus_credited?: boolean
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
         }
         Relationships: []
       }
