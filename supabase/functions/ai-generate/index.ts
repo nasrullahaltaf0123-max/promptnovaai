@@ -52,7 +52,7 @@ serve(async (req) => {
       } else if (toolType === "logo" && options) {
         userPrompt = `Design logo concepts for brand "${prompt}" in the ${options.industry || "Technology"} industry with a ${options.style || "Minimal"} style.`;
       } else if (toolType === "image" && options) {
-        userPrompt = `Create image concepts in ${options.style || "Photorealistic"} style at ${options.resolution || "1024x1024"} resolution for: ${prompt}`;
+        userPrompt = `Generate a ${options.style || "photorealistic"} image of: ${prompt}`;
       }
       chatMessages.push({ role: "user", content: userPrompt });
     }
