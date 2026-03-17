@@ -54,7 +54,7 @@ const GenerationState = ({
             animate={{ scale: 1 }}
             transition={{ type: "spring", bounce: 0.5, delay: 0.1 }}
           >
-            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+            <CheckCircle2 className="w-5 h-5 text-accent" />
           </motion.div>
           <p className="text-caption font-medium text-foreground">{successText}</p>
         </motion.div>

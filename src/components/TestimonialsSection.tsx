@@ -89,7 +89,7 @@ const TestimonialsSection = () => (
         className="mt-10 flex flex-wrap items-center justify-center gap-6 text-micro text-muted-foreground/50"
       >
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          <span className="w-2 h-2 rounded-full bg-primary/80" />
           1,000+ active users
         </span>
         <span className="flex items-center gap-1.5">
