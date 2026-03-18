@@ -15,7 +15,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const LogoGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [brandName, setBrandName] = useState("");
   const [industry, setIndustry] = useState(industries[0]);
   const [logoStyle, setLogoStyle] = useState(logoStyles[0]);
