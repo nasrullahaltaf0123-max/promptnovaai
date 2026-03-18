@@ -13,7 +13,8 @@ interface Message {
 }
 
 const AIChat = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hello! I'm **PromptNova AI**. How can I help you today?" },
   ]);
