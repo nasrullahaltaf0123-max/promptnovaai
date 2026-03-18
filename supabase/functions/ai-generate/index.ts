@@ -42,49 +42,64 @@ function detectTopicCategory(text: string): string {
 function getCategoryScene(category: string): { scene: string; tone: string; elements: string } {
   const scenes: Record<string, { scene: string; tone: string; elements: string }> = {
     history: {
-      scene: "Ancient ruins with dramatic smoke and fire, historical battlefield aftermath, crumbling fortress walls, soldiers silhouettes against burning sky",
-      tone: "Desaturated warm palette with selective red/orange highlights, slight grayscale with sepia undertones",
-      elements: "Volumetric smoke, embers floating in air, cracked stone textures, distant flames, dust particles in light beams",
+      scene: "SPLIT STORYTELLING: Left side shows ancient battlefield ruins with smoke, burning villages, soldiers in silhouette. Right side transitions to modern peaceful cityscape with monuments. Time-travel contrast composition",
+      tone: "Left: desaturated sepia with red/orange fire glow. Right: warm golden hour modern tones. Strong light divide in center",
+      elements: "Volumetric smoke, floating embers, cracked stone, ancient weapons on ground, dust particles in dramatic light shafts, distant flames reflecting on wet ground",
     },
-    economy: {
-      scene: "Split composition: left side shows broken infrastructure and slums in shadow, right side shows gleaming modern skyscrapers in golden light. Contrast between poverty and wealth",
-      tone: "Left dark and desaturated, right bright and vibrant with golden hour warmth",
-      elements: "Cracked ground vs polished floors, scattered coins, broken vs pristine buildings, dramatic light divide",
+    money: {
+      scene: "WEALTH CONTRAST: Massive pile of gold coins and cash bundles in foreground, stock market growth chart with glowing green arrows shooting upward, luxury vs poverty split. Left shows struggle (empty pockets, cracked floor), right shows abundance (gold, skyscrapers, luxury)",
+      tone: "Left: dark cold blue desaturated. Right: rich golden warm with green money glow accents",
+      elements: "Floating dollar bills, gold particles, upward arrows, bar charts, scattered coins catching light, money rain effect, reflective gold surfaces",
+    },
+    crime: {
+      scene: "Dark urban alley with police sirens reflecting red and blue on wet pavement, crime scene tape, shadowy figure silhouette, noir detective atmosphere. City skyline in foggy background",
+      tone: "Very dark with harsh red and blue police light contrast, noir color grade, deep shadows with selective color",
+      elements: "Rain reflections on pavement, police light streaks, crime tape, cigarette smoke, broken glass, evidence markers, wet surfaces reflecting lights",
+    },
+    motivation: {
+      scene: "TRANSFORMATION JOURNEY: Left shows person at rock bottom (dark, rain, fallen). Right shows summit of mountain with sunrise, victory pose silhouette. Path of progress connecting both sides",
+      tone: "Left: dark stormy blue-grey. Right: epic golden sunrise with warm orange rays. Dramatic transition from dark to light",
+      elements: "Mountain peak, sunrise god rays, stepping stones path, storm clouds clearing, golden light breakthrough, victory stance shadow",
     },
     technology: {
-      scene: "Futuristic control room with holographic displays, neon-lit cyberpunk cityscape, advanced AI neural network visualization floating in dark space",
-      tone: "Deep blue and electric purple with cyan neon accents, dark environment with bright tech elements",
-      elements: "Holographic UI elements, circuit board patterns, glowing data streams, lens flares, digital particles",
+      scene: "Futuristic AI command center with massive holographic displays showing neural networks, a glowing AI brain visualization floating in center, cyberpunk cityscape visible through panoramic window",
+      tone: "Deep midnight blue with electric cyan and purple neon accents, dark environment with bright holographic elements",
+      elements: "Holographic UI panels, circuit board patterns, glowing data streams, floating code fragments, neural network visualization, lens flares, digital particles, matrix-style data rain",
     },
     education: {
-      scene: "Grand library with towering bookshelves, warm sunlight streaming through large windows onto ancient maps and open books, scholarly atmosphere",
-      tone: "Warm amber and golden tones, soft diffused lighting, rich wood textures",
-      elements: "Stacked books, globe, quill pen, floating knowledge particles, warm dust motes in light beams",
+      scene: "KNOWLEDGE TRANSFORMATION: Left shows struggling student in dim candlelight with books. Right shows graduate on stage with spotlight, diploma, successful career. Library transforms into modern university",
+      tone: "Left: warm amber candlelight. Right: bright stage spotlight white with golden graduation warmth",
+      elements: "Towering bookshelves, floating knowledge particles, graduation cap in air, trophy, scholarship documents, light of wisdom breaking through",
     },
     politics: {
-      scene: "Dramatic government building silhouette against stormy sky, crowd gathering in tension, flags waving in dramatic wind, power and authority atmosphere",
-      tone: "High contrast dark blues and deep reds, stormy atmospheric lighting",
-      elements: "Flag silhouettes, crowd shadows, dramatic clouds, spotlight beams, architectural pillars",
+      scene: "Dramatic parliament building with stormy sky, massive crowd gathering with raised fists, leader podium silhouette against spotlight, flags waving in dramatic wind, tension-filled political rally atmosphere",
+      tone: "High contrast: deep navy blue sky with dramatic red and white spotlight beams, storm clouds with lightning",
+      elements: "Waving flags, crowd silhouettes, microphone podium, dramatic storm clouds, spotlight beams cutting through darkness, rain, tension atmosphere",
     },
     space: {
-      scene: "Deep space nebula with distant galaxies, planet surface with Earth rising on horizon, astronaut perspective of cosmic vastness",
-      tone: "Deep space blacks with vibrant nebula colors: purple, blue, orange, cosmic palette",
-      elements: "Star fields, nebula gas clouds, planet rings, asteroid debris, lens flare from distant star",
+      scene: "Astronaut helmet close-up reflecting a massive nebula and distant Earth, deep space station window view showing cosmic phenomena, epic scale of universe",
+      tone: "Deep space blacks with vibrant nebula colors: electric purple, cosmic blue, supernova orange, star white",
+      elements: "Star fields, nebula gas clouds, planet rings, space station interior, helmet reflection, asteroid debris, cosmic dust, distant galaxy spiral",
     },
     sports: {
-      scene: "Stadium with dramatic spotlight beams cutting through atmosphere, arena floor with motion blur, victory moment atmosphere",
-      tone: "High contrast with vivid stadium lighting, green and golden accents",
-      elements: "Spotlight beams, crowd blur, motion trails, confetti particles, dramatic shadows",
+      scene: "Stadium final moment: massive crowd in dramatic lighting, spotlight cutting through smoke/pyrotechnics, victory celebration freeze-frame, confetti explosion",
+      tone: "High contrast stadium lighting: bright white spots against deep dark crowd, vivid green field, golden trophy glow",
+      elements: "Spotlight beams through smoke, confetti explosion, crowd wave, motion blur energy trails, trophy gleam, pyrotechnic sparks",
     },
     horror: {
-      scene: "Abandoned dark corridor with single flickering light, fog creeping along floor, eerie shadows on cracked walls, unsettling atmosphere",
-      tone: "Very dark with cold blue-green undertones, minimal harsh lighting, deep shadows",
-      elements: "Fog, flickering light, cracks in walls, distorted shadows, dust particles",
+      scene: "Abandoned asylum corridor with single flickering red emergency light, long shadows stretching toward viewer, fog creeping along cracked floor, something lurking in distant darkness",
+      tone: "Near-black with sickly green-grey undertones, single harsh red or cold blue light source, maximum shadow",
+      elements: "Flickering light strobes, thick floor fog, cracked peeling walls, distorted shadows, floating dust, cobwebs, eerie silhouette in far doorway",
+    },
+    health: {
+      scene: "Medical drama composition: hospital corridor with dramatic overhead surgical light, DNA helix visualization, microscopic virus particles enlarged to dramatic scale, life-saving moment tension",
+      tone: "Clinical blue-white with warm human skin tones, sterile environment with emotional warmth, selective red for urgency",
+      elements: "DNA helix, microscopic cells enlarged, surgical light halo, heartbeat monitor line, medical equipment silhouettes, dramatic lens flare from surgical lamp",
     },
     general: {
-      scene: "Cinematic wide-angle dramatic landscape or abstract composition with strong visual impact, storytelling mood",
-      tone: "High contrast cinematic color grading with complementary color split (teal and orange)",
-      elements: "Volumetric light rays, atmospheric haze, bokeh, lens flare, layered depth",
+      scene: "Epic cinematic landscape with dramatic cloud formation, volumetric god rays breaking through storm clouds onto a lone figure, sweeping vista with strong foreground-background depth",
+      tone: "Hollywood-grade teal and orange complementary color split, high dynamic range, moody atmospheric grade",
+      elements: "Volumetric god rays, atmospheric haze, dramatic clouds, bokeh lights, lens flare, layered depth with foreground silhouettes, particle dust in light beams",
     },
   };
   return scenes[category] || scenes.general;
