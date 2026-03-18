@@ -14,7 +14,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const BlogWriter = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState(tones[0]);
   const [wordCount, setWordCount] = useState(wordCounts[1]);
