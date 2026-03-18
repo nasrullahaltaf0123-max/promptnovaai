@@ -25,22 +25,17 @@ function buildImagePrompt(prompt: string, style: string): string {
 
 function detectTopicCategory(text: string): string {
   const t = text.toLowerCase();
-  if (/war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(t))
-    return "history";
-  if (/econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|দারিদ্র্য|অর্থনীতি|ব্যর্থ/.test(t))
-    return "economy";
-  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t))
-    return "technology";
-  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t))
-    return "education";
-  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t))
-    return "politics";
-  if (/space|planet|universe|galaxy|nasa|star|moon|mars|মহাকাশ|গ্রহ|নক্ষত্র/.test(t))
-    return "space";
-  if (/sport|football|cricket|game|player|champion|tournament|খেলা|ক্রিকেট|ফুটবল/.test(t))
-    return "sports";
-  if (/horror|ghost|scary|dark|mystery|haunted|ভয়|ভূত|রহস্য/.test(t))
-    return "horror";
+  if (/crime|murder|killer|mafia|drug|cartel|gang|prison|অপরাধ|খুন|মাফিয়া/.test(t)) return "crime";
+  if (/motivat|success|inspire|dream|goal|winner|champion|hustle|grind|অনুপ্রেরণা|সাফল্য|স্বপ্ন/.test(t)) return "motivation";
+  if (/war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(t)) return "history";
+  if (/money|econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|billion|million|wealth|টাকা|দারিদ্র্য|অর্থনীতি|ব্যর্থ|কোটিপতি/.test(t)) return "money";
+  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t)) return "technology";
+  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t)) return "education";
+  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t)) return "politics";
+  if (/space|planet|universe|galaxy|nasa|star|moon|mars|মহাকাশ|গ্রহ|নক্ষত্র/.test(t)) return "space";
+  if (/sport|football|cricket|game|player|champion|tournament|খেলা|ক্রিকেট|ফুটবল/.test(t)) return "sports";
+  if (/horror|ghost|scary|dark|mystery|haunted|ভয়|ভূত|রহস্য/.test(t)) return "horror";
+  if (/health|disease|doctor|hospital|medicine|virus|cancer|diet|fitness|স্বাস্থ্য|রোগ|চিকিৎসা/.test(t)) return "health";
   return "general";
 }
 
