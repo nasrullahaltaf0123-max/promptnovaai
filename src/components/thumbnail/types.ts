@@ -36,6 +36,8 @@ export interface ThumbnailConfig {
   backgroundImage: string | null;
   backgroundBlur: number; // 0-20
   shapeOverlay: ShapeOverlay;
+  themeColor: string | null;
+  blendPreset: string | null;
 }
 
 export const FONT_PRESETS: Record<FontPreset, { label: string; titleFont: string; subtitleFont: string }> = {

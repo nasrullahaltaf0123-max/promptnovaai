@@ -34,6 +34,8 @@ const ThumbnailGenerator = () => {
     backgroundImage: null,
     backgroundBlur: 0,
     shapeOverlay: "none",
+    themeColor: null,
+    blendPreset: null,
   });
 
   useEffect(() => {
@@ -56,7 +58,6 @@ const ThumbnailGenerator = () => {
     try {
       const { result } = await generateContent("thumbnail-headlines", topic);
       if (result) {
-        // Parse JSON array from response
         const match = result.match(/\[[\s\S]*?\]/);
         if (match) {
           const parsed = JSON.parse(match[0]);
@@ -69,6 +70,32 @@ const ThumbnailGenerator = () => {
       // Silently fail — headlines are optional
     }
     setIsLoadingHeadlines(false);
+  };
+
+  const generateBackgroundImage = async (bgPrompt: string) => {
+    const { images, error: genError } = await generateContent("thumbnail", bgPrompt, {
+      style: "Cinematic",
+      colorScheme: "Dark & Bold",
+      width: String(config.platform.width),
+      height: String(config.platform.height),
+    });
+
+    setIsGenerating(false);
+
+    if (genError) {
+      setError(genError);
+      toast({ title: "Image generation failed", description: genError, variant: "destructive" });
+      return;
+    }
+
+    if (images && images.length > 0) {
+      updateConfig({ backgroundImage: images[0] });
+      if (user) {
+        await saveToHistory(user.id, "image", config.title, `Thumbnail: ${config.platform.label}`, `[thumbnail generated]`);
+      }
+    } else {
+      setError("No background generated. Try again.");
+    }
   };
 
   const handleGenerate = async () => {
@@ -88,29 +115,56 @@ const ThumbnailGenerator = () => {
     }
     setUsage((u) => u + 1);
 
-    // Fetch headlines in parallel with image generation
+    // Fetch headlines in parallel
     fetchHeadlines(config.title);
 
-    const { images, error: genError } = await generateContent("thumbnail", config.title, {
+    // Step 1: Get structured AI response
+    const { result, error: genError } = await generateContent("thumbnail", config.title, {
       style: "Cinematic",
       colorScheme: "Dark & Bold",
       width: String(config.platform.width),
       height: String(config.platform.height),
     });
 
-    setIsGenerating(false);
-
     if (genError) {
+      setIsGenerating(false);
       setError(genError);
       toast({ title: "Generation failed", description: genError, variant: "destructive" });
       return;
     }
 
-    if (images && images.length > 0) {
-      updateConfig({ backgroundImage: images[0] });
-      await saveToHistory(user.id, "image", config.title, `Thumbnail: ${config.platform.label}`, `[thumbnail generated]`);
-    } else {
-      setError("No background generated. Try again.");
+    if (!result) {
+      setIsGenerating(false);
+      setError("No AI response received. Try again.");
+      return;
+    }
+
+    // Step 2: Parse nested JSON from Gemini response (strip markdown fences)
+    try {
+      const cleanJsonString = result.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const parsedData = JSON.parse(cleanJsonString);
+
+      // Map nested fields to UI state
+      updateConfig({
+        title: parsedData.text_layers?.bangla_hook || config.title,
+        subtitle: parsedData.text_layers?.english_subtitle || config.subtitle,
+        themeColor: parsedData.visual_intelligence?.environmental_lighting_color || null,
+        blendPreset: parsedData.visual_intelligence?.css_blend_preset || null,
+      });
+
+      // Step 3: Trigger image generation with the structured background prompt
+      const bgPrompt = parsedData.generation_prompts?.background_plate;
+      if (bgPrompt) {
+        await generateBackgroundImage(bgPrompt);
+      } else {
+        setIsGenerating(false);
+        setError("No background prompt in AI response.");
+      }
+    } catch (parseErr) {
+      console.error("Failed to parse AI structure. Raw response:", result);
+      setIsGenerating(false);
+      setError("Failed to parse AI structure.");
+      toast({ title: "Parse error", description: "Failed to parse AI structure.", variant: "destructive" });
     }
   };
 
