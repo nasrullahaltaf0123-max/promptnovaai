@@ -31,7 +31,7 @@ const ImageGenerator = () => {
 
   const handleGenerate = async () => {
     if (!prompt.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", description: `You've used all ${limit} image generations for today.`, variant: "destructive" });
       return;
     }
