@@ -46,7 +46,7 @@ const AIChat = () => {
     setInput("");
     setIsLoading(true);
 
-    const ok = await incrementUsage(user.id, "chat");
+    const ok = await incrementUsage(user.id, "chat", isAdmin);
     if (!ok) {
       toast({ title: "Limit reached", description: "Daily chat limit exceeded.", variant: "destructive" });
       setIsLoading(false);
