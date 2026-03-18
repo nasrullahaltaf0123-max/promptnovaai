@@ -23,11 +23,101 @@ function buildImagePrompt(prompt: string, style: string): string {
   return `Generate a ${style} image of: ${prompt}. ${base}`;
 }
 
+function detectTopicCategory(text: string): string {
+  const t = text.toLowerCase();
+  if (/war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(t))
+    return "history";
+  if (/econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|দারিদ্র্য|অর্থনীতি|ব্যর্থ/.test(t))
+    return "economy";
+  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t))
+    return "technology";
+  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t))
+    return "education";
+  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t))
+    return "politics";
+  if (/space|planet|universe|galaxy|nasa|star|moon|mars|মহাকাশ|গ্রহ|নক্ষত্র/.test(t))
+    return "space";
+  if (/sport|football|cricket|game|player|champion|tournament|খেলা|ক্রিকেট|ফুটবল/.test(t))
+    return "sports";
+  if (/horror|ghost|scary|dark|mystery|haunted|ভয়|ভূত|রহস্য/.test(t))
+    return "horror";
+  return "general";
+}
+
+function getCategoryScene(category: string): { scene: string; tone: string; elements: string } {
+  const scenes: Record<string, { scene: string; tone: string; elements: string }> = {
+    history: {
+      scene: "Ancient ruins with dramatic smoke and fire, historical battlefield aftermath, crumbling fortress walls, soldiers silhouettes against burning sky",
+      tone: "Desaturated warm palette with selective red/orange highlights, slight grayscale with sepia undertones",
+      elements: "Volumetric smoke, embers floating in air, cracked stone textures, distant flames, dust particles in light beams",
+    },
+    economy: {
+      scene: "Split composition: left side shows broken infrastructure and slums in shadow, right side shows gleaming modern skyscrapers in golden light. Contrast between poverty and wealth",
+      tone: "Left dark and desaturated, right bright and vibrant with golden hour warmth",
+      elements: "Cracked ground vs polished floors, scattered coins, broken vs pristine buildings, dramatic light divide",
+    },
+    technology: {
+      scene: "Futuristic control room with holographic displays, neon-lit cyberpunk cityscape, advanced AI neural network visualization floating in dark space",
+      tone: "Deep blue and electric purple with cyan neon accents, dark environment with bright tech elements",
+      elements: "Holographic UI elements, circuit board patterns, glowing data streams, lens flares, digital particles",
+    },
+    education: {
+      scene: "Grand library with towering bookshelves, warm sunlight streaming through large windows onto ancient maps and open books, scholarly atmosphere",
+      tone: "Warm amber and golden tones, soft diffused lighting, rich wood textures",
+      elements: "Stacked books, globe, quill pen, floating knowledge particles, warm dust motes in light beams",
+    },
+    politics: {
+      scene: "Dramatic government building silhouette against stormy sky, crowd gathering in tension, flags waving in dramatic wind, power and authority atmosphere",
+      tone: "High contrast dark blues and deep reds, stormy atmospheric lighting",
+      elements: "Flag silhouettes, crowd shadows, dramatic clouds, spotlight beams, architectural pillars",
+    },
+    space: {
+      scene: "Deep space nebula with distant galaxies, planet surface with Earth rising on horizon, astronaut perspective of cosmic vastness",
+      tone: "Deep space blacks with vibrant nebula colors: purple, blue, orange, cosmic palette",
+      elements: "Star fields, nebula gas clouds, planet rings, asteroid debris, lens flare from distant star",
+    },
+    sports: {
+      scene: "Stadium with dramatic spotlight beams cutting through atmosphere, arena floor with motion blur, victory moment atmosphere",
+      tone: "High contrast with vivid stadium lighting, green and golden accents",
+      elements: "Spotlight beams, crowd blur, motion trails, confetti particles, dramatic shadows",
+    },
+    horror: {
+      scene: "Abandoned dark corridor with single flickering light, fog creeping along floor, eerie shadows on cracked walls, unsettling atmosphere",
+      tone: "Very dark with cold blue-green undertones, minimal harsh lighting, deep shadows",
+      elements: "Fog, flickering light, cracks in walls, distorted shadows, dust particles",
+    },
+    general: {
+      scene: "Cinematic wide-angle dramatic landscape or abstract composition with strong visual impact, storytelling mood",
+      tone: "High contrast cinematic color grading with complementary color split (teal and orange)",
+      elements: "Volumetric light rays, atmospheric haze, bokeh, lens flare, layered depth",
+    },
+  };
+  return scenes[category] || scenes.general;
+}
+
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
-  // Generate BACKGROUND ONLY — text is overlaid via frontend HTML
-  const base = `YouTube thumbnail BACKGROUND image only, NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY. High quality background scene, dramatic cinematic lighting, high contrast, vivid colors, 16:9 ratio, ${style} style, ${colorScheme} color scheme`;
-  const effects = `Dramatic lighting, bokeh background blur where appropriate, color grading, high contrast, depth of field, cinematic composition, visually striking scene that works as a background behind overlay text`;
-  return `Generate a thumbnail BACKGROUND IMAGE (no text at all) for the topic: ${prompt}. ${base}. Effects: ${effects}. IMPORTANT: Do NOT include any text, letters, words, or typography in the image. The image should be a pure visual background.`;
+  const category = detectTopicCategory(prompt);
+  const { scene, tone, elements } = getCategoryScene(category);
+
+  return `Generate a CINEMATIC THUMBNAIL BACKGROUND IMAGE for the topic: "${prompt}".
+
+SCENE: ${scene}
+COLOR TONE: ${tone}
+DETAIL ELEMENTS: ${elements}
+
+COMPOSITION RULES:
+- Layered depth: foreground elements slightly blurred, mid-ground sharp, background atmospheric
+- Dramatic cinematic lighting with strong contrast between light and shadow
+- Movie-poster quality, NOT generic AI art
+- Leave clear space on the left side for text overlay
+- ${style} visual style, ${colorScheme} color emphasis
+
+CRITICAL RULES:
+- ABSOLUTELY NO TEXT, LETTERS, WORDS, OR TYPOGRAPHY in the image
+- No watermarks, no logos, no written content
+- Pure visual background only
+- High detail, photorealistic textures, 4K quality
+- Must feel like a movie scene or documentary still frame`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
