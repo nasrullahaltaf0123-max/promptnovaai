@@ -95,29 +95,70 @@ function getCategoryScene(category: string): { scene: string; tone: string; elem
   return scenes[category] || scenes.general;
 }
 
+function getEmotionForCategory(category: string): string {
+  const emotions: Record<string, string> = {
+    history: "serious, intense, battle-hardened expression, looking into the distance with determination",
+    economy: "shocked, frustrated expression, wide eyes showing disbelief, furrowed brows",
+    technology: "awe-struck, fascinated expression, eyes reflecting holographic light, slight wonder",
+    education: "thoughtful, wise expression, contemplative gaze, intellectual confidence",
+    politics: "stern, authoritative expression, commanding presence, sharp focused eyes",
+    space: "awestruck, mouth slightly open, eyes wide reflecting starlight, wonder and amazement",
+    sports: "fierce determination, sweat on face, victory scream, raw competitive energy",
+    horror: "terrified, eyes wide with fear, pale face, mouth open in silent scream",
+    general: "dramatic intense expression, strong eye contact with camera, cinematic presence",
+  };
+  return emotions[category] || emotions.general;
+}
+
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
   const category = detectTopicCategory(prompt);
   const { scene, tone, elements } = getCategoryScene(category);
+  const emotion = getEmotionForCategory(category);
 
-  return `Generate a CINEMATIC THUMBNAIL BACKGROUND IMAGE for the topic: "${prompt}".
+  return `Generate a HIGH-CTR CINEMATIC YOUTUBE THUMBNAIL IMAGE for the topic: "${prompt}".
 
-SCENE: ${scene}
-COLOR TONE: ${tone}
-DETAIL ELEMENTS: ${elements}
+MANDATORY SUBJECT (RIGHT SIDE):
+- A photorealistic human figure positioned on the RIGHT 40% of the frame
+- Expression: ${emotion}
+- Shot from chest up, slightly angled, looking toward camera or slightly off-camera
+- RED GLOW OUTLINE around the subject (subtle neon red edge lighting / rim light)
+- Strong backlight creating dramatic silhouette edge
+- Face must be sharp, detailed, and emotionally expressive
+- Subject should feel like a real documentary host or storyteller
+
+BACKGROUND (FULL FRAME, BEHIND SUBJECT):
+- ${scene}
+- COLOR TONE: ${tone}
+- DETAIL ELEMENTS: ${elements}
+- Background should be slightly BLURRED (depth of field, f/1.8 bokeh effect)
+- Dramatic cinematic lighting: strong key light from one side, fill light opposite
 
 COMPOSITION RULES:
-- Layered depth: foreground elements slightly blurred, mid-ground sharp, background atmospheric
-- Dramatic cinematic lighting with strong contrast between light and shadow
-- Movie-poster quality, NOT generic AI art
-- Leave clear space on the left side for text overlay
+- LEFT 55% of frame: keep relatively clear for text overlay (darker, more atmospheric)
+- RIGHT 45% of frame: subject with dramatic lighting
+- Storytelling split if applicable: left = problem/past (darker), right = solution/future (brighter)
+- Layered depth: foreground particles/smoke, mid-ground subject sharp, background atmospheric blur
 - ${style} visual style, ${colorScheme} color emphasis
+
+COLOR GRADING:
+- High contrast cinematic grade (like movie color correction)
+- Teal shadows + orange highlights (complementary color split)
+- Deep blacks, rich midtones, controlled highlights
+- Dramatic vignette darkening edges
+
+CINEMATIC EFFECTS:
+- Volumetric light rays or god rays from behind/above subject
+- Atmospheric haze or particles (smoke, dust, embers based on topic)
+- Lens flare from strong light source
+- Red/orange rim light on subject edges creating glow outline effect
 
 CRITICAL RULES:
 - ABSOLUTELY NO TEXT, LETTERS, WORDS, OR TYPOGRAPHY in the image
 - No watermarks, no logos, no written content
-- Pure visual background only
-- High detail, photorealistic textures, 4K quality
-- Must feel like a movie scene or documentary still frame`;
+- Must look like a viral YouTube documentary thumbnail (MrBeast/Veritasium quality)
+- NOT generic AI art — must feel like a real cinematic movie still
+- High detail, photorealistic textures, 8K quality
+- Every thumbnail must tell a visual story`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
