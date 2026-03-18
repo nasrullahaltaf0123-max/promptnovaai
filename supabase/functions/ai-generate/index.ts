@@ -107,15 +107,18 @@ function getCategoryScene(category: string): { scene: string; tone: string; elem
 
 function getEmotionForCategory(category: string): string {
   const emotions: Record<string, string> = {
-    history: "serious, intense, battle-hardened expression, looking into the distance with determination",
-    economy: "shocked, frustrated expression, wide eyes showing disbelief, furrowed brows",
-    technology: "awe-struck, fascinated expression, eyes reflecting holographic light, slight wonder",
-    education: "thoughtful, wise expression, contemplative gaze, intellectual confidence",
-    politics: "stern, authoritative expression, commanding presence, sharp focused eyes",
-    space: "awestruck, mouth slightly open, eyes wide reflecting starlight, wonder and amazement",
-    sports: "fierce determination, sweat on face, victory scream, raw competitive energy",
-    horror: "terrified, eyes wide with fear, pale face, mouth open in silent scream",
-    general: "dramatic intense expression, strong eye contact with camera, cinematic presence",
+    history: "serious, intense, battle-hardened expression with deep focused eyes staring into distance, jaw clenched with determination, weathered but strong",
+    money: "SHOCKED and EXCITED expression, eyes extremely wide open, mouth slightly open in disbelief, eyebrows raised high, as if seeing incredible wealth for the first time",
+    crime: "dark suspicious look, narrowed eyes with intensity, one eyebrow raised, shadowy mysterious expression, noir detective energy",
+    motivation: "powerful confident smile, chest out, chin slightly raised, eyes burning with determination, winner's expression, unstoppable energy",
+    technology: "awe-struck fascinated expression, eyes wide reflecting holographic blue light, slight wonder and curiosity, futuristic genius look",
+    education: "thoughtful intellectual expression, slight knowing smile, wise contemplative gaze, confident scholar energy, glasses optional",
+    politics: "stern authoritative commanding expression, sharp piercing eyes, slight frown of power, leader's decisive face",
+    space: "pure awestruck wonder, mouth slightly open, eyes wide reflecting starlight and nebula colors, cosmic amazement",
+    sports: "fierce battle cry expression, veins visible, intense competitive scream, sweat glistening, raw victory energy",
+    horror: "genuine terror, eyes wide with primal fear, pale skin, mouth open in silent scream, looking at something horrifying off-camera",
+    health: "concerned empathetic expression, focused doctor's gaze, slight worry mixed with determination to save, medical professional intensity",
+    general: "dramatic intense expression with strong eye contact directly at camera, charismatic presence, slightly furrowed brow, commanding attention",
   };
   return emotions[category] || emotions.general;
 }
@@ -125,50 +128,69 @@ function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string
   const { scene, tone, elements } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
 
-  return `Generate a HIGH-CTR CINEMATIC YOUTUBE THUMBNAIL IMAGE for the topic: "${prompt}".
+  return `Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 
-MANDATORY SUBJECT (RIGHT SIDE):
-- A photorealistic human figure positioned on the RIGHT 40% of the frame
-- Expression: ${emotion}
-- Shot from chest up, slightly angled, looking toward camera or slightly off-camera
-- RED GLOW OUTLINE around the subject (subtle neon red edge lighting / rim light)
-- Strong backlight creating dramatic silhouette edge
-- Face must be sharp, detailed, and emotionally expressive
-- Subject should feel like a real documentary host or storyteller
+═══ MANDATORY SUBJECT (RIGHT 40% OF FRAME) ═══
+- Ultra-photorealistic South Asian male face and upper body, age 25-35
+- EMOTION: ${emotion}
+- Camera angle: medium close-up, chest to head, slightly angled 15° to the right
+- Looking toward camera or dramatically off-camera based on emotion
+- Skin texture must be hyper-detailed: visible pores, natural skin imperfections, realistic lighting on skin
+- Hair slightly wind-blown or dramatic
+- Subject must be SHARP (f/2.8 focus on face) while background is BLURRED
 
-BACKGROUND (FULL FRAME, BEHIND SUBJECT):
-- ${scene}
-- COLOR TONE: ${tone}
-- DETAIL ELEMENTS: ${elements}
-- Background should be slightly BLURRED (depth of field, f/1.8 bokeh effect)
-- Dramatic cinematic lighting: strong key light from one side, fill light opposite
+═══ RED GLOW RIM LIGHT (CRITICAL) ═══
+- Strong RED/CRIMSON neon rim light outlining the subject's head, shoulders, and body edge
+- The red glow should be visible as a bright edge light separating subject from background
+- Additional warm backlight creating a halo/glow effect behind the subject's head
+- This red outline is the KEY visual signature — make it prominent and cinematic
 
-COMPOSITION RULES:
-- LEFT 55% of frame: keep relatively clear for text overlay (darker, more atmospheric)
-- RIGHT 45% of frame: subject with dramatic lighting
-- Storytelling split if applicable: left = problem/past (darker), right = solution/future (brighter)
-- Layered depth: foreground particles/smoke, mid-ground subject sharp, background atmospheric blur
-- ${style} visual style, ${colorScheme} color emphasis
+═══ STORYTELLING BACKGROUND (FULL FRAME) ═══
+${scene}
+COLOR GRADING: ${tone}
+ATMOSPHERIC DETAILS: ${elements}
+- Background MUST tell a story — NEVER use plain, flat, or generic backgrounds
+- Apply gaussian depth blur (f/1.4 bokeh) to background — subject stays sharp
+- Background should have 3 layers: far background (very blurry), mid-ground (slightly blurry), foreground elements (particles/smoke)
 
-COLOR GRADING:
-- High contrast cinematic grade (like movie color correction)
-- Teal shadows + orange highlights (complementary color split)
-- Deep blacks, rich midtones, controlled highlights
-- Dramatic vignette darkening edges
+═══ CINEMATIC COMPOSITION LAYOUT ═══
+- LEFT 55%: Dark atmospheric zone with subtle scene elements, reserved for text overlay
+  → Apply dark gradient overlay (black 60% opacity fading to transparent)
+  → Some scene elements visible but not cluttered
+- RIGHT 45%: Subject dominates with dramatic lighting
+  → Subject's face is the focal point
+  → Red rim light creates separation from background
+- VIGNETTE: Strong dark vignette on all edges, especially corners (cinema-style framing)
 
-CINEMATIC EFFECTS:
-- Volumetric light rays or god rays from behind/above subject
-- Atmospheric haze or particles (smoke, dust, embers based on topic)
-- Lens flare from strong light source
-- Red/orange rim light on subject edges creating glow outline effect
+═══ LIGHTING SYSTEM (5-POINT) ═══
+1. KEY LIGHT: Strong warm light from upper-right, illuminating subject's face dramatically
+2. RIM LIGHT: Intense RED/CRIMSON edge light from behind-left, creating the signature glow outline
+3. FILL LIGHT: Subtle cool blue/teal ambient from left side (barely visible, prevents pure black)
+4. BACKGROUND LIGHT: Dramatic volumetric god rays or spotlight in the story background
+5. HAIR LIGHT: Subtle top-down light catching hair edges for separation
 
-CRITICAL RULES:
-- ABSOLUTELY NO TEXT, LETTERS, WORDS, OR TYPOGRAPHY in the image
-- No watermarks, no logos, no written content
-- Must look like a viral YouTube documentary thumbnail (MrBeast/Veritasium quality)
-- NOT generic AI art — must feel like a real cinematic movie still
-- High detail, photorealistic textures, 8K quality
-- Every thumbnail must tell a visual story`;
+═══ COLOR GRADING (HOLLYWOOD-GRADE) ═══
+- Teal shadows + orange/warm highlights (complementary split-toning)
+- Left side of frame: cooler, more desaturated, moodier
+- Right side (subject area): warmer, more vibrant, skin tones pop
+- Crushed blacks (deep rich shadows, not grey)
+- Controlled highlights with slight bloom on bright areas
+- Overall: dark, moody, high-contrast cinematic look
+
+═══ CTR-BOOSTING EFFECTS ═══
+- Volumetric light rays (god rays) from behind or above subject
+- Atmospheric particles: smoke wisps, dust motes, embers, or topic-relevant particles floating in light beams
+- Subtle lens flare from the strongest light source
+- Motion energy: slight directional blur on background elements suggesting dynamism
+- Depth layers creating parallax-like 3D feel
+
+═══ ABSOLUTE RULES ═══
+- ZERO text, letters, words, numbers, typography, watermarks, or logos in the image
+- Must rival MrBeast / Veritasium / Johnny Harris thumbnail quality
+- NOT generic AI art — must feel like a real Hollywood movie still or Netflix documentary frame
+- Photorealistic textures, 8K detail, cinematic depth of field
+- Every pixel must serve the story — no empty or wasted space
+- The thumbnail must make viewers STOP SCROLLING and CLICK`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
