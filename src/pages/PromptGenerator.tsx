@@ -14,7 +14,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const PromptGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [idea, setIdea] = useState("");
   const [category, setCategory] = useState(categories[0]);
   const [complexity, setComplexity] = useState(complexities[1]);
