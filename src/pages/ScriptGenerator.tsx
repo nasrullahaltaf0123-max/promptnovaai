@@ -36,7 +36,7 @@ const ScriptGenerator = () => {
       return;
     }
     setIsGenerating(true);
-    await incrementUsage(user.id, "script");
+    await incrementUsage(user.id, "script", isAdmin);
     setUsage((u) => u + 1);
 
     const { result, error } = await generateContent("script", topic, { length, tone });
