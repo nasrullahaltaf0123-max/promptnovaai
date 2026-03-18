@@ -39,7 +39,7 @@ const TikTokScriptGenerator = () => {
     setIsGenerating(true);
     setScript("");
 
-    const ok = await incrementUsage(user.id, "script");
+    const ok = await incrementUsage(user.id, "script", isAdmin);
     if (!ok) { setIsGenerating(false); return; }
     setUsage((u) => u + 1);
 
