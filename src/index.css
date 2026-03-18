@@ -196,6 +196,68 @@
     opacity: 0.15;
     pointer-events: none;
   }
+
+  /* Thumbnail text overlay utilities */
+  .thumb-title-bn {
+    font-family: 'SiyamRupali', 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    font-weight: 700;
+    -webkit-text-stroke: 3px hsl(0 0% 0% / 0.6);
+    paint-order: stroke fill;
+    text-shadow:
+      0 0 20px hsl(var(--glow-cyan) / 0.6),
+      0 4px 12px hsl(0 0% 0% / 0.8),
+      0 0 40px hsl(var(--glow-violet) / 0.3);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+  .thumb-title-en {
+    font-family: 'Inter', 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    -webkit-text-stroke: 3px hsl(0 0% 0% / 0.5);
+    paint-order: stroke fill;
+    text-shadow:
+      0 0 20px hsl(var(--glow-cyan) / 0.5),
+      0 4px 12px hsl(0 0% 0% / 0.7),
+      0 0 40px hsl(var(--glow-violet) / 0.3);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .thumb-subtitle-bn {
+    font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+    font-weight: 500;
+    text-shadow:
+      0 2px 8px hsl(0 0% 0% / 0.9),
+      0 0 16px hsl(var(--glow-violet) / 0.3);
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  .thumb-subtitle-en {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    text-shadow:
+      0 2px 8px hsl(0 0% 0% / 0.9),
+      0 0 16px hsl(var(--glow-violet) / 0.3);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .thumb-gradient-yellow {
+    background: linear-gradient(135deg, hsl(48 100% 60%), hsl(0 0% 100%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .thumb-gradient-cyan {
+    background: linear-gradient(135deg, hsl(var(--glow-cyan)), hsl(0 0% 100%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .thumb-gradient-neon {
+    background: linear-gradient(135deg, hsl(var(--glow-violet)), hsl(var(--glow-cyan)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 @keyframes shimmer {
