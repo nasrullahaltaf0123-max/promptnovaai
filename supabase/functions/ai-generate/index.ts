@@ -26,92 +26,143 @@ function buildImagePrompt(prompt: string, style: string): string {
 function detectTopicCategory(text: string): string {
   const t = text.toLowerCase();
   if (/crime|murder|killer|mafia|drug|cartel|gang|prison|অপরাধ|খুন|মাফিয়া/.test(t)) return "crime";
-  if (/motivat|success|inspire|dream|goal|winner|champion|hustle|grind|অনুপ্রেরণা|সাফল্য|স্বপ্ন/.test(t)) return "motivation";
-  if (/war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(t)) return "history";
-  if (/money|econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|billion|million|wealth|টাকা|দারিদ্র্য|অর্থনীতি|ব্যর্থ|কোটিপতি/.test(t)) return "money";
-  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t)) return "technology";
-  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t)) return "education";
-  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t)) return "politics";
+  if (/motivat|success|inspire|dream|goal|winner|champion|hustle|grind|অনুপ্রেরণা|সাফল্য|স্বপ্ন/.test(t))
+    return "motivation";
+  if (
+    /war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(
+      t,
+    )
+  )
+    return "history";
+  if (
+    /money|econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|billion|million|wealth|টাকা|দারিদ্র্য|অর্থনীতি|ব্যর্থ|কোটিপতি/.test(
+      t,
+    )
+  )
+    return "money";
+  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t))
+    return "technology";
+  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t))
+    return "education";
+  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t))
+    return "politics";
   if (/space|planet|universe|galaxy|nasa|star|moon|mars|মহাকাশ|গ্রহ|নক্ষত্র/.test(t)) return "space";
   if (/sport|football|cricket|game|player|champion|tournament|খেলা|ক্রিকেট|ফুটবল/.test(t)) return "sports";
   if (/horror|ghost|scary|dark|mystery|haunted|ভয়|ভূত|রহস্য/.test(t)) return "horror";
-  if (/health|disease|doctor|hospital|medicine|virus|cancer|diet|fitness|স্বাস্থ্য|রোগ|চিকিৎসা/.test(t)) return "health";
+  if (/health|disease|doctor|hospital|medicine|virus|cancer|diet|fitness|স্বাস্থ্য|রোগ|চিকিৎসা/.test(t))
+    return "health";
   return "general";
 }
 
 function getCategoryScene(category: string): { scene: string; tone: string; elements: string; visualClues: string } {
   const scenes: Record<string, { scene: string; tone: string; elements: string; visualClues: string }> = {
     history: {
-      scene: "SPLIT STORYTELLING: Left 50% shows ancient battlefield — burning village, soldiers charging through smoke, fallen fortress walls crumbling. Right 50% transitions sharply to modern peaceful city with glass buildings and monuments. A clear TIME DIVIDE line separates the two eras",
+      scene:
+        "SPLIT STORYTELLING: Left 50% shows ancient battlefield — burning village, soldiers charging through smoke, fallen fortress walls crumbling. Right 50% transitions sharply to modern peaceful city with glass buildings and monuments. A clear TIME DIVIDE line separates the two eras",
       tone: "Left: heavy sepia desaturation with orange fire glow and ash. Right: warm golden hour with clean modern tones. Hard light divide creates visual storytelling",
-      elements: "Volumetric battle smoke, floating embers and ash, cracked stone walls, ancient swords/shields on ground, dust particles in dramatic god rays, distant flames reflecting on muddy/wet terrain",
-      visualClues: "VISIBLE OBJECTS that tell the story instantly: broken sword stuck in ground, burning flag, crumbling brick wall, old vs new buildings side by side, timeline arrow visual, ancient map fragment",
+      elements:
+        "Volumetric battle smoke, floating embers and ash, cracked stone walls, ancient swords/shields on ground, dust particles in dramatic god rays, distant flames reflecting on muddy/wet terrain",
+      visualClues:
+        "VISIBLE OBJECTS that tell the story instantly: broken sword stuck in ground, burning flag, crumbling brick wall, old vs new buildings side by side, timeline arrow visual, ancient map fragment",
     },
     money: {
-      scene: "WEALTH STORY: Foreground has massive gold coin pile and bundled cash with green glow. A giant glowing stock chart with GREEN ARROWS pointing sharply UP dominates mid-ground. Left side shows cracked empty wallet on broken floor (poverty). Right side shows luxury penthouse view with gold everywhere (wealth)",
+      scene:
+        "WEALTH STORY: Foreground has massive gold coin pile and bundled cash with green glow. A giant glowing stock chart with GREEN ARROWS pointing sharply UP dominates mid-ground. Left side shows cracked empty wallet on broken floor (poverty). Right side shows luxury penthouse view with gold everywhere (wealth)",
       tone: "Left: cold dark blue poverty mood. Right: rich warm golden luxury glow with green money accents. Sharp contrast divide",
-      elements: "Floating dollar/taka bills, gold particles raining down, upward green arrows, rising bar charts, scattered coins catching spotlight, diamond sparkles, luxury car silhouette in distance",
-      visualClues: "INSTANT STORY OBJECTS: giant upward arrow, money stack, growth chart line, broken piggy bank vs full vault, empty pocket vs overflowing wallet, '0 to 1M' visual journey",
+      elements:
+        "Floating dollar/taka bills, gold particles raining down, upward green arrows, rising bar charts, scattered coins catching spotlight, diamond sparkles, luxury car silhouette in distance",
+      visualClues:
+        "INSTANT STORY OBJECTS: giant upward arrow, money stack, growth chart line, broken piggy bank vs full vault, empty pocket vs overflowing wallet, '0 to 1M' visual journey",
     },
     crime: {
-      scene: "NOIR CRIME SCENE: Dark rain-soaked urban alley, red and blue police sirens reflecting on wet pavement, yellow CRIME SCENE tape stretched across frame, shadowy suspect silhouette against brick wall, detective noir atmosphere with city fog",
+      scene:
+        "NOIR CRIME SCENE: Dark rain-soaked urban alley, red and blue police sirens reflecting on wet pavement, yellow CRIME SCENE tape stretched across frame, shadowy suspect silhouette against brick wall, detective noir atmosphere with city fog",
       tone: "Near-black with harsh alternating red/blue police strobe contrast, noir desaturated grade, selective color only on warning elements",
-      elements: "Rain streaks and puddle reflections, police light sweep patterns, crime tape, cigarette smoke trails, broken glass on ground, evidence markers, wet neon sign reflections on pavement",
-      visualClues: "INSTANT STORY: handcuffs, blood splatter, police badge, mystery question mark shadow, wanted poster silhouette, jail bars shadow pattern on wall, broken window",
+      elements:
+        "Rain streaks and puddle reflections, police light sweep patterns, crime tape, cigarette smoke trails, broken glass on ground, evidence markers, wet neon sign reflections on pavement",
+      visualClues:
+        "INSTANT STORY: handcuffs, blood splatter, police badge, mystery question mark shadow, wanted poster silhouette, jail bars shadow pattern on wall, broken window",
     },
     motivation: {
-      scene: "TRANSFORMATION JOURNEY: Left shows person collapsed on knees in pouring rain on dark muddy ground (rock bottom). Right shows same figure standing victorious on mountain peak with epic golden sunrise behind them, arms raised in triumph. A glowing path of stepping stones connects the two",
+      scene:
+        "TRANSFORMATION JOURNEY: Left shows person collapsed on knees in pouring rain on dark muddy ground (rock bottom). Right shows same figure standing victorious on mountain peak with epic golden sunrise behind them, arms raised in triumph. A glowing path of stepping stones connects the two",
       tone: "Left: dark stormy blue-grey despair. Right: explosive golden sunrise with warm orange god rays. The transition from dark to light IS the story",
-      elements: "Mountain summit, sunrise god rays bursting through clouds, stepping stone path glowing, storm clouds dramatically parting, golden light breakthrough moment, trophy/medal gleam",
-      visualClues: "INSTANT STORY: broken chain links, rising phoenix silhouette, 'before/after' visual split, ladder climbing up, dark valley to bright peak journey, lion/eagle power symbol",
+      elements:
+        "Mountain summit, sunrise god rays bursting through clouds, stepping stone path glowing, storm clouds dramatically parting, golden light breakthrough moment, trophy/medal gleam",
+      visualClues:
+        "INSTANT STORY: broken chain links, rising phoenix silhouette, 'before/after' visual split, ladder climbing up, dark valley to bright peak journey, lion/eagle power symbol",
     },
     technology: {
-      scene: "AI COMMAND CENTER: Massive holographic brain visualization floating in center of dark room, multiple floating holographic screens showing code/neural networks, cyberpunk cityscape with neon lights visible through panoramic window, digital data streams flowing",
+      scene:
+        "AI COMMAND CENTER: Massive holographic brain visualization floating in center of dark room, multiple floating holographic screens showing code/neural networks, cyberpunk cityscape with neon lights visible through panoramic window, digital data streams flowing",
       tone: "Deep midnight blue-black with electric cyan and purple neon accents, dark environment lit only by holographic tech elements",
-      elements: "Holographic floating UI panels, circuit board floor patterns, glowing blue data streams, neural network web visualization, floating code fragments, matrix data rain, lens flares from holographic sources",
-      visualClues: "INSTANT STORY: robot hand reaching toward human hand, AI brain with glowing nodes, before/after of manual vs automated, old computer vs holographic display, binary code rain",
+      elements:
+        "Holographic floating UI panels, circuit board floor patterns, glowing blue data streams, neural network web visualization, floating code fragments, matrix data rain, lens flares from holographic sources",
+      visualClues:
+        "INSTANT STORY: robot hand reaching toward human hand, AI brain with glowing nodes, before/after of manual vs automated, old computer vs holographic display, binary code rain",
     },
     education: {
-      scene: "KNOWLEDGE TRANSFORMATION: Left shows struggling student studying by dim candlelight surrounded by messy books (struggle). Right shows same person as graduate on brightly lit stage receiving diploma with audience applauding (success). Grand library transforms into modern university",
+      scene:
+        "KNOWLEDGE TRANSFORMATION: Left shows struggling student studying by dim candlelight surrounded by messy books (struggle). Right shows same person as graduate on brightly lit stage receiving diploma with audience applauding (success). Grand library transforms into modern university",
       tone: "Left: warm dim amber candlelight struggle. Right: brilliant white stage spotlight with golden celebration warmth",
-      elements: "Towering bookshelves fading into modern campus, floating knowledge particles like fireflies, graduation cap tossed in air, trophy gleaming, scholarship scroll, light beams representing wisdom",
-      visualClues: "INSTANT STORY: open book with light emanating, F grade paper vs A+ certificate, small desk vs grand university, candle vs stadium lights, diploma scroll, graduation cap in air",
+      elements:
+        "Towering bookshelves fading into modern campus, floating knowledge particles like fireflies, graduation cap tossed in air, trophy gleaming, scholarship scroll, light beams representing wisdom",
+      visualClues:
+        "INSTANT STORY: open book with light emanating, F grade paper vs A+ certificate, small desk vs grand university, candle vs stadium lights, diploma scroll, graduation cap in air",
     },
     politics: {
-      scene: "POWER DRAMA: Grand parliament/government building with stormy dramatic sky and lightning, massive crowd of thousands with raised fists and flags, leader silhouette at podium against blinding spotlight, national flags waving in powerful wind, electric political tension atmosphere",
+      scene:
+        "POWER DRAMA: Grand parliament/government building with stormy dramatic sky and lightning, massive crowd of thousands with raised fists and flags, leader silhouette at podium against blinding spotlight, national flags waving in powerful wind, electric political tension atmosphere",
       tone: "High contrast: deep navy-black stormy sky with dramatic red-white spotlight columns, lightning flashes, power colors",
-      elements: "Hundreds of waving national flags, dense crowd silhouettes with raised fists, microphone podium center-stage, dramatic storm clouds with lightning cracks, spotlight pillars cutting through rain, tension atmosphere",
-      visualClues: "INSTANT STORY: ballot box, voting hand, broken vs fixed bridge (metaphor), chess pieces (strategy), podium microphone, crowd sea of people, scales of justice",
+      elements:
+        "Hundreds of waving national flags, dense crowd silhouettes with raised fists, microphone podium center-stage, dramatic storm clouds with lightning cracks, spotlight pillars cutting through rain, tension atmosphere",
+      visualClues:
+        "INSTANT STORY: ballot box, voting hand, broken vs fixed bridge (metaphor), chess pieces (strategy), podium microphone, crowd sea of people, scales of justice",
     },
     space: {
-      scene: "COSMIC REVELATION: Astronaut in detailed spacesuit, helmet visor reflecting a massive colorful nebula and tiny distant Earth, standing on alien planet surface with strange rock formations, epic galaxy spiral visible in sky",
+      scene:
+        "COSMIC REVELATION: Astronaut in detailed spacesuit, helmet visor reflecting a massive colorful nebula and tiny distant Earth, standing on alien planet surface with strange rock formations, epic galaxy spiral visible in sky",
       tone: "Deep space blacks with vibrant nebula palette: electric purple clouds, cosmic blue wisps, supernova orange bursts, brilliant star whites",
-      elements: "Dense star fields, swirling nebula gas clouds, Saturn-like planet rings, space station structure, helmet visor reflections, asteroid belt debris, cosmic dust particles, distant spiral galaxy",
-      visualClues: "INSTANT STORY: Earth from space (tiny and fragile), rocket launch trail, astronaut footprint, alien landscape, black hole visualization, satellite dish",
+      elements:
+        "Dense star fields, swirling nebula gas clouds, Saturn-like planet rings, space station structure, helmet visor reflections, asteroid belt debris, cosmic dust particles, distant spiral galaxy",
+      visualClues:
+        "INSTANT STORY: Earth from space (tiny and fragile), rocket launch trail, astronaut footprint, alien landscape, black hole visualization, satellite dish",
     },
     sports: {
-      scene: "VICTORY MOMENT: Packed stadium (100K+) with dramatic spotlight beams cutting through smoke and pyrotechnics, freeze-frame of championship winning moment, golden confetti explosion, trophy raised high, crowd going absolutely wild",
+      scene:
+        "VICTORY MOMENT: Packed stadium (100K+) with dramatic spotlight beams cutting through smoke and pyrotechnics, freeze-frame of championship winning moment, golden confetti explosion, trophy raised high, crowd going absolutely wild",
       tone: "High contrast stadium lighting: brilliant white spotlights against deep dark crowd mass, vivid green field, golden trophy gleam, pyrotechnic orange bursts",
-      elements: "Multiple spotlight beams through smoke/haze, golden confetti explosion mid-air, crowd wave motion blur, energy trails behind motion, giant trophy gleaming, pyrotechnic spark showers, camera flash dots",
-      visualClues: "INSTANT STORY: trophy/cup, medal around neck, scoreboard showing win, fans crying with joy, championship banner, raised fist victory, jersey number",
+      elements:
+        "Multiple spotlight beams through smoke/haze, golden confetti explosion mid-air, crowd wave motion blur, energy trails behind motion, giant trophy gleaming, pyrotechnic spark showers, camera flash dots",
+      visualClues:
+        "INSTANT STORY: trophy/cup, medal around neck, scoreboard showing win, fans crying with joy, championship banner, raised fist victory, jersey number",
     },
     horror: {
-      scene: "NIGHTMARE CORRIDOR: Abandoned asylum with peeling walls, single flickering blood-red emergency light creating strobing shadows, thick fog creeping along cracked floor, something horrifying barely visible in the far darkness, long distorted shadows reaching toward viewer",
+      scene:
+        "NIGHTMARE CORRIDOR: Abandoned asylum with peeling walls, single flickering blood-red emergency light creating strobing shadows, thick fog creeping along cracked floor, something horrifying barely visible in the far darkness, long distorted shadows reaching toward viewer",
       tone: "Near-total darkness with sickly yellow-green undertones, single harsh red strobe, maximum shadow contrast, unsettling cold color temperature",
-      elements: "Flickering strobe light effect, thick floor-level fog, peeling paint and cracked plaster, extremely distorted elongated shadows, floating dust in red light, cobwebs, barely visible dark figure silhouette in far doorway",
-      visualClues: "INSTANT STORY: creepy doll, bloody handprint on wall, broken mirror with reflection, old photograph with scratched out faces, mysterious door ajar with light, clock stopped at midnight",
+      elements:
+        "Flickering strobe light effect, thick floor-level fog, peeling paint and cracked plaster, extremely distorted elongated shadows, floating dust in red light, cobwebs, barely visible dark figure silhouette in far doorway",
+      visualClues:
+        "INSTANT STORY: creepy doll, bloody handprint on wall, broken mirror with reflection, old photograph with scratched out faces, mysterious door ajar with light, clock stopped at midnight",
     },
     health: {
-      scene: "MEDICAL DRAMA: Hospital corridor with dramatic overhead surgical lamp creating halo, giant DNA double helix visualization glowing in center, microscopic virus/cell structures enlarged to dramatic cinematic scale, life-or-death surgical moment tension",
+      scene:
+        "MEDICAL DRAMA: Hospital corridor with dramatic overhead surgical lamp creating halo, giant DNA double helix visualization glowing in center, microscopic virus/cell structures enlarged to dramatic cinematic scale, life-or-death surgical moment tension",
       tone: "Clinical blue-white sterile environment with warm human skin tones, selective urgent red for critical elements, emotional medical drama grade",
-      elements: "Rotating DNA helix with glowing nodes, enlarged colorful cell structures, surgical lamp creating god-ray halo, heartbeat ECG line across frame, medical equipment silhouettes, dramatic lens flare from surgical light",
-      visualClues: "INSTANT STORY: heartbeat line (flat to beating), pill vs natural remedy, virus particle enlarged, stethoscope, before/after health transformation, medical cross symbol glowing",
+      elements:
+        "Rotating DNA helix with glowing nodes, enlarged colorful cell structures, surgical lamp creating god-ray halo, heartbeat ECG line across frame, medical equipment silhouettes, dramatic lens flare from surgical light",
+      visualClues:
+        "INSTANT STORY: heartbeat line (flat to beating), pill vs natural remedy, virus particle enlarged, stethoscope, before/after health transformation, medical cross symbol glowing",
     },
     general: {
-      scene: "EPIC CINEMATIC VISTA: Dramatic cloud formation with volumetric god rays breaking through storm onto a lone powerful figure, sweeping landscape with extreme foreground-background depth separation, movie poster composition",
+      scene:
+        "EPIC CINEMATIC VISTA: Dramatic cloud formation with volumetric god rays breaking through storm onto a lone powerful figure, sweeping landscape with extreme foreground-background depth separation, movie poster composition",
       tone: "Hollywood teal-and-orange complementary color split, ultra high dynamic range, moody atmospheric blockbuster grade",
-      elements: "Powerful volumetric god rays, atmospheric haze layers, dramatic cumulonimbus clouds, bokeh light orbs, anamorphic lens flare, layered depth with foreground silhouette elements, golden particle dust floating in light beams",
-      visualClues: "INSTANT STORY: dramatic pointing gesture, question mark visual, before/after split, path leading to unknown, door of opportunity opening, spotlight on discovery",
+      elements:
+        "Powerful volumetric god rays, atmospheric haze layers, dramatic cumulonimbus clouds, bokeh light orbs, anamorphic lens flare, layered depth with foreground silhouette elements, golden particle dust floating in light beams",
+      visualClues:
+        "INSTANT STORY: dramatic pointing gesture, question mark visual, before/after split, path leading to unknown, door of opportunity opening, spotlight on discovery",
     },
   };
   return scenes[category] || scenes.general;
@@ -119,18 +170,30 @@ function getCategoryScene(category: string): { scene: string; tone: string; elem
 
 function getEmotionForCategory(category: string): string {
   const emotions: Record<string, string> = {
-    history: "serious, intense, battle-hardened expression with deep focused eyes staring into distance, jaw clenched with determination, weathered but strong",
-    money: "SHOCKED and EXCITED expression, eyes extremely wide open, mouth slightly open in disbelief, eyebrows raised high, as if seeing incredible wealth for the first time",
-    crime: "dark suspicious look, narrowed eyes with intensity, one eyebrow raised, shadowy mysterious expression, noir detective energy",
-    motivation: "powerful confident smile, chest out, chin slightly raised, eyes burning with determination, winner's expression, unstoppable energy",
-    technology: "awe-struck fascinated expression, eyes wide reflecting holographic blue light, slight wonder and curiosity, futuristic genius look",
-    education: "thoughtful intellectual expression, slight knowing smile, wise contemplative gaze, confident scholar energy, glasses optional",
-    politics: "stern authoritative commanding expression, sharp piercing eyes, slight frown of power, leader's decisive face",
-    space: "pure awestruck wonder, mouth slightly open, eyes wide reflecting starlight and nebula colors, cosmic amazement",
-    sports: "fierce battle cry expression, veins visible, intense competitive scream, sweat glistening, raw victory energy",
-    horror: "genuine terror, eyes wide with primal fear, pale skin, mouth open in silent scream, looking at something horrifying off-camera",
-    health: "concerned empathetic expression, focused doctor's gaze, slight worry mixed with determination to save, medical professional intensity",
-    general: "dramatic intense expression with strong eye contact directly at camera, charismatic presence, slightly furrowed brow, commanding attention",
+    history:
+      "serious, intense, battle-hardened expression with deep focused eyes staring into distance, jaw clenched with determination, weathered but strong",
+    money:
+      "SHOCKED and EXCITED expression, eyes extremely wide open, mouth slightly open in disbelief, eyebrows raised high, as if seeing incredible wealth for the first time",
+    crime:
+      "dark suspicious look, narrowed eyes with intensity, one eyebrow raised, shadowy mysterious expression, noir detective energy",
+    motivation:
+      "powerful confident smile, chest out, chin slightly raised, eyes burning with determination, winner's expression, unstoppable energy",
+    technology:
+      "awe-struck fascinated expression, eyes wide reflecting holographic blue light, slight wonder and curiosity, futuristic genius look",
+    education:
+      "thoughtful intellectual expression, slight knowing smile, wise contemplative gaze, confident scholar energy, glasses optional",
+    politics:
+      "stern authoritative commanding expression, sharp piercing eyes, slight frown of power, leader's decisive face",
+    space:
+      "pure awestruck wonder, mouth slightly open, eyes wide reflecting starlight and nebula colors, cosmic amazement",
+    sports:
+      "fierce battle cry expression, veins visible, intense competitive scream, sweat glistening, raw victory energy",
+    horror:
+      "genuine terror, eyes wide with primal fear, pale skin, mouth open in silent scream, looking at something horrifying off-camera",
+    health:
+      "concerned empathetic expression, focused doctor's gaze, slight worry mixed with determination to save, medical professional intensity",
+    general:
+      "dramatic intense expression with strong eye contact directly at camera, charismatic presence, slightly furrowed brow, commanding attention",
   };
   return emotions[category] || emotions.general;
 }
@@ -220,10 +283,37 @@ function buildLogoPrompt(prompt: string, industry: string, style: string): strin
 const systemPrompts: Record<string, string> = {
   chat: "You are PromptNova AI, a helpful, friendly, and knowledgeable AI assistant. Provide clear, well-structured answers using markdown formatting when appropriate. Be concise but thorough.",
   blog: "You are PromptNova AI Blog Writer. Write a well-structured, engaging blog article. Use markdown with proper headings (##), bullet points, and paragraphs. Make it SEO-friendly and reader-engaging.",
-  script: "You are PromptNova AI Script Generator. Write a professional video script with clear sections: [HOOK], [INTRO], [BODY], [CTA], [OUTRO]. Use engaging language appropriate for the requested tone.",
-  prompt: "You are PromptNova AI Prompt Generator. Create a detailed, highly effective AI prompt based on the user's idea. The prompt should be clear, specific, and designed to get the best possible output from an AI model.",
-  image: "You are an AI image generator. Generate the image the user describes. Do not describe images in text — actually generate visual images.",
-  thumbnail: "You are an AI thumbnail designer. Generate a visually striking thumbnail image. Do not describe — actually generate the image.",
+  script:
+    "You are PromptNova AI Script Generator. Write a professional video script with clear sections: [HOOK], [INTRO], [BODY], [CTA], [OUTRO]. Use engaging language appropriate for the requested tone.",
+  prompt:
+    "You are PromptNova AI Prompt Generator. Create a detailed, highly effective AI prompt based on the user's idea. The prompt should be clear, specific, and designed to get the best possible output from an AI model.",
+  image:
+    "You are an AI image generator. Generate the image the user describes. Do not describe images in text — actually generate visual images.",
+  thumbnail: `You are an elite YouTube Thumbnail Art Director.
+
+INTELLIGENCE RULES:
+- Demographic & Subject: Adapt subject based on topic
+- Emotion: Strong emotional expression
+- Background: Cinematic 16:9 scene
+- Text: Bangla hook + English subtitle
+
+OUTPUT ONLY JSON.
+
+{
+"text_layers": {
+  "bangla_hook": "Main viral text",
+  "english_subtitle": "Subtitle"
+},
+"visual_intelligence": {
+  "target_demographic": "Description",
+  "emotion": "One word",
+  "environmental_lighting_color": "#FF4500",
+  "css_blend_preset": "high-contrast"
+},
+"generation_prompts": {
+  "background_plate": "cinematic background description"
+}
+}`,
   logo: "You are an AI logo designer. Generate a professional logo image. Do not describe — actually generate the image.",
   "thumbnail-headlines": `You are a viral YouTube headline expert specializing in Bangla and English content. Generate exactly 3 short, powerful, clickable thumbnail headlines.
 
@@ -268,7 +358,10 @@ serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
     if (userError || !user) {
       return new Response(JSON.stringify({ error: "Invalid or expired session" }), {
         status: 401,
@@ -302,7 +395,7 @@ serve(async (req) => {
         .eq("user_id", userId)
         .eq("used_at", today);
 
-      const totalUsedToday = (usageRows as any[] || []).reduce((sum: number, r: any) => sum + (r.count || 0), 0);
+      const totalUsedToday = ((usageRows as any[]) || []).reduce((sum: number, r: any) => sum + (r.count || 0), 0);
       const effectiveLimit = dailyLimit + bonusCredits;
 
       if (totalUsedToday >= effectiveLimit) {
@@ -312,7 +405,7 @@ serve(async (req) => {
             credits_used: totalUsedToday,
             credits_limit: effectiveLimit,
           }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
     }
@@ -377,16 +470,19 @@ serve(async (req) => {
 
       if (gatewayResponse.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (gatewayResponse.status === 402) {
         return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       return new Response(JSON.stringify({ error: "AI generation failed" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -405,9 +501,7 @@ serve(async (req) => {
         .update({ count: (existingUsage as any).count + 1 })
         .eq("id", (existingUsage as any).id);
     } else {
-      await supabase
-        .from("usage_tracking")
-        .insert({ user_id: userId, tool_type: toolType, used_at: today, count: 1 });
+      await supabase.from("usage_tracking").insert({ user_id: userId, tool_type: toolType, used_at: today, count: 1 });
     }
 
     // ── Return response ──
@@ -432,9 +526,9 @@ serve(async (req) => {
     }
   } catch (e) {
     console.error("ai-generate error:", e);
-    return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
