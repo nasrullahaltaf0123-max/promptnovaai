@@ -39,67 +39,79 @@ function detectTopicCategory(text: string): string {
   return "general";
 }
 
-function getCategoryScene(category: string): { scene: string; tone: string; elements: string } {
-  const scenes: Record<string, { scene: string; tone: string; elements: string }> = {
+function getCategoryScene(category: string): { scene: string; tone: string; elements: string; visualClues: string } {
+  const scenes: Record<string, { scene: string; tone: string; elements: string; visualClues: string }> = {
     history: {
-      scene: "SPLIT STORYTELLING: Left side shows ancient battlefield ruins with smoke, burning villages, soldiers in silhouette. Right side transitions to modern peaceful cityscape with monuments. Time-travel contrast composition",
-      tone: "Left: desaturated sepia with red/orange fire glow. Right: warm golden hour modern tones. Strong light divide in center",
-      elements: "Volumetric smoke, floating embers, cracked stone, ancient weapons on ground, dust particles in dramatic light shafts, distant flames reflecting on wet ground",
+      scene: "SPLIT STORYTELLING: Left 50% shows ancient battlefield — burning village, soldiers charging through smoke, fallen fortress walls crumbling. Right 50% transitions sharply to modern peaceful city with glass buildings and monuments. A clear TIME DIVIDE line separates the two eras",
+      tone: "Left: heavy sepia desaturation with orange fire glow and ash. Right: warm golden hour with clean modern tones. Hard light divide creates visual storytelling",
+      elements: "Volumetric battle smoke, floating embers and ash, cracked stone walls, ancient swords/shields on ground, dust particles in dramatic god rays, distant flames reflecting on muddy/wet terrain",
+      visualClues: "VISIBLE OBJECTS that tell the story instantly: broken sword stuck in ground, burning flag, crumbling brick wall, old vs new buildings side by side, timeline arrow visual, ancient map fragment",
     },
     money: {
-      scene: "WEALTH CONTRAST: Massive pile of gold coins and cash bundles in foreground, stock market growth chart with glowing green arrows shooting upward, luxury vs poverty split. Left shows struggle (empty pockets, cracked floor), right shows abundance (gold, skyscrapers, luxury)",
-      tone: "Left: dark cold blue desaturated. Right: rich golden warm with green money glow accents",
-      elements: "Floating dollar bills, gold particles, upward arrows, bar charts, scattered coins catching light, money rain effect, reflective gold surfaces",
+      scene: "WEALTH STORY: Foreground has massive gold coin pile and bundled cash with green glow. A giant glowing stock chart with GREEN ARROWS pointing sharply UP dominates mid-ground. Left side shows cracked empty wallet on broken floor (poverty). Right side shows luxury penthouse view with gold everywhere (wealth)",
+      tone: "Left: cold dark blue poverty mood. Right: rich warm golden luxury glow with green money accents. Sharp contrast divide",
+      elements: "Floating dollar/taka bills, gold particles raining down, upward green arrows, rising bar charts, scattered coins catching spotlight, diamond sparkles, luxury car silhouette in distance",
+      visualClues: "INSTANT STORY OBJECTS: giant upward arrow, money stack, growth chart line, broken piggy bank vs full vault, empty pocket vs overflowing wallet, '0 to 1M' visual journey",
     },
     crime: {
-      scene: "Dark urban alley with police sirens reflecting red and blue on wet pavement, crime scene tape, shadowy figure silhouette, noir detective atmosphere. City skyline in foggy background",
-      tone: "Very dark with harsh red and blue police light contrast, noir color grade, deep shadows with selective color",
-      elements: "Rain reflections on pavement, police light streaks, crime tape, cigarette smoke, broken glass, evidence markers, wet surfaces reflecting lights",
+      scene: "NOIR CRIME SCENE: Dark rain-soaked urban alley, red and blue police sirens reflecting on wet pavement, yellow CRIME SCENE tape stretched across frame, shadowy suspect silhouette against brick wall, detective noir atmosphere with city fog",
+      tone: "Near-black with harsh alternating red/blue police strobe contrast, noir desaturated grade, selective color only on warning elements",
+      elements: "Rain streaks and puddle reflections, police light sweep patterns, crime tape, cigarette smoke trails, broken glass on ground, evidence markers, wet neon sign reflections on pavement",
+      visualClues: "INSTANT STORY: handcuffs, blood splatter, police badge, mystery question mark shadow, wanted poster silhouette, jail bars shadow pattern on wall, broken window",
     },
     motivation: {
-      scene: "TRANSFORMATION JOURNEY: Left shows person at rock bottom (dark, rain, fallen). Right shows summit of mountain with sunrise, victory pose silhouette. Path of progress connecting both sides",
-      tone: "Left: dark stormy blue-grey. Right: epic golden sunrise with warm orange rays. Dramatic transition from dark to light",
-      elements: "Mountain peak, sunrise god rays, stepping stones path, storm clouds clearing, golden light breakthrough, victory stance shadow",
+      scene: "TRANSFORMATION JOURNEY: Left shows person collapsed on knees in pouring rain on dark muddy ground (rock bottom). Right shows same figure standing victorious on mountain peak with epic golden sunrise behind them, arms raised in triumph. A glowing path of stepping stones connects the two",
+      tone: "Left: dark stormy blue-grey despair. Right: explosive golden sunrise with warm orange god rays. The transition from dark to light IS the story",
+      elements: "Mountain summit, sunrise god rays bursting through clouds, stepping stone path glowing, storm clouds dramatically parting, golden light breakthrough moment, trophy/medal gleam",
+      visualClues: "INSTANT STORY: broken chain links, rising phoenix silhouette, 'before/after' visual split, ladder climbing up, dark valley to bright peak journey, lion/eagle power symbol",
     },
     technology: {
-      scene: "Futuristic AI command center with massive holographic displays showing neural networks, a glowing AI brain visualization floating in center, cyberpunk cityscape visible through panoramic window",
-      tone: "Deep midnight blue with electric cyan and purple neon accents, dark environment with bright holographic elements",
-      elements: "Holographic UI panels, circuit board patterns, glowing data streams, floating code fragments, neural network visualization, lens flares, digital particles, matrix-style data rain",
+      scene: "AI COMMAND CENTER: Massive holographic brain visualization floating in center of dark room, multiple floating holographic screens showing code/neural networks, cyberpunk cityscape with neon lights visible through panoramic window, digital data streams flowing",
+      tone: "Deep midnight blue-black with electric cyan and purple neon accents, dark environment lit only by holographic tech elements",
+      elements: "Holographic floating UI panels, circuit board floor patterns, glowing blue data streams, neural network web visualization, floating code fragments, matrix data rain, lens flares from holographic sources",
+      visualClues: "INSTANT STORY: robot hand reaching toward human hand, AI brain with glowing nodes, before/after of manual vs automated, old computer vs holographic display, binary code rain",
     },
     education: {
-      scene: "KNOWLEDGE TRANSFORMATION: Left shows struggling student in dim candlelight with books. Right shows graduate on stage with spotlight, diploma, successful career. Library transforms into modern university",
-      tone: "Left: warm amber candlelight. Right: bright stage spotlight white with golden graduation warmth",
-      elements: "Towering bookshelves, floating knowledge particles, graduation cap in air, trophy, scholarship documents, light of wisdom breaking through",
+      scene: "KNOWLEDGE TRANSFORMATION: Left shows struggling student studying by dim candlelight surrounded by messy books (struggle). Right shows same person as graduate on brightly lit stage receiving diploma with audience applauding (success). Grand library transforms into modern university",
+      tone: "Left: warm dim amber candlelight struggle. Right: brilliant white stage spotlight with golden celebration warmth",
+      elements: "Towering bookshelves fading into modern campus, floating knowledge particles like fireflies, graduation cap tossed in air, trophy gleaming, scholarship scroll, light beams representing wisdom",
+      visualClues: "INSTANT STORY: open book with light emanating, F grade paper vs A+ certificate, small desk vs grand university, candle vs stadium lights, diploma scroll, graduation cap in air",
     },
     politics: {
-      scene: "Dramatic parliament building with stormy sky, massive crowd gathering with raised fists, leader podium silhouette against spotlight, flags waving in dramatic wind, tension-filled political rally atmosphere",
-      tone: "High contrast: deep navy blue sky with dramatic red and white spotlight beams, storm clouds with lightning",
-      elements: "Waving flags, crowd silhouettes, microphone podium, dramatic storm clouds, spotlight beams cutting through darkness, rain, tension atmosphere",
+      scene: "POWER DRAMA: Grand parliament/government building with stormy dramatic sky and lightning, massive crowd of thousands with raised fists and flags, leader silhouette at podium against blinding spotlight, national flags waving in powerful wind, electric political tension atmosphere",
+      tone: "High contrast: deep navy-black stormy sky with dramatic red-white spotlight columns, lightning flashes, power colors",
+      elements: "Hundreds of waving national flags, dense crowd silhouettes with raised fists, microphone podium center-stage, dramatic storm clouds with lightning cracks, spotlight pillars cutting through rain, tension atmosphere",
+      visualClues: "INSTANT STORY: ballot box, voting hand, broken vs fixed bridge (metaphor), chess pieces (strategy), podium microphone, crowd sea of people, scales of justice",
     },
     space: {
-      scene: "Astronaut helmet close-up reflecting a massive nebula and distant Earth, deep space station window view showing cosmic phenomena, epic scale of universe",
-      tone: "Deep space blacks with vibrant nebula colors: electric purple, cosmic blue, supernova orange, star white",
-      elements: "Star fields, nebula gas clouds, planet rings, space station interior, helmet reflection, asteroid debris, cosmic dust, distant galaxy spiral",
+      scene: "COSMIC REVELATION: Astronaut in detailed spacesuit, helmet visor reflecting a massive colorful nebula and tiny distant Earth, standing on alien planet surface with strange rock formations, epic galaxy spiral visible in sky",
+      tone: "Deep space blacks with vibrant nebula palette: electric purple clouds, cosmic blue wisps, supernova orange bursts, brilliant star whites",
+      elements: "Dense star fields, swirling nebula gas clouds, Saturn-like planet rings, space station structure, helmet visor reflections, asteroid belt debris, cosmic dust particles, distant spiral galaxy",
+      visualClues: "INSTANT STORY: Earth from space (tiny and fragile), rocket launch trail, astronaut footprint, alien landscape, black hole visualization, satellite dish",
     },
     sports: {
-      scene: "Stadium final moment: massive crowd in dramatic lighting, spotlight cutting through smoke/pyrotechnics, victory celebration freeze-frame, confetti explosion",
-      tone: "High contrast stadium lighting: bright white spots against deep dark crowd, vivid green field, golden trophy glow",
-      elements: "Spotlight beams through smoke, confetti explosion, crowd wave, motion blur energy trails, trophy gleam, pyrotechnic sparks",
+      scene: "VICTORY MOMENT: Packed stadium (100K+) with dramatic spotlight beams cutting through smoke and pyrotechnics, freeze-frame of championship winning moment, golden confetti explosion, trophy raised high, crowd going absolutely wild",
+      tone: "High contrast stadium lighting: brilliant white spotlights against deep dark crowd mass, vivid green field, golden trophy gleam, pyrotechnic orange bursts",
+      elements: "Multiple spotlight beams through smoke/haze, golden confetti explosion mid-air, crowd wave motion blur, energy trails behind motion, giant trophy gleaming, pyrotechnic spark showers, camera flash dots",
+      visualClues: "INSTANT STORY: trophy/cup, medal around neck, scoreboard showing win, fans crying with joy, championship banner, raised fist victory, jersey number",
     },
     horror: {
-      scene: "Abandoned asylum corridor with single flickering red emergency light, long shadows stretching toward viewer, fog creeping along cracked floor, something lurking in distant darkness",
-      tone: "Near-black with sickly green-grey undertones, single harsh red or cold blue light source, maximum shadow",
-      elements: "Flickering light strobes, thick floor fog, cracked peeling walls, distorted shadows, floating dust, cobwebs, eerie silhouette in far doorway",
+      scene: "NIGHTMARE CORRIDOR: Abandoned asylum with peeling walls, single flickering blood-red emergency light creating strobing shadows, thick fog creeping along cracked floor, something horrifying barely visible in the far darkness, long distorted shadows reaching toward viewer",
+      tone: "Near-total darkness with sickly yellow-green undertones, single harsh red strobe, maximum shadow contrast, unsettling cold color temperature",
+      elements: "Flickering strobe light effect, thick floor-level fog, peeling paint and cracked plaster, extremely distorted elongated shadows, floating dust in red light, cobwebs, barely visible dark figure silhouette in far doorway",
+      visualClues: "INSTANT STORY: creepy doll, bloody handprint on wall, broken mirror with reflection, old photograph with scratched out faces, mysterious door ajar with light, clock stopped at midnight",
     },
     health: {
-      scene: "Medical drama composition: hospital corridor with dramatic overhead surgical light, DNA helix visualization, microscopic virus particles enlarged to dramatic scale, life-saving moment tension",
-      tone: "Clinical blue-white with warm human skin tones, sterile environment with emotional warmth, selective red for urgency",
-      elements: "DNA helix, microscopic cells enlarged, surgical light halo, heartbeat monitor line, medical equipment silhouettes, dramatic lens flare from surgical lamp",
+      scene: "MEDICAL DRAMA: Hospital corridor with dramatic overhead surgical lamp creating halo, giant DNA double helix visualization glowing in center, microscopic virus/cell structures enlarged to dramatic cinematic scale, life-or-death surgical moment tension",
+      tone: "Clinical blue-white sterile environment with warm human skin tones, selective urgent red for critical elements, emotional medical drama grade",
+      elements: "Rotating DNA helix with glowing nodes, enlarged colorful cell structures, surgical lamp creating god-ray halo, heartbeat ECG line across frame, medical equipment silhouettes, dramatic lens flare from surgical light",
+      visualClues: "INSTANT STORY: heartbeat line (flat to beating), pill vs natural remedy, virus particle enlarged, stethoscope, before/after health transformation, medical cross symbol glowing",
     },
     general: {
-      scene: "Epic cinematic landscape with dramatic cloud formation, volumetric god rays breaking through storm clouds onto a lone figure, sweeping vista with strong foreground-background depth",
-      tone: "Hollywood-grade teal and orange complementary color split, high dynamic range, moody atmospheric grade",
-      elements: "Volumetric god rays, atmospheric haze, dramatic clouds, bokeh lights, lens flare, layered depth with foreground silhouettes, particle dust in light beams",
+      scene: "EPIC CINEMATIC VISTA: Dramatic cloud formation with volumetric god rays breaking through storm onto a lone powerful figure, sweeping landscape with extreme foreground-background depth separation, movie poster composition",
+      tone: "Hollywood teal-and-orange complementary color split, ultra high dynamic range, moody atmospheric blockbuster grade",
+      elements: "Powerful volumetric god rays, atmospheric haze layers, dramatic cumulonimbus clouds, bokeh light orbs, anamorphic lens flare, layered depth with foreground silhouette elements, golden particle dust floating in light beams",
+      visualClues: "INSTANT STORY: dramatic pointing gesture, question mark visual, before/after split, path leading to unknown, door of opportunity opening, spotlight on discovery",
     },
   };
   return scenes[category] || scenes.general;
@@ -125,72 +137,74 @@ function getEmotionForCategory(category: string): string {
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
   const category = detectTopicCategory(prompt);
-  const { scene, tone, elements } = getCategoryScene(category);
+  const { scene, tone, elements, visualClues } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
 
   return `Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
+
+═══ 1-SECOND STORY RULE (MOST IMPORTANT) ═══
+The viewer must understand the ENTIRE topic within 1 SECOND of seeing this thumbnail.
+Use VISUAL CLUES that instantly communicate the subject matter:
+${visualClues}
+- These objects/symbols must be clearly visible in the background composition
+- They act as instant visual shorthand — no text needed to understand the story
 
 ═══ MANDATORY SUBJECT (RIGHT 40% OF FRAME) ═══
 - Ultra-photorealistic South Asian male face and upper body, age 25-35
 - EMOTION: ${emotion}
 - Camera angle: medium close-up, chest to head, slightly angled 15° to the right
-- Looking toward camera or dramatically off-camera based on emotion
-- Skin texture must be hyper-detailed: visible pores, natural skin imperfections, realistic lighting on skin
-- Hair slightly wind-blown or dramatic
 - Subject must be SHARP (f/2.8 focus on face) while background is BLURRED
+- Skin: hyper-detailed pores, natural imperfections, realistic lighting
+- Hair slightly wind-blown or dramatic
 
 ═══ RED GLOW RIM LIGHT (CRITICAL) ═══
-- Strong RED/CRIMSON neon rim light outlining the subject's head, shoulders, and body edge
-- The red glow should be visible as a bright edge light separating subject from background
-- Additional warm backlight creating a halo/glow effect behind the subject's head
-- This red outline is the KEY visual signature — make it prominent and cinematic
+- Strong RED/CRIMSON neon rim light outlining subject's head, shoulders, body edge
+- Bright edge light separating subject from background
+- Warm backlight halo behind subject's head
+- This red outline is the KEY visual signature
 
-═══ STORYTELLING BACKGROUND (FULL FRAME) ═══
+═══ STORYTELLING BACKGROUND WITH CONTRAST ═══
 ${scene}
 COLOR GRADING: ${tone}
 ATMOSPHERIC DETAILS: ${elements}
-- Background MUST tell a story — NEVER use plain, flat, or generic backgrounds
-- Apply gaussian depth blur (f/1.4 bokeh) to background — subject stays sharp
-- Background should have 3 layers: far background (very blurry), mid-ground (slightly blurry), foreground elements (particles/smoke)
+- CONTRAST STORY RULE: Always show BEFORE vs AFTER or PROBLEM vs SOLUTION
+  → Left half = the problem/past/struggle (darker, desaturated, broken)
+  → Right half = the solution/future/success (brighter, vibrant, fixed)
+  → The visual contrast between both sides IS the clickbait story
+- Background MUST directly represent the topic — NEVER generic
+- 3 depth layers: far background (very blurry), mid-ground (slightly blurry), foreground particles
 
-═══ CINEMATIC COMPOSITION LAYOUT ═══
-- LEFT 55%: Dark atmospheric zone with subtle scene elements, reserved for text overlay
-  → Apply dark gradient overlay (black 60% opacity fading to transparent)
-  → Some scene elements visible but not cluttered
-- RIGHT 45%: Subject dominates with dramatic lighting
-  → Subject's face is the focal point
-  → Red rim light creates separation from background
-- VIGNETTE: Strong dark vignette on all edges, especially corners (cinema-style framing)
+═══ CINEMATIC COMPOSITION ═══
+- LEFT 55%: Dark atmospheric story zone with visible contextual elements + dark gradient overlay
+- RIGHT 45%: Subject dominates with dramatic lighting, face is focal point
+- VIGNETTE: Strong dark vignette on all edges (cinema framing)
 
-═══ LIGHTING SYSTEM (5-POINT) ═══
-1. KEY LIGHT: Strong warm light from upper-right, illuminating subject's face dramatically
-2. RIM LIGHT: Intense RED/CRIMSON edge light from behind-left, creating the signature glow outline
-3. FILL LIGHT: Subtle cool blue/teal ambient from left side (barely visible, prevents pure black)
-4. BACKGROUND LIGHT: Dramatic volumetric god rays or spotlight in the story background
-5. HAIR LIGHT: Subtle top-down light catching hair edges for separation
+═══ LIGHTING (5-POINT) ═══
+1. KEY: Strong warm light from upper-right on subject's face
+2. RIM: Intense RED edge light from behind-left (glow outline)
+3. FILL: Subtle cool teal ambient from left
+4. BG LIGHT: Volumetric god rays in story background
+5. HAIR: Top-down edge light for separation
 
-═══ COLOR GRADING (HOLLYWOOD-GRADE) ═══
-- Teal shadows + orange/warm highlights (complementary split-toning)
-- Left side of frame: cooler, more desaturated, moodier
-- Right side (subject area): warmer, more vibrant, skin tones pop
-- Crushed blacks (deep rich shadows, not grey)
-- Controlled highlights with slight bloom on bright areas
-- Overall: dark, moody, high-contrast cinematic look
+═══ COLOR GRADING (HOLLYWOOD) ═══
+- Teal shadows + orange highlights (complementary split)
+- Left: cooler, desaturated. Right: warmer, vibrant
+- Crushed blacks, controlled highlight bloom
+- Dark, moody, high-contrast cinematic look
 
-═══ CTR-BOOSTING EFFECTS ═══
-- Volumetric light rays (god rays) from behind or above subject
-- Atmospheric particles: smoke wisps, dust motes, embers, or topic-relevant particles floating in light beams
-- Subtle lens flare from the strongest light source
-- Motion energy: slight directional blur on background elements suggesting dynamism
-- Depth layers creating parallax-like 3D feel
+═══ CTR-BOOST EFFECTS ═══
+- Volumetric god rays from behind/above subject
+- Atmospheric particles (smoke, dust, embers per topic)
+- Lens flare from strongest light source
+- Motion energy blur on background elements
+- Depth layers creating parallax 3D feel
 
 ═══ ABSOLUTE RULES ═══
-- ZERO text, letters, words, numbers, typography, watermarks, or logos in the image
-- Must rival MrBeast / Veritasium / Johnny Harris thumbnail quality
-- NOT generic AI art — must feel like a real Hollywood movie still or Netflix documentary frame
-- Photorealistic textures, 8K detail, cinematic depth of field
-- Every pixel must serve the story — no empty or wasted space
-- The thumbnail must make viewers STOP SCROLLING and CLICK`;
+- ZERO text, letters, words, numbers, typography, watermarks, logos
+- Must rival MrBeast / Veritasium / Johnny Harris quality
+- Real Hollywood movie still feel, NOT generic AI art
+- 8K photorealistic detail, cinematic depth of field
+- Every pixel serves the story — viewer STOPS SCROLLING and CLICKS`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
@@ -211,6 +225,18 @@ const systemPrompts: Record<string, string> = {
   image: "You are an AI image generator. Generate the image the user describes. Do not describe images in text — actually generate visual images.",
   thumbnail: "You are an AI thumbnail designer. Generate a visually striking thumbnail image. Do not describe — actually generate the image.",
   logo: "You are an AI logo designer. Generate a professional logo image. Do not describe — actually generate the image.",
+  "thumbnail-headlines": `You are a viral YouTube headline expert specializing in Bangla and English content. Generate exactly 3 short, powerful, clickable thumbnail headlines.
+
+RULES:
+- If the topic is in Bangla, write headlines in Bangla
+- If the topic is in English, write headlines in English
+- Each headline must be 3-7 words MAXIMUM (thumbnail text must be SHORT)
+- Use power words: shocking, secret, unknown, impossible, dangerous, incredible
+- Create curiosity gap (make viewer NEED to click)
+- Use emotional triggers: fear, greed, curiosity, anger, amazement
+- Format: Return ONLY a JSON array of 3 strings, nothing else
+- Example output: ["কেন ব্যর্থ হচ্ছে?", "গোপন সত্য ফাঁস!", "এটা কি সম্ভব?"]
+- Example English: ["The Hidden Truth", "Why Everyone Failed", "Nobody Expected This"]`,
 };
 
 serve(async (req) => {
@@ -298,6 +324,7 @@ serve(async (req) => {
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
     const isImageGen = toolType === "image" || toolType === "thumbnail" || toolType === "logo";
+    const isHeadlineSuggest = toolType === "thumbnail-headlines";
 
     if (toolType === "chat" && messages) {
       chatMessages.push(...messages);
@@ -315,6 +342,8 @@ serve(async (req) => {
         userPrompt = buildThumbnailPrompt(prompt, options.style || "YouTube", options.colorScheme || "Vibrant");
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
+      } else if (isHeadlineSuggest) {
+        userPrompt = `Generate 3 viral clickable thumbnail headlines for this topic: "${prompt}". Return ONLY a JSON array of 3 short headline strings.`;
       }
       chatMessages.push({ role: "user", content: userPrompt });
     }
@@ -324,8 +353,8 @@ serve(async (req) => {
       model: isImageGen ? IMAGE_MODEL : MODEL,
       messages: chatMessages,
       stream,
-      max_tokens: toolType === "blog" ? 4096 : 2048,
-      temperature: toolType === "chat" ? 0.7 : 0.8,
+      max_tokens: isHeadlineSuggest ? 256 : toolType === "blog" ? 4096 : 2048,
+      temperature: isHeadlineSuggest ? 0.9 : toolType === "chat" ? 0.7 : 0.8,
     };
 
     if (isImageGen) {

@@ -14,6 +14,8 @@ const ThumbnailGenerator = () => {
   const limit = getLimit("image");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
+  const [headlines, setHeadlines] = useState<string[]>([]);
+  const [isLoadingHeadlines, setIsLoadingHeadlines] = useState(false);
 
   const [config, setConfig] = useState<ThumbnailConfig>({
     title: "",
@@ -48,6 +50,27 @@ const ThumbnailGenerator = () => {
     reader.readAsDataURL(file);
   };
 
+  const fetchHeadlines = async (topic: string) => {
+    if (!topic.trim()) return;
+    setIsLoadingHeadlines(true);
+    try {
+      const { result } = await generateContent("thumbnail-headlines", topic);
+      if (result) {
+        // Parse JSON array from response
+        const match = result.match(/\[[\s\S]*?\]/);
+        if (match) {
+          const parsed = JSON.parse(match[0]);
+          if (Array.isArray(parsed)) {
+            setHeadlines(parsed.slice(0, 3));
+          }
+        }
+      }
+    } catch {
+      // Silently fail — headlines are optional
+    }
+    setIsLoadingHeadlines(false);
+  };
+
   const handleGenerate = async () => {
     if (!config.title.trim() || !user) return;
     if (!isAdmin && usage >= limit) {
@@ -64,6 +87,9 @@ const ThumbnailGenerator = () => {
       return;
     }
     setUsage((u) => u + 1);
+
+    // Fetch headlines in parallel with image generation
+    fetchHeadlines(config.title);
 
     const { images, error: genError } = await generateContent("thumbnail", config.title, {
       style: "Cinematic",
@@ -108,6 +134,9 @@ const ThumbnailGenerator = () => {
           usage={usage}
           limit={limit}
           isAdmin={isAdmin}
+          headlines={headlines}
+          isLoadingHeadlines={isLoadingHeadlines}
+          onSelectHeadline={(h) => updateConfig({ title: h })}
         />
         <ThumbnailPreview config={config} isGenerating={isGenerating} error={error} />
       </div>

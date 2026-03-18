@@ -1,4 +1,4 @@
-import { Upload, Type, Sparkles, Loader2, Image as ImageIcon } from "lucide-react";
+import { Upload, Type, Sparkles, Loader2, Image as ImageIcon, Zap } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import {
   PLATFORMS, FONT_PRESETS, TEXT_COLORS, TEXT_EFFECTS, SHAPE_OVERLAYS,
@@ -16,6 +16,9 @@ interface Props {
   usage: number;
   limit: number;
   isAdmin?: boolean;
+  headlines?: string[];
+  isLoadingHeadlines?: boolean;
+  onSelectHeadline?: (headline: string) => void;
 }
 
 const Chip = ({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) => (
@@ -30,7 +33,7 @@ const positions: { value: TextPosition; label: string }[] = [
   { value: "bottom-left", label: "Bottom Left" },
 ];
 
-export default function ThumbnailControls({ config, onChange, onGenerate, onSubjectUpload, onBgUpload, isGenerating, usage, limit, isAdmin }: Props) {
+export default function ThumbnailControls({ config, onChange, onGenerate, onSubjectUpload, onBgUpload, isGenerating, usage, limit, isAdmin, headlines, isLoadingHeadlines, onSelectHeadline }: Props) {
   return (
     <div className="glass-card-highlight rounded-2xl p-5 space-y-4 overflow-y-auto max-h-[80vh]">
       {/* Platform */}
@@ -49,6 +52,33 @@ export default function ThumbnailControls({ config, onChange, onGenerate, onSubj
       <Section label="Title Text" icon={<Type className="w-3.5 h-3.5 inline mr-1 opacity-60" />}>
         <input value={config.title} onChange={(e) => onChange({ title: e.target.value })} placeholder="বাংলা বা English টাইটেল..." className="w-full bg-secondary/30 border border-border/40 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
       </Section>
+
+      {/* Headline Suggestions */}
+      {(headlines && headlines.length > 0) && (
+        <Section label="🔥 Suggested Headlines" icon={<Zap className="w-3.5 h-3.5 inline mr-1 text-primary" />}>
+          <div className="space-y-1.5">
+            {headlines.map((h, i) => (
+              <button
+                key={i}
+                onClick={() => onSelectHeadline?.(h)}
+                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border ${
+                  config.title === h
+                    ? "bg-primary/20 border-primary/40 text-primary"
+                    : "bg-secondary/30 border-border/30 text-foreground hover:bg-secondary/50 hover:border-primary/20"
+                }`}
+              >
+                {h}
+              </button>
+            ))}
+          </div>
+        </Section>
+      )}
+      {isLoadingHeadlines && (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Loader2 className="w-3 h-3 animate-spin" />
+          Generating headline suggestions...
+        </div>
+      )}
 
       {/* Subtitle */}
       <Section label="Subtitle">
