@@ -14,7 +14,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const ScriptGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [topic, setTopic] = useState("");
   const [length, setLength] = useState(scriptLengths[1]);
   const [tone, setTone] = useState(toneStyles[0]);
