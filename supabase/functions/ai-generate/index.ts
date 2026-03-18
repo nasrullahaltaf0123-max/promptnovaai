@@ -25,71 +25,81 @@ function buildImagePrompt(prompt: string, style: string): string {
 
 function detectTopicCategory(text: string): string {
   const t = text.toLowerCase();
-  if (/war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(t))
-    return "history";
-  if (/econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|দারিদ্র্য|অর্থনীতি|ব্যর্থ/.test(t))
-    return "economy";
-  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t))
-    return "technology";
-  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t))
-    return "education";
-  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t))
-    return "politics";
-  if (/space|planet|universe|galaxy|nasa|star|moon|mars|মহাকাশ|গ্রহ|নক্ষত্র/.test(t))
-    return "space";
-  if (/sport|football|cricket|game|player|champion|tournament|খেলা|ক্রিকেট|ফুটবল/.test(t))
-    return "sports";
-  if (/horror|ghost|scary|dark|mystery|haunted|ভয়|ভূত|রহস্য/.test(t))
-    return "horror";
+  if (/crime|murder|killer|mafia|drug|cartel|gang|prison|অপরাধ|খুন|মাফিয়া/.test(t)) return "crime";
+  if (/motivat|success|inspire|dream|goal|winner|champion|hustle|grind|অনুপ্রেরণা|সাফল্য|স্বপ্ন/.test(t)) return "motivation";
+  if (/war|battle|histor|ancient|empire|kingdom|soldier|invasion|colonial|freedom|independence|মুক্তিযুদ্ধ|যুদ্ধ|ইতিহাস|সাম্রাজ্য/.test(t)) return "history";
+  if (/money|econom|poverty|rich|poor|gdp|inflation|failure|bankrupt|crisis|recession|billion|million|wealth|টাকা|দারিদ্র্য|অর্থনীতি|ব্যর্থ|কোটিপতি/.test(t)) return "money";
+  if (/tech|ai|robot|cyber|digital|future|software|code|computer|program|প্রযুক্তি|কৃত্রিম বুদ্ধিমত্তা/.test(t)) return "technology";
+  if (/educat|school|university|knowledge|learn|study|book|library|teacher|শিক্ষা|বিদ্যালয়|জ্ঞান|পড়াশোনা/.test(t)) return "education";
+  if (/politic|leader|election|govern|minister|parliament|vote|president|রাজনীতি|নেতা|নির্বাচন|সরকার/.test(t)) return "politics";
+  if (/space|planet|universe|galaxy|nasa|star|moon|mars|মহাকাশ|গ্রহ|নক্ষত্র/.test(t)) return "space";
+  if (/sport|football|cricket|game|player|champion|tournament|খেলা|ক্রিকেট|ফুটবল/.test(t)) return "sports";
+  if (/horror|ghost|scary|dark|mystery|haunted|ভয়|ভূত|রহস্য/.test(t)) return "horror";
+  if (/health|disease|doctor|hospital|medicine|virus|cancer|diet|fitness|স্বাস্থ্য|রোগ|চিকিৎসা/.test(t)) return "health";
   return "general";
 }
 
 function getCategoryScene(category: string): { scene: string; tone: string; elements: string } {
   const scenes: Record<string, { scene: string; tone: string; elements: string }> = {
     history: {
-      scene: "Ancient ruins with dramatic smoke and fire, historical battlefield aftermath, crumbling fortress walls, soldiers silhouettes against burning sky",
-      tone: "Desaturated warm palette with selective red/orange highlights, slight grayscale with sepia undertones",
-      elements: "Volumetric smoke, embers floating in air, cracked stone textures, distant flames, dust particles in light beams",
+      scene: "SPLIT STORYTELLING: Left side shows ancient battlefield ruins with smoke, burning villages, soldiers in silhouette. Right side transitions to modern peaceful cityscape with monuments. Time-travel contrast composition",
+      tone: "Left: desaturated sepia with red/orange fire glow. Right: warm golden hour modern tones. Strong light divide in center",
+      elements: "Volumetric smoke, floating embers, cracked stone, ancient weapons on ground, dust particles in dramatic light shafts, distant flames reflecting on wet ground",
     },
-    economy: {
-      scene: "Split composition: left side shows broken infrastructure and slums in shadow, right side shows gleaming modern skyscrapers in golden light. Contrast between poverty and wealth",
-      tone: "Left dark and desaturated, right bright and vibrant with golden hour warmth",
-      elements: "Cracked ground vs polished floors, scattered coins, broken vs pristine buildings, dramatic light divide",
+    money: {
+      scene: "WEALTH CONTRAST: Massive pile of gold coins and cash bundles in foreground, stock market growth chart with glowing green arrows shooting upward, luxury vs poverty split. Left shows struggle (empty pockets, cracked floor), right shows abundance (gold, skyscrapers, luxury)",
+      tone: "Left: dark cold blue desaturated. Right: rich golden warm with green money glow accents",
+      elements: "Floating dollar bills, gold particles, upward arrows, bar charts, scattered coins catching light, money rain effect, reflective gold surfaces",
+    },
+    crime: {
+      scene: "Dark urban alley with police sirens reflecting red and blue on wet pavement, crime scene tape, shadowy figure silhouette, noir detective atmosphere. City skyline in foggy background",
+      tone: "Very dark with harsh red and blue police light contrast, noir color grade, deep shadows with selective color",
+      elements: "Rain reflections on pavement, police light streaks, crime tape, cigarette smoke, broken glass, evidence markers, wet surfaces reflecting lights",
+    },
+    motivation: {
+      scene: "TRANSFORMATION JOURNEY: Left shows person at rock bottom (dark, rain, fallen). Right shows summit of mountain with sunrise, victory pose silhouette. Path of progress connecting both sides",
+      tone: "Left: dark stormy blue-grey. Right: epic golden sunrise with warm orange rays. Dramatic transition from dark to light",
+      elements: "Mountain peak, sunrise god rays, stepping stones path, storm clouds clearing, golden light breakthrough, victory stance shadow",
     },
     technology: {
-      scene: "Futuristic control room with holographic displays, neon-lit cyberpunk cityscape, advanced AI neural network visualization floating in dark space",
-      tone: "Deep blue and electric purple with cyan neon accents, dark environment with bright tech elements",
-      elements: "Holographic UI elements, circuit board patterns, glowing data streams, lens flares, digital particles",
+      scene: "Futuristic AI command center with massive holographic displays showing neural networks, a glowing AI brain visualization floating in center, cyberpunk cityscape visible through panoramic window",
+      tone: "Deep midnight blue with electric cyan and purple neon accents, dark environment with bright holographic elements",
+      elements: "Holographic UI panels, circuit board patterns, glowing data streams, floating code fragments, neural network visualization, lens flares, digital particles, matrix-style data rain",
     },
     education: {
-      scene: "Grand library with towering bookshelves, warm sunlight streaming through large windows onto ancient maps and open books, scholarly atmosphere",
-      tone: "Warm amber and golden tones, soft diffused lighting, rich wood textures",
-      elements: "Stacked books, globe, quill pen, floating knowledge particles, warm dust motes in light beams",
+      scene: "KNOWLEDGE TRANSFORMATION: Left shows struggling student in dim candlelight with books. Right shows graduate on stage with spotlight, diploma, successful career. Library transforms into modern university",
+      tone: "Left: warm amber candlelight. Right: bright stage spotlight white with golden graduation warmth",
+      elements: "Towering bookshelves, floating knowledge particles, graduation cap in air, trophy, scholarship documents, light of wisdom breaking through",
     },
     politics: {
-      scene: "Dramatic government building silhouette against stormy sky, crowd gathering in tension, flags waving in dramatic wind, power and authority atmosphere",
-      tone: "High contrast dark blues and deep reds, stormy atmospheric lighting",
-      elements: "Flag silhouettes, crowd shadows, dramatic clouds, spotlight beams, architectural pillars",
+      scene: "Dramatic parliament building with stormy sky, massive crowd gathering with raised fists, leader podium silhouette against spotlight, flags waving in dramatic wind, tension-filled political rally atmosphere",
+      tone: "High contrast: deep navy blue sky with dramatic red and white spotlight beams, storm clouds with lightning",
+      elements: "Waving flags, crowd silhouettes, microphone podium, dramatic storm clouds, spotlight beams cutting through darkness, rain, tension atmosphere",
     },
     space: {
-      scene: "Deep space nebula with distant galaxies, planet surface with Earth rising on horizon, astronaut perspective of cosmic vastness",
-      tone: "Deep space blacks with vibrant nebula colors: purple, blue, orange, cosmic palette",
-      elements: "Star fields, nebula gas clouds, planet rings, asteroid debris, lens flare from distant star",
+      scene: "Astronaut helmet close-up reflecting a massive nebula and distant Earth, deep space station window view showing cosmic phenomena, epic scale of universe",
+      tone: "Deep space blacks with vibrant nebula colors: electric purple, cosmic blue, supernova orange, star white",
+      elements: "Star fields, nebula gas clouds, planet rings, space station interior, helmet reflection, asteroid debris, cosmic dust, distant galaxy spiral",
     },
     sports: {
-      scene: "Stadium with dramatic spotlight beams cutting through atmosphere, arena floor with motion blur, victory moment atmosphere",
-      tone: "High contrast with vivid stadium lighting, green and golden accents",
-      elements: "Spotlight beams, crowd blur, motion trails, confetti particles, dramatic shadows",
+      scene: "Stadium final moment: massive crowd in dramatic lighting, spotlight cutting through smoke/pyrotechnics, victory celebration freeze-frame, confetti explosion",
+      tone: "High contrast stadium lighting: bright white spots against deep dark crowd, vivid green field, golden trophy glow",
+      elements: "Spotlight beams through smoke, confetti explosion, crowd wave, motion blur energy trails, trophy gleam, pyrotechnic sparks",
     },
     horror: {
-      scene: "Abandoned dark corridor with single flickering light, fog creeping along floor, eerie shadows on cracked walls, unsettling atmosphere",
-      tone: "Very dark with cold blue-green undertones, minimal harsh lighting, deep shadows",
-      elements: "Fog, flickering light, cracks in walls, distorted shadows, dust particles",
+      scene: "Abandoned asylum corridor with single flickering red emergency light, long shadows stretching toward viewer, fog creeping along cracked floor, something lurking in distant darkness",
+      tone: "Near-black with sickly green-grey undertones, single harsh red or cold blue light source, maximum shadow",
+      elements: "Flickering light strobes, thick floor fog, cracked peeling walls, distorted shadows, floating dust, cobwebs, eerie silhouette in far doorway",
+    },
+    health: {
+      scene: "Medical drama composition: hospital corridor with dramatic overhead surgical light, DNA helix visualization, microscopic virus particles enlarged to dramatic scale, life-saving moment tension",
+      tone: "Clinical blue-white with warm human skin tones, sterile environment with emotional warmth, selective red for urgency",
+      elements: "DNA helix, microscopic cells enlarged, surgical light halo, heartbeat monitor line, medical equipment silhouettes, dramatic lens flare from surgical lamp",
     },
     general: {
-      scene: "Cinematic wide-angle dramatic landscape or abstract composition with strong visual impact, storytelling mood",
-      tone: "High contrast cinematic color grading with complementary color split (teal and orange)",
-      elements: "Volumetric light rays, atmospheric haze, bokeh, lens flare, layered depth",
+      scene: "Epic cinematic landscape with dramatic cloud formation, volumetric god rays breaking through storm clouds onto a lone figure, sweeping vista with strong foreground-background depth",
+      tone: "Hollywood-grade teal and orange complementary color split, high dynamic range, moody atmospheric grade",
+      elements: "Volumetric god rays, atmospheric haze, dramatic clouds, bokeh lights, lens flare, layered depth with foreground silhouettes, particle dust in light beams",
     },
   };
   return scenes[category] || scenes.general;
@@ -97,15 +107,18 @@ function getCategoryScene(category: string): { scene: string; tone: string; elem
 
 function getEmotionForCategory(category: string): string {
   const emotions: Record<string, string> = {
-    history: "serious, intense, battle-hardened expression, looking into the distance with determination",
-    economy: "shocked, frustrated expression, wide eyes showing disbelief, furrowed brows",
-    technology: "awe-struck, fascinated expression, eyes reflecting holographic light, slight wonder",
-    education: "thoughtful, wise expression, contemplative gaze, intellectual confidence",
-    politics: "stern, authoritative expression, commanding presence, sharp focused eyes",
-    space: "awestruck, mouth slightly open, eyes wide reflecting starlight, wonder and amazement",
-    sports: "fierce determination, sweat on face, victory scream, raw competitive energy",
-    horror: "terrified, eyes wide with fear, pale face, mouth open in silent scream",
-    general: "dramatic intense expression, strong eye contact with camera, cinematic presence",
+    history: "serious, intense, battle-hardened expression with deep focused eyes staring into distance, jaw clenched with determination, weathered but strong",
+    money: "SHOCKED and EXCITED expression, eyes extremely wide open, mouth slightly open in disbelief, eyebrows raised high, as if seeing incredible wealth for the first time",
+    crime: "dark suspicious look, narrowed eyes with intensity, one eyebrow raised, shadowy mysterious expression, noir detective energy",
+    motivation: "powerful confident smile, chest out, chin slightly raised, eyes burning with determination, winner's expression, unstoppable energy",
+    technology: "awe-struck fascinated expression, eyes wide reflecting holographic blue light, slight wonder and curiosity, futuristic genius look",
+    education: "thoughtful intellectual expression, slight knowing smile, wise contemplative gaze, confident scholar energy, glasses optional",
+    politics: "stern authoritative commanding expression, sharp piercing eyes, slight frown of power, leader's decisive face",
+    space: "pure awestruck wonder, mouth slightly open, eyes wide reflecting starlight and nebula colors, cosmic amazement",
+    sports: "fierce battle cry expression, veins visible, intense competitive scream, sweat glistening, raw victory energy",
+    horror: "genuine terror, eyes wide with primal fear, pale skin, mouth open in silent scream, looking at something horrifying off-camera",
+    health: "concerned empathetic expression, focused doctor's gaze, slight worry mixed with determination to save, medical professional intensity",
+    general: "dramatic intense expression with strong eye contact directly at camera, charismatic presence, slightly furrowed brow, commanding attention",
   };
   return emotions[category] || emotions.general;
 }
@@ -115,50 +128,69 @@ function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string
   const { scene, tone, elements } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
 
-  return `Generate a HIGH-CTR CINEMATIC YOUTUBE THUMBNAIL IMAGE for the topic: "${prompt}".
+  return `Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 
-MANDATORY SUBJECT (RIGHT SIDE):
-- A photorealistic human figure positioned on the RIGHT 40% of the frame
-- Expression: ${emotion}
-- Shot from chest up, slightly angled, looking toward camera or slightly off-camera
-- RED GLOW OUTLINE around the subject (subtle neon red edge lighting / rim light)
-- Strong backlight creating dramatic silhouette edge
-- Face must be sharp, detailed, and emotionally expressive
-- Subject should feel like a real documentary host or storyteller
+═══ MANDATORY SUBJECT (RIGHT 40% OF FRAME) ═══
+- Ultra-photorealistic South Asian male face and upper body, age 25-35
+- EMOTION: ${emotion}
+- Camera angle: medium close-up, chest to head, slightly angled 15° to the right
+- Looking toward camera or dramatically off-camera based on emotion
+- Skin texture must be hyper-detailed: visible pores, natural skin imperfections, realistic lighting on skin
+- Hair slightly wind-blown or dramatic
+- Subject must be SHARP (f/2.8 focus on face) while background is BLURRED
 
-BACKGROUND (FULL FRAME, BEHIND SUBJECT):
-- ${scene}
-- COLOR TONE: ${tone}
-- DETAIL ELEMENTS: ${elements}
-- Background should be slightly BLURRED (depth of field, f/1.8 bokeh effect)
-- Dramatic cinematic lighting: strong key light from one side, fill light opposite
+═══ RED GLOW RIM LIGHT (CRITICAL) ═══
+- Strong RED/CRIMSON neon rim light outlining the subject's head, shoulders, and body edge
+- The red glow should be visible as a bright edge light separating subject from background
+- Additional warm backlight creating a halo/glow effect behind the subject's head
+- This red outline is the KEY visual signature — make it prominent and cinematic
 
-COMPOSITION RULES:
-- LEFT 55% of frame: keep relatively clear for text overlay (darker, more atmospheric)
-- RIGHT 45% of frame: subject with dramatic lighting
-- Storytelling split if applicable: left = problem/past (darker), right = solution/future (brighter)
-- Layered depth: foreground particles/smoke, mid-ground subject sharp, background atmospheric blur
-- ${style} visual style, ${colorScheme} color emphasis
+═══ STORYTELLING BACKGROUND (FULL FRAME) ═══
+${scene}
+COLOR GRADING: ${tone}
+ATMOSPHERIC DETAILS: ${elements}
+- Background MUST tell a story — NEVER use plain, flat, or generic backgrounds
+- Apply gaussian depth blur (f/1.4 bokeh) to background — subject stays sharp
+- Background should have 3 layers: far background (very blurry), mid-ground (slightly blurry), foreground elements (particles/smoke)
 
-COLOR GRADING:
-- High contrast cinematic grade (like movie color correction)
-- Teal shadows + orange highlights (complementary color split)
-- Deep blacks, rich midtones, controlled highlights
-- Dramatic vignette darkening edges
+═══ CINEMATIC COMPOSITION LAYOUT ═══
+- LEFT 55%: Dark atmospheric zone with subtle scene elements, reserved for text overlay
+  → Apply dark gradient overlay (black 60% opacity fading to transparent)
+  → Some scene elements visible but not cluttered
+- RIGHT 45%: Subject dominates with dramatic lighting
+  → Subject's face is the focal point
+  → Red rim light creates separation from background
+- VIGNETTE: Strong dark vignette on all edges, especially corners (cinema-style framing)
 
-CINEMATIC EFFECTS:
-- Volumetric light rays or god rays from behind/above subject
-- Atmospheric haze or particles (smoke, dust, embers based on topic)
-- Lens flare from strong light source
-- Red/orange rim light on subject edges creating glow outline effect
+═══ LIGHTING SYSTEM (5-POINT) ═══
+1. KEY LIGHT: Strong warm light from upper-right, illuminating subject's face dramatically
+2. RIM LIGHT: Intense RED/CRIMSON edge light from behind-left, creating the signature glow outline
+3. FILL LIGHT: Subtle cool blue/teal ambient from left side (barely visible, prevents pure black)
+4. BACKGROUND LIGHT: Dramatic volumetric god rays or spotlight in the story background
+5. HAIR LIGHT: Subtle top-down light catching hair edges for separation
 
-CRITICAL RULES:
-- ABSOLUTELY NO TEXT, LETTERS, WORDS, OR TYPOGRAPHY in the image
-- No watermarks, no logos, no written content
-- Must look like a viral YouTube documentary thumbnail (MrBeast/Veritasium quality)
-- NOT generic AI art — must feel like a real cinematic movie still
-- High detail, photorealistic textures, 8K quality
-- Every thumbnail must tell a visual story`;
+═══ COLOR GRADING (HOLLYWOOD-GRADE) ═══
+- Teal shadows + orange/warm highlights (complementary split-toning)
+- Left side of frame: cooler, more desaturated, moodier
+- Right side (subject area): warmer, more vibrant, skin tones pop
+- Crushed blacks (deep rich shadows, not grey)
+- Controlled highlights with slight bloom on bright areas
+- Overall: dark, moody, high-contrast cinematic look
+
+═══ CTR-BOOSTING EFFECTS ═══
+- Volumetric light rays (god rays) from behind or above subject
+- Atmospheric particles: smoke wisps, dust motes, embers, or topic-relevant particles floating in light beams
+- Subtle lens flare from the strongest light source
+- Motion energy: slight directional blur on background elements suggesting dynamism
+- Depth layers creating parallax-like 3D feel
+
+═══ ABSOLUTE RULES ═══
+- ZERO text, letters, words, numbers, typography, watermarks, or logos in the image
+- Must rival MrBeast / Veritasium / Johnny Harris thumbnail quality
+- NOT generic AI art — must feel like a real Hollywood movie still or Netflix documentary frame
+- Photorealistic textures, 8K detail, cinematic depth of field
+- Every pixel must serve the story — no empty or wasted space
+- The thumbnail must make viewers STOP SCROLLING and CLICK`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
