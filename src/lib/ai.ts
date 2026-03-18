@@ -93,7 +93,9 @@ export async function generateContent(
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({ error: "Request failed" }));
-      return { error: err.error || `Error ${resp.status}` };
+      console.error("IMAGE API ERROR PAYLOAD:", err);
+      const message = err?.error?.message || err?.error || `Error ${resp.status}`;
+      return { error: message };
     }
 
     const data = await resp.json();

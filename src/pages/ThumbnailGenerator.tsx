@@ -83,6 +83,7 @@ const ThumbnailGenerator = () => {
     setIsGenerating(false);
 
     if (genError) {
+      console.error("IMAGE API ERROR PAYLOAD:", genError);
       setError(genError);
       toast({ title: "Image generation failed", description: genError, variant: "destructive" });
       return;
@@ -94,7 +95,10 @@ const ThumbnailGenerator = () => {
         await saveToHistory(user.id, "image", config.title, `Thumbnail: ${config.platform.label}`, `[thumbnail generated]`);
       }
     } else {
-      setError("No background generated. Try again.");
+      const msg = "No background generated — the API returned no images.";
+      console.error("IMAGE API ERROR PAYLOAD:", { message: msg });
+      setError(msg);
+      toast({ title: "Image generation failed", description: msg, variant: "destructive" });
     }
   };
 
