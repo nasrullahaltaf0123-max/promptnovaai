@@ -7,6 +7,7 @@ interface Profile {
   full_name: string | null;
   email: string | null;
   plan: string;
+  role: string | null;
   created_at: string;
 }
 

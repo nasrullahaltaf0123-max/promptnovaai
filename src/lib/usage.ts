@@ -23,7 +23,8 @@ export async function getDailyUsage(userId: string, toolType: string): Promise<n
   return (data as any)?.count ?? 0;
 }
 
-export async function incrementUsage(userId: string, toolType: string): Promise<boolean> {
+export async function incrementUsage(userId: string, toolType: string, isAdmin = false): Promise<boolean> {
+  if (isAdmin) return true; // Admin bypasses all limits
   const current = await getDailyUsage(userId, toolType);
   const limit = getLimit(toolType);
   if (current >= limit) return false;

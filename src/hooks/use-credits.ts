@@ -34,5 +34,5 @@ export function useCredits() {
     refresh();
   }, [refresh]);
 
-  return { used, remaining, dailyLimit, loading, refresh, plan };
+  return { used, remaining, dailyLimit, loading, refresh, plan, isAdmin };
 }
