@@ -8,7 +8,8 @@ import ThumbnailPreview from "@/components/thumbnail/ThumbnailPreview";
 import { PLATFORMS, type ThumbnailConfig } from "@/components/thumbnail/types";
 
 const ThumbnailGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [usage, setUsage] = useState(0);
   const limit = getLimit("image");
   const [isGenerating, setIsGenerating] = useState(false);
