@@ -41,7 +41,7 @@ const LogoGenerator = () => {
     setError("");
     setImages([]);
 
-    const ok = await incrementUsage(user.id, "logo");
+    const ok = await incrementUsage(user.id, "logo", isAdmin);
     if (!ok) { setIsGenerating(false); toast({ title: "Limit reached", variant: "destructive" }); return; }
     setUsage((u) => u + 1);
 
