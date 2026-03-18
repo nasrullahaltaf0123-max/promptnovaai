@@ -55,7 +55,7 @@ export default function ThumbnailControls({ config, onChange, onGenerate, onSubj
 
       {/* Headline Suggestions */}
       {(headlines && headlines.length > 0) && (
-        <Section label="🔥 Suggested Headlines" icon={<Zap className="w-3.5 h-3.5 inline mr-1 text-yellow-500" />}>
+        <Section label="🔥 Suggested Headlines" icon={<Zap className="w-3.5 h-3.5 inline mr-1 text-primary" />}>
           <div className="space-y-1.5">
             {headlines.map((h, i) => (
               <button
