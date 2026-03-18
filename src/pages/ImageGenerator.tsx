@@ -14,7 +14,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const ImageGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState(styles[0]);
   const [isGenerating, setIsGenerating] = useState(false);
