@@ -111,6 +111,7 @@ export type Database = {
           last_active_date: string | null
           plan: string
           referral_code: string | null
+          role: string | null
           streak_count: number
           total_xp: number
         }
@@ -123,6 +124,7 @@ export type Database = {
           last_active_date?: string | null
           plan?: string
           referral_code?: string | null
+          role?: string | null
           streak_count?: number
           total_xp?: number
         }
@@ -135,6 +137,7 @@ export type Database = {
           last_active_date?: string | null
           plan?: string
           referral_code?: string | null
+          role?: string | null
           streak_count?: number
           total_xp?: number
         }
