@@ -31,7 +31,7 @@ const BlogWriter = () => {
 
   const handleGenerate = async () => {
     if (!topic.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", description: `You've used all ${limit} blog generations for today.`, variant: "destructive" });
       return;
     }
