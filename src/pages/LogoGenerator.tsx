@@ -33,7 +33,7 @@ const LogoGenerator = () => {
 
   const handleGenerate = async () => {
     if (!brandName.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
