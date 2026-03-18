@@ -324,6 +324,7 @@ serve(async (req) => {
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
     const isImageGen = toolType === "image" || toolType === "thumbnail" || toolType === "logo";
+    const isHeadlineSuggest = toolType === "thumbnail-headlines";
 
     if (toolType === "chat" && messages) {
       chatMessages.push(...messages);
