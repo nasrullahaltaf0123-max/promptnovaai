@@ -50,7 +50,7 @@ const ThumbnailGenerator = () => {
 
   const handleGenerate = async () => {
     if (!config.title.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
