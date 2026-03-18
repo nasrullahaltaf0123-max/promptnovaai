@@ -87,9 +87,9 @@ const AIChat = () => {
     <div className="max-w-3xl mx-auto h-[calc(100vh-7rem)] flex flex-col">
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-heading text-foreground">AI Chat</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">
           {usage}/{limit} today
-        </span>
+        </span>}
       </div>
 
       <div ref={scrollRef} className="flex-1 glass-card rounded-2xl p-5 overflow-y-auto space-y-4 mb-4">
