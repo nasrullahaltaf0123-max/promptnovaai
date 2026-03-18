@@ -197,7 +197,6 @@ serve(async (req) => {
       const bonusCredits = (profile as any)?.bonus_credits || 0;
       const dailyLimit = plan === "pro" ? PRO_DAILY_CREDITS : FREE_DAILY_CREDITS;
 
-      const today = new Date().toISOString().split("T")[0];
       const { data: usageRows } = await serviceClient
         .from("usage_tracking")
         .select("count")
