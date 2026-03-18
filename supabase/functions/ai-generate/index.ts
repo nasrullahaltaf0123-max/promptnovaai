@@ -225,6 +225,18 @@ const systemPrompts: Record<string, string> = {
   image: "You are an AI image generator. Generate the image the user describes. Do not describe images in text — actually generate visual images.",
   thumbnail: "You are an AI thumbnail designer. Generate a visually striking thumbnail image. Do not describe — actually generate the image.",
   logo: "You are an AI logo designer. Generate a professional logo image. Do not describe — actually generate the image.",
+  "thumbnail-headlines": `You are a viral YouTube headline expert specializing in Bangla and English content. Generate exactly 3 short, powerful, clickable thumbnail headlines.
+
+RULES:
+- If the topic is in Bangla, write headlines in Bangla
+- If the topic is in English, write headlines in English
+- Each headline must be 3-7 words MAXIMUM (thumbnail text must be SHORT)
+- Use power words: shocking, secret, unknown, impossible, dangerous, incredible
+- Create curiosity gap (make viewer NEED to click)
+- Use emotional triggers: fear, greed, curiosity, anger, amazement
+- Format: Return ONLY a JSON array of 3 strings, nothing else
+- Example output: ["কেন ব্যর্থ হচ্ছে?", "গোপন সত্য ফাঁস!", "এটা কি সম্ভব?"]
+- Example English: ["The Hidden Truth", "Why Everyone Failed", "Nobody Expected This"]`,
 };
 
 serve(async (req) => {
