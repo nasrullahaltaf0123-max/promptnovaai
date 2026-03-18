@@ -24,13 +24,10 @@ function buildImagePrompt(prompt: string, style: string): string {
 }
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
-  const base = `YouTube thumbnail, high CTR, bold composition, vibrant colors, high contrast, dramatic lighting, expressive subject, clickbait style, 16:9 ratio, ${style} style, ${colorScheme} color scheme`;
-  const bangla = isBangla(prompt);
-  const typographyRules = bangla
-    ? `Bold Bangla headline text prominently displayed (large and centered), clean Bangla font style like Hind Siliguri or Noto Sans Bengali, thick strokes for readability, high contrast background, glow and shadow and outline effects for visibility`
-    : `Bold English headline typography prominently displayed, clean modern sans-serif font like Montserrat or Bebas Neue style, large readable text, glow and shadow and stroke effects`;
-  const effects = `Neon glow effect, drop shadow for depth, stroke outline for readability, slight blur background for focus on subject, gradient overlays, light particles and tech glow where relevant`;
-  return `Create a thumbnail: ${prompt}. ${base}. Typography rules: ${typographyRules}. Add BIG headline text (2-4 words max), add emotion (shock, money, success, warning), use contrast (light text on dark bg or vice versa). Effects: ${effects}`;
+  // Generate BACKGROUND ONLY — text is overlaid via frontend HTML
+  const base = `YouTube thumbnail BACKGROUND image only, NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY. High quality background scene, dramatic cinematic lighting, high contrast, vivid colors, 16:9 ratio, ${style} style, ${colorScheme} color scheme`;
+  const effects = `Dramatic lighting, bokeh background blur where appropriate, color grading, high contrast, depth of field, cinematic composition, visually striking scene that works as a background behind overlay text`;
+  return `Generate a thumbnail BACKGROUND IMAGE (no text at all) for the topic: ${prompt}. ${base}. Effects: ${effects}. IMPORTANT: Do NOT include any text, letters, words, or typography in the image. The image should be a pure visual background.`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
