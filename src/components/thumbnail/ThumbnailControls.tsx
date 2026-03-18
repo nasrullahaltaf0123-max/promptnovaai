@@ -15,6 +15,7 @@ interface Props {
   isGenerating: boolean;
   usage: number;
   limit: number;
+  isAdmin?: boolean;
 }
 
 const Chip = ({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) => (
