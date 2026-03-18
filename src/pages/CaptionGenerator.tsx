@@ -39,7 +39,7 @@ const CaptionGenerator = () => {
     setIsGenerating(true);
     setCaptions([]);
 
-    const ok = await incrementUsage(user.id, "prompt");
+    const ok = await incrementUsage(user.id, "prompt", isAdmin);
     if (!ok) { setIsGenerating(false); return; }
     setUsage((u) => u + 1);
 
