@@ -342,6 +342,8 @@ serve(async (req) => {
         userPrompt = buildThumbnailPrompt(prompt, options.style || "YouTube", options.colorScheme || "Vibrant");
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
+      } else if (isHeadlineSuggest) {
+        userPrompt = `Generate 3 viral clickable thumbnail headlines for this topic: "${prompt}". Return ONLY a JSON array of 3 short headline strings.`;
       }
       chatMessages.push({ role: "user", content: userPrompt });
     }
