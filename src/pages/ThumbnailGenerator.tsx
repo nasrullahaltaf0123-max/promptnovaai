@@ -107,6 +107,7 @@ const ThumbnailGenerator = () => {
           isGenerating={isGenerating}
           usage={usage}
           limit={limit}
+          isAdmin={isAdmin}
         />
         <ThumbnailPreview config={config} isGenerating={isGenerating} error={error} />
       </div>

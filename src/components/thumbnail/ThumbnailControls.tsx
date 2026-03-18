@@ -30,7 +30,7 @@ const positions: { value: TextPosition; label: string }[] = [
   { value: "bottom-left", label: "Bottom Left" },
 ];
 
-export default function ThumbnailControls({ config, onChange, onGenerate, onSubjectUpload, onBgUpload, isGenerating, usage, limit }: Props) {
+export default function ThumbnailControls({ config, onChange, onGenerate, onSubjectUpload, onBgUpload, isGenerating, usage, limit, isAdmin }: Props) {
   return (
     <div className="glass-card-highlight rounded-2xl p-5 space-y-4 overflow-y-auto max-h-[80vh]">
       {/* Platform */}
