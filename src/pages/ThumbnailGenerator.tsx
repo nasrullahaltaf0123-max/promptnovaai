@@ -8,7 +8,8 @@ import ThumbnailPreview from "@/components/thumbnail/ThumbnailPreview";
 import { PLATFORMS, type ThumbnailConfig } from "@/components/thumbnail/types";
 
 const ThumbnailGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [usage, setUsage] = useState(0);
   const limit = getLimit("image");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -49,14 +50,14 @@ const ThumbnailGenerator = () => {
 
   const handleGenerate = async () => {
     if (!config.title.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
     setIsGenerating(true);
     setError("");
 
-    const ok = await incrementUsage(user.id, "image");
+    const ok = await incrementUsage(user.id, "image", isAdmin);
     if (!ok) {
       setIsGenerating(false);
       toast({ title: "Limit reached", variant: "destructive" });
@@ -106,6 +107,7 @@ const ThumbnailGenerator = () => {
           isGenerating={isGenerating}
           usage={usage}
           limit={limit}
+          isAdmin={isAdmin}
         />
         <ThumbnailPreview config={config} isGenerating={isGenerating} error={error} />
       </div>

@@ -14,7 +14,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const ImageGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState(styles[0]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -30,7 +31,7 @@ const ImageGenerator = () => {
 
   const handleGenerate = async () => {
     if (!prompt.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", description: `You've used all ${limit} image generations for today.`, variant: "destructive" });
       return;
     }
@@ -38,7 +39,7 @@ const ImageGenerator = () => {
     setError("");
     setImages([]);
 
-    const ok = await incrementUsage(user.id, "image");
+    const ok = await incrementUsage(user.id, "image", isAdmin);
     if (!ok) { setIsGenerating(false); toast({ title: "Limit reached", variant: "destructive" }); return; }
     setUsage((u) => u + 1);
 
@@ -73,7 +74,7 @@ const ImageGenerator = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-heading text-foreground">Image Generator</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>}
       </div>
 
       {/* Input Section */}

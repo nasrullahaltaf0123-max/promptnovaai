@@ -15,7 +15,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const LogoGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [brandName, setBrandName] = useState("");
   const [industry, setIndustry] = useState(industries[0]);
   const [logoStyle, setLogoStyle] = useState(logoStyles[0]);
@@ -32,7 +33,7 @@ const LogoGenerator = () => {
 
   const handleGenerate = async () => {
     if (!brandName.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
@@ -40,7 +41,7 @@ const LogoGenerator = () => {
     setError("");
     setImages([]);
 
-    const ok = await incrementUsage(user.id, "logo");
+    const ok = await incrementUsage(user.id, "logo", isAdmin);
     if (!ok) { setIsGenerating(false); toast({ title: "Limit reached", variant: "destructive" }); return; }
     setUsage((u) => u + 1);
 
@@ -74,7 +75,7 @@ const LogoGenerator = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-heading text-foreground">Logo Generator</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">

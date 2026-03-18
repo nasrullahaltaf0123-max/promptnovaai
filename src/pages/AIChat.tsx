@@ -13,7 +13,8 @@ interface Message {
 }
 
 const AIChat = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hello! I'm **PromptNova AI**. How can I help you today?" },
   ]);
@@ -34,7 +35,7 @@ const AIChat = () => {
 
   const handleSend = async () => {
     if (!input.trim() || isLoading || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", description: `You've used all ${limit} chat messages for today.`, variant: "destructive" });
       return;
     }
@@ -45,7 +46,7 @@ const AIChat = () => {
     setInput("");
     setIsLoading(true);
 
-    const ok = await incrementUsage(user.id, "chat");
+    const ok = await incrementUsage(user.id, "chat", isAdmin);
     if (!ok) {
       toast({ title: "Limit reached", description: "Daily chat limit exceeded.", variant: "destructive" });
       setIsLoading(false);
@@ -86,9 +87,9 @@ const AIChat = () => {
     <div className="max-w-3xl mx-auto h-[calc(100vh-7rem)] flex flex-col">
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-heading text-foreground">AI Chat</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">
           {usage}/{limit} today
-        </span>
+        </span>}
       </div>
 
       <div ref={scrollRef} className="flex-1 glass-card rounded-2xl p-5 overflow-y-auto space-y-4 mb-4">

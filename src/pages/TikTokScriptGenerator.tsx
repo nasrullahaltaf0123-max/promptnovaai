@@ -15,7 +15,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const TikTokScriptGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [idea, setIdea] = useState("");
   const [niche, setNiche] = useState(niches[0]);
   const [format, setFormat] = useState(formats[0]);
@@ -31,14 +32,14 @@ const TikTokScriptGenerator = () => {
 
   const handleGenerate = async () => {
     if (!idea.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
     setIsGenerating(true);
     setScript("");
 
-    const ok = await incrementUsage(user.id, "script");
+    const ok = await incrementUsage(user.id, "script", isAdmin);
     if (!ok) { setIsGenerating(false); return; }
     setUsage((u) => u + 1);
 
@@ -79,7 +80,7 @@ Format the output clearly with sections: HOOK, BODY, CTA, and VISUAL NOTES.`;
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-heading text-foreground">TikTok Script Generator</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>}
       </div>
 
       <div className="glass-card-highlight rounded-2xl p-6 space-y-5 mb-6">

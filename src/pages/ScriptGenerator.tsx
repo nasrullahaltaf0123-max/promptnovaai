@@ -14,7 +14,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const ScriptGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [topic, setTopic] = useState("");
   const [length, setLength] = useState(scriptLengths[1]);
   const [tone, setTone] = useState(toneStyles[0]);
@@ -30,12 +31,12 @@ const ScriptGenerator = () => {
 
   const handleGenerate = async () => {
     if (!topic.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
     setIsGenerating(true);
-    await incrementUsage(user.id, "script");
+    await incrementUsage(user.id, "script", isAdmin);
     setUsage((u) => u + 1);
 
     const { result, error } = await generateContent("script", topic, { length, tone });
@@ -51,7 +52,7 @@ const ScriptGenerator = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-heading text-foreground">Script Generator</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="glass-card-highlight rounded-2xl p-6 space-y-5">

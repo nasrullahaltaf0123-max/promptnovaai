@@ -11,9 +11,10 @@ export function useCredits() {
   const [loading, setLoading] = useState(true);
 
   const plan = profile?.plan || "free";
+  const isAdmin = profile?.role === "admin";
   const bonusCredits = (profile as any)?.bonus_credits || 0;
-  const dailyLimit = (plan === "pro" ? PRO_DAILY_CREDITS : FREE_DAILY_CREDITS) + bonusCredits;
-  const remaining = Math.max(0, dailyLimit - used);
+  const dailyLimit = isAdmin ? Infinity : (plan === "pro" ? PRO_DAILY_CREDITS : FREE_DAILY_CREDITS) + bonusCredits;
+  const remaining = isAdmin ? Infinity : Math.max(0, dailyLimit - used);
 
   const refresh = useCallback(async () => {
     if (!user) return;
@@ -33,5 +34,5 @@ export function useCredits() {
     refresh();
   }, [refresh]);
 
-  return { used, remaining, dailyLimit, loading, refresh, plan };
+  return { used, remaining, dailyLimit, loading, refresh, plan, isAdmin };
 }

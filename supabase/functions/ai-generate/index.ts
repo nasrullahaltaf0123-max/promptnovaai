@@ -180,36 +180,42 @@ serve(async (req) => {
     const userId = user.id;
 
     // ── Credit check ──
-    const { data: profile } = await supabase
+    const serviceClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data: profile } = await serviceClient
       .from("profiles")
-      .select("plan, bonus_credits")
+      .select("plan, bonus_credits, role")
       .eq("id", userId)
       .single();
 
     const plan = (profile as any)?.plan || "free";
-    const bonusCredits = (profile as any)?.bonus_credits || 0;
-    const dailyLimit = plan === "pro" ? PRO_DAILY_CREDITS : FREE_DAILY_CREDITS;
+    const userRole = (profile as any)?.role || "user";
+    const isAdmin = userRole === "admin";
 
-    // Count today's total usage
-    const today = new Date().toISOString().split("T")[0];
-    const { data: usageRows } = await supabase
-      .from("usage_tracking")
-      .select("count")
-      .eq("user_id", userId)
-      .eq("used_at", today);
+    // Admin users bypass all limits
+    if (!isAdmin) {
+      const bonusCredits = (profile as any)?.bonus_credits || 0;
+      const dailyLimit = plan === "pro" ? PRO_DAILY_CREDITS : FREE_DAILY_CREDITS;
 
-    const totalUsedToday = (usageRows as any[] || []).reduce((sum: number, r: any) => sum + (r.count || 0), 0);
-    const effectiveLimit = dailyLimit + bonusCredits;
+      const today = new Date().toISOString().split("T")[0];
+      const { data: usageRows } = await serviceClient
+        .from("usage_tracking")
+        .select("count")
+        .eq("user_id", userId)
+        .eq("used_at", today);
 
-    if (totalUsedToday >= effectiveLimit) {
-      return new Response(
-        JSON.stringify({
-          error: "Daily credit limit reached. Upgrade to Pro for more credits!",
-          credits_used: totalUsedToday,
-          credits_limit: effectiveLimit,
-        }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      const totalUsedToday = (usageRows as any[] || []).reduce((sum: number, r: any) => sum + (r.count || 0), 0);
+      const effectiveLimit = dailyLimit + bonusCredits;
+
+      if (totalUsedToday >= effectiveLimit) {
+        return new Response(
+          JSON.stringify({
+            error: "Daily credit limit reached. Upgrade to Pro for more credits!",
+            credits_used: totalUsedToday,
+            credits_limit: effectiveLimit,
+          }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
     // ── Build request ──

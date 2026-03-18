@@ -15,7 +15,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const CaptionGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState(platforms[0]);
   const [tone, setTone] = useState(tones[0]);
@@ -31,14 +32,14 @@ const CaptionGenerator = () => {
 
   const handleGenerate = async () => {
     if (!topic.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
     setIsGenerating(true);
     setCaptions([]);
 
-    const ok = await incrementUsage(user.id, "prompt");
+    const ok = await incrementUsage(user.id, "prompt", isAdmin);
     if (!ok) { setIsGenerating(false); return; }
     setUsage((u) => u + 1);
 
@@ -69,7 +70,7 @@ const CaptionGenerator = () => {
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-heading text-foreground">Viral Caption Generator</h1>
-        <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>
+        {!isAdmin && <span className="text-micro text-muted-foreground bg-secondary/50 px-3 py-1 rounded-lg">{usage}/{limit} today</span>}
       </div>
 
       <div className="glass-card-highlight rounded-2xl p-6 space-y-5 mb-6">
