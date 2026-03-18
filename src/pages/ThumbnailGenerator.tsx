@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Download, Loader2, ImageIcon, Sparkles, X, ZoomIn } from "lucide-react";
+import { Download, Loader2, ImageIcon, Sparkles, X, ZoomIn, Type } from "lucide-react";
 import ShareButton from "@/components/ShareButton";
 import { useAuth } from "@/lib/auth";
 import { generateContent } from "@/lib/ai";
@@ -9,6 +9,16 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const thumbnailStyles = ["YouTube", "Blog Header", "Social Media", "Podcast Cover", "Course Thumbnail"];
 const colorSchemes = ["Vibrant", "Dark & Bold", "Minimal", "Gradient", "Neon"];
+const textGradients = [
+  { label: "Yellow → White", class: "thumb-gradient-yellow" },
+  { label: "Cyan → White", class: "thumb-gradient-cyan" },
+  { label: "Neon Purple", class: "thumb-gradient-neon" },
+  { label: "Pure White", class: "" },
+];
+
+function isBangla(text: string): boolean {
+  return /[\u0980-\u09FF]/.test(text);
+}
 
 const OptionButton = ({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) => (
   <button onClick={onClick} className={`px-3 py-1.5 rounded-lg text-micro font-medium transition-all duration-200 ${selected ? "bg-foreground text-background" : "bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary"}`}>{children}</button>
@@ -17,8 +27,10 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 const ThumbnailGenerator = () => {
   const { user } = useAuth();
   const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
   const [style, setStyle] = useState(thumbnailStyles[0]);
   const [colorScheme, setColorScheme] = useState(colorSchemes[0]);
+  const [textGradient, setTextGradient] = useState(textGradients[0]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [error, setError] = useState("");
@@ -29,6 +41,8 @@ const ThumbnailGenerator = () => {
   useEffect(() => {
     if (user) getDailyUsage(user.id, "image").then(setUsage);
   }, [user]);
+
+  const bangla = isBangla(title) || isBangla(subtitle);
 
   const handleGenerate = async () => {
     if (!title.trim() || !user) return;
@@ -44,6 +58,7 @@ const ThumbnailGenerator = () => {
     if (!ok) { setIsGenerating(false); toast({ title: "Limit reached", variant: "destructive" }); return; }
     setUsage((u) => u + 1);
 
+    // Pass a simplified prompt — text will be overlaid via HTML
     const { images: generated, error: genError } = await generateContent("thumbnail", title, { style, colorScheme });
     setIsGenerating(false);
 
@@ -61,14 +76,35 @@ const ThumbnailGenerator = () => {
     }
   };
 
-  const downloadImage = (dataUrl: string, index: number) => {
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `promptnova-thumbnail-${index + 1}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadThumbnail = (index: number) => {
+    const container = document.getElementById(`thumb-composite-${index}`);
+    if (!container) return;
+    // Use canvas to composite
+    import("html2canvas").then(({ default: html2canvas }) => {
+      html2canvas(container, { useCORS: true, scale: 2, backgroundColor: null }).then((canvas) => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = `promptnova-thumbnail-${index + 1}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    }).catch(() => {
+      // Fallback: download just the image
+      const img = images[index];
+      if (img) {
+        const link = document.createElement("a");
+        link.href = img;
+        link.download = `promptnova-thumbnail-${index + 1}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
   };
+
+  const titleClass = bangla ? "thumb-title-bn" : "thumb-title-en";
+  const subtitleClass = bangla ? "thumb-subtitle-bn" : "thumb-subtitle-en";
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -78,10 +114,18 @@ const ThumbnailGenerator = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="glass-card-highlight rounded-2xl p-6 space-y-5">
+        {/* Controls */}
+        <div className="glass-card-highlight rounded-2xl p-6 space-y-4">
           <div>
-            <label className="text-caption font-medium text-foreground mb-2 block">Thumbnail title / topic</label>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter your video or blog title..." className="w-full bg-secondary/30 border border-border/40 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+            <label className="text-caption font-medium text-foreground mb-2 block">
+              <Type className="w-3.5 h-3.5 inline mr-1.5 opacity-60" />
+              Title text (shown on thumbnail)
+            </label>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter title — English or বাংলা..." className="w-full bg-secondary/30 border border-border/40 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+          </div>
+          <div>
+            <label className="text-caption font-medium text-foreground mb-2 block">Subtitle (optional)</label>
+            <input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Add a subtitle..." className="w-full bg-secondary/30 border border-border/40 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
           </div>
           <div>
             <label className="text-caption font-medium text-foreground mb-2 block">Style</label>
@@ -91,11 +135,16 @@ const ThumbnailGenerator = () => {
             <label className="text-caption font-medium text-foreground mb-2 block">Color scheme</label>
             <div className="flex flex-wrap gap-1.5">{colorSchemes.map((c) => <OptionButton key={c} selected={colorScheme === c} onClick={() => setColorScheme(c)}>{c}</OptionButton>)}</div>
           </div>
+          <div>
+            <label className="text-caption font-medium text-foreground mb-2 block">Text color</label>
+            <div className="flex flex-wrap gap-1.5">{textGradients.map((g) => <OptionButton key={g.label} selected={textGradient.label === g.label} onClick={() => setTextGradient(g)}>{g.label}</OptionButton>)}</div>
+          </div>
           <button onClick={handleGenerate} disabled={isGenerating || !title.trim()} className="w-full bg-foreground text-background font-medium py-2.5 rounded-xl hover:bg-foreground/90 transition-all duration-200 text-caption disabled:opacity-30 flex items-center justify-center gap-2">
             {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <><Sparkles className="w-4 h-4" /> Generate Thumbnails</>}
           </button>
         </div>
 
+        {/* Output */}
         <div className="glass-card rounded-2xl p-6">
           <h3 className="text-caption font-medium text-foreground mb-4">Output</h3>
           <AnimatePresence mode="wait">
@@ -124,17 +173,42 @@ const ThumbnailGenerator = () => {
             )}
 
             {!isGenerating && !error && images.length > 0 && (
-              <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 gap-3">
+              <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
                 {images.map((img, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }} className="group relative aspect-video rounded-xl overflow-hidden border border-border/20">
-                    <img src={img} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-3">
-                      <button onClick={() => setPreviewImage(img)} className="bg-white/20 backdrop-blur-sm text-white p-1.5 rounded-lg hover:bg-white/30 transition-colors">
-                        <ZoomIn className="w-3.5 h-3.5" />
-                      </button>
-                      <button onClick={() => downloadImage(img, i)} className="flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-micro px-2.5 py-1.5 rounded-lg hover:bg-white/30 transition-colors">
-                        <Download className="w-3.5 h-3.5" />
-                      </button>
+                  <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }}>
+                    {/* Composite thumbnail with text overlay */}
+                    <div
+                      id={`thumb-composite-${i}`}
+                      className="group relative aspect-video rounded-xl overflow-hidden border border-border/20"
+                    >
+                      {/* Background image */}
+                      <img src={img} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" crossOrigin="anonymous" />
+
+                      {/* Readability overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Text overlay */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center p-4 pointer-events-none select-none">
+                        <h2 className={`${titleClass} ${textGradient.class} text-2xl sm:text-3xl lg:text-4xl text-center text-white max-w-[90%] drop-shadow-2xl`}>
+                          {title}
+                        </h2>
+                        {subtitle && (
+                          <p className={`${subtitleClass} text-sm sm:text-base lg:text-lg text-center text-white/90 mt-2 max-w-[80%]`}>
+                            {subtitle}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Hover actions */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-3 pointer-events-auto">
+                        <button onClick={() => setPreviewImage(img)} className="bg-white/20 backdrop-blur-sm text-white p-1.5 rounded-lg hover:bg-white/30 transition-colors">
+                          <ZoomIn className="w-3.5 h-3.5" />
+                        </button>
+                        <button onClick={() => downloadThumbnail(i)} className="flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-micro px-2.5 py-1.5 rounded-lg hover:bg-white/30 transition-colors">
+                          <Download className="w-3.5 h-3.5" /> Download
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -158,9 +232,23 @@ const ThumbnailGenerator = () => {
               <button onClick={() => setPreviewImage(null)} className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors">
                 <X className="w-6 h-6" />
               </button>
-              <img src={previewImage} alt="Preview" className="w-full rounded-2xl" />
+              <div className="relative aspect-video rounded-2xl overflow-hidden">
+                <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 select-none">
+                  <h2 className={`${titleClass} ${textGradient.class} text-4xl sm:text-5xl lg:text-6xl text-center text-white drop-shadow-2xl`}>
+                    {title}
+                  </h2>
+                  {subtitle && (
+                    <p className={`${subtitleClass} text-lg sm:text-xl lg:text-2xl text-center text-white/90 mt-3`}>
+                      {subtitle}
+                    </p>
+                  )}
+                </div>
+              </div>
               <div className="absolute bottom-4 right-4">
-                <button onClick={() => downloadImage(previewImage, 0)} className="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
+                <button onClick={() => downloadThumbnail(0)} className="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
                   <Download className="w-4 h-4" /> Download
                 </button>
               </div>
