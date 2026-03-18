@@ -32,7 +32,7 @@ const CaptionGenerator = () => {
 
   const handleGenerate = async () => {
     if (!topic.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
