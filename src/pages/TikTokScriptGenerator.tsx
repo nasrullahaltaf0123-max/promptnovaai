@@ -15,7 +15,8 @@ const OptionButton = ({ selected, onClick, children }: { selected: boolean; onCl
 );
 
 const TikTokScriptGenerator = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
   const [idea, setIdea] = useState("");
   const [niche, setNiche] = useState(niches[0]);
   const [format, setFormat] = useState(formats[0]);
