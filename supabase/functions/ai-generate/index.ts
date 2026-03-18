@@ -137,72 +137,74 @@ function getEmotionForCategory(category: string): string {
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
   const category = detectTopicCategory(prompt);
-  const { scene, tone, elements } = getCategoryScene(category);
+  const { scene, tone, elements, visualClues } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
 
   return `Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
+
+═══ 1-SECOND STORY RULE (MOST IMPORTANT) ═══
+The viewer must understand the ENTIRE topic within 1 SECOND of seeing this thumbnail.
+Use VISUAL CLUES that instantly communicate the subject matter:
+${visualClues}
+- These objects/symbols must be clearly visible in the background composition
+- They act as instant visual shorthand — no text needed to understand the story
 
 ═══ MANDATORY SUBJECT (RIGHT 40% OF FRAME) ═══
 - Ultra-photorealistic South Asian male face and upper body, age 25-35
 - EMOTION: ${emotion}
 - Camera angle: medium close-up, chest to head, slightly angled 15° to the right
-- Looking toward camera or dramatically off-camera based on emotion
-- Skin texture must be hyper-detailed: visible pores, natural skin imperfections, realistic lighting on skin
-- Hair slightly wind-blown or dramatic
 - Subject must be SHARP (f/2.8 focus on face) while background is BLURRED
+- Skin: hyper-detailed pores, natural imperfections, realistic lighting
+- Hair slightly wind-blown or dramatic
 
 ═══ RED GLOW RIM LIGHT (CRITICAL) ═══
-- Strong RED/CRIMSON neon rim light outlining the subject's head, shoulders, and body edge
-- The red glow should be visible as a bright edge light separating subject from background
-- Additional warm backlight creating a halo/glow effect behind the subject's head
-- This red outline is the KEY visual signature — make it prominent and cinematic
+- Strong RED/CRIMSON neon rim light outlining subject's head, shoulders, body edge
+- Bright edge light separating subject from background
+- Warm backlight halo behind subject's head
+- This red outline is the KEY visual signature
 
-═══ STORYTELLING BACKGROUND (FULL FRAME) ═══
+═══ STORYTELLING BACKGROUND WITH CONTRAST ═══
 ${scene}
 COLOR GRADING: ${tone}
 ATMOSPHERIC DETAILS: ${elements}
-- Background MUST tell a story — NEVER use plain, flat, or generic backgrounds
-- Apply gaussian depth blur (f/1.4 bokeh) to background — subject stays sharp
-- Background should have 3 layers: far background (very blurry), mid-ground (slightly blurry), foreground elements (particles/smoke)
+- CONTRAST STORY RULE: Always show BEFORE vs AFTER or PROBLEM vs SOLUTION
+  → Left half = the problem/past/struggle (darker, desaturated, broken)
+  → Right half = the solution/future/success (brighter, vibrant, fixed)
+  → The visual contrast between both sides IS the clickbait story
+- Background MUST directly represent the topic — NEVER generic
+- 3 depth layers: far background (very blurry), mid-ground (slightly blurry), foreground particles
 
-═══ CINEMATIC COMPOSITION LAYOUT ═══
-- LEFT 55%: Dark atmospheric zone with subtle scene elements, reserved for text overlay
-  → Apply dark gradient overlay (black 60% opacity fading to transparent)
-  → Some scene elements visible but not cluttered
-- RIGHT 45%: Subject dominates with dramatic lighting
-  → Subject's face is the focal point
-  → Red rim light creates separation from background
-- VIGNETTE: Strong dark vignette on all edges, especially corners (cinema-style framing)
+═══ CINEMATIC COMPOSITION ═══
+- LEFT 55%: Dark atmospheric story zone with visible contextual elements + dark gradient overlay
+- RIGHT 45%: Subject dominates with dramatic lighting, face is focal point
+- VIGNETTE: Strong dark vignette on all edges (cinema framing)
 
-═══ LIGHTING SYSTEM (5-POINT) ═══
-1. KEY LIGHT: Strong warm light from upper-right, illuminating subject's face dramatically
-2. RIM LIGHT: Intense RED/CRIMSON edge light from behind-left, creating the signature glow outline
-3. FILL LIGHT: Subtle cool blue/teal ambient from left side (barely visible, prevents pure black)
-4. BACKGROUND LIGHT: Dramatic volumetric god rays or spotlight in the story background
-5. HAIR LIGHT: Subtle top-down light catching hair edges for separation
+═══ LIGHTING (5-POINT) ═══
+1. KEY: Strong warm light from upper-right on subject's face
+2. RIM: Intense RED edge light from behind-left (glow outline)
+3. FILL: Subtle cool teal ambient from left
+4. BG LIGHT: Volumetric god rays in story background
+5. HAIR: Top-down edge light for separation
 
-═══ COLOR GRADING (HOLLYWOOD-GRADE) ═══
-- Teal shadows + orange/warm highlights (complementary split-toning)
-- Left side of frame: cooler, more desaturated, moodier
-- Right side (subject area): warmer, more vibrant, skin tones pop
-- Crushed blacks (deep rich shadows, not grey)
-- Controlled highlights with slight bloom on bright areas
-- Overall: dark, moody, high-contrast cinematic look
+═══ COLOR GRADING (HOLLYWOOD) ═══
+- Teal shadows + orange highlights (complementary split)
+- Left: cooler, desaturated. Right: warmer, vibrant
+- Crushed blacks, controlled highlight bloom
+- Dark, moody, high-contrast cinematic look
 
-═══ CTR-BOOSTING EFFECTS ═══
-- Volumetric light rays (god rays) from behind or above subject
-- Atmospheric particles: smoke wisps, dust motes, embers, or topic-relevant particles floating in light beams
-- Subtle lens flare from the strongest light source
-- Motion energy: slight directional blur on background elements suggesting dynamism
-- Depth layers creating parallax-like 3D feel
+═══ CTR-BOOST EFFECTS ═══
+- Volumetric god rays from behind/above subject
+- Atmospheric particles (smoke, dust, embers per topic)
+- Lens flare from strongest light source
+- Motion energy blur on background elements
+- Depth layers creating parallax 3D feel
 
 ═══ ABSOLUTE RULES ═══
-- ZERO text, letters, words, numbers, typography, watermarks, or logos in the image
-- Must rival MrBeast / Veritasium / Johnny Harris thumbnail quality
-- NOT generic AI art — must feel like a real Hollywood movie still or Netflix documentary frame
-- Photorealistic textures, 8K detail, cinematic depth of field
-- Every pixel must serve the story — no empty or wasted space
-- The thumbnail must make viewers STOP SCROLLING and CLICK`;
+- ZERO text, letters, words, numbers, typography, watermarks, logos
+- Must rival MrBeast / Veritasium / Johnny Harris quality
+- Real Hollywood movie still feel, NOT generic AI art
+- 8K photorealistic detail, cinematic depth of field
+- Every pixel serves the story — viewer STOPS SCROLLING and CLICKS`;
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
