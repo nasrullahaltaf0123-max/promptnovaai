@@ -112,9 +112,19 @@ const PricingSection = () => {
                 <p className="text-caption text-muted-foreground">{plan.description}</p>
               </div>
 
-              <div className="mb-7">
+              {"badge" in plan && (plan as any).badge && (
+                <div className="mb-3">
+                  <span className="text-micro font-bold text-primary">{(plan as any).badge}</span>
+                  <p className="text-micro text-muted-foreground mt-0.5">{(plan as any).subBadge}</p>
+                </div>
+              )}
+
+              <div className="mb-7 flex items-baseline gap-2">
                 <span className="text-display font-extrabold text-foreground">{plan.price}</span>
-                <span className="text-caption text-muted-foreground ml-1">{plan.period}</span>
+                {"oldPrice" in plan && (plan as any).oldPrice && (
+                  <span className="text-body text-muted-foreground/50 line-through">{(plan as any).oldPrice}</span>
+                )}
+                <span className="text-caption text-muted-foreground">{plan.period}</span>
               </div>
 
               <ul className="space-y-3 mb-8 flex-1">
