@@ -16,6 +16,8 @@ export const PLATFORMS: Platform[] = [
 export type TextPosition = "left" | "center" | "bottom-left";
 export type FontPreset = "siyam" | "hind" | "noto";
 export type TextColor = "yellow" | "white" | "cyan";
+export type TextEffect = "none" | "3d" | "gradient" | "highlight";
+export type ShapeOverlay = "none" | "arrow" | "circle" | "glow-lines";
 
 export interface ThumbnailConfig {
   title: string;
@@ -24,11 +26,16 @@ export interface ThumbnailConfig {
   textPosition: TextPosition;
   fontPreset: FontPreset;
   textColor: TextColor;
+  textEffect: TextEffect;
+  textSize: number; // 60-150 as percentage scale
   enableGlow: boolean;
   enableStroke: boolean;
   subjectImage: string | null;
   subjectScale: number;
+  subjectFlip: boolean;
   backgroundImage: string | null;
+  backgroundBlur: number; // 0-20
+  shapeOverlay: ShapeOverlay;
 }
 
 export const FONT_PRESETS: Record<FontPreset, { label: string; titleFont: string; subtitleFont: string }> = {
@@ -38,7 +45,21 @@ export const FONT_PRESETS: Record<FontPreset, { label: string; titleFont: string
 };
 
 export const TEXT_COLORS: Record<TextColor, { label: string; class: string }> = {
-  yellow: { label: "Yellow Gold", class: "thumb-color-yellow" },
-  white: { label: "Pure White", class: "thumb-color-white" },
-  cyan: { label: "Cyan Glow", class: "thumb-color-cyan" },
+  yellow: { label: "🟡 Yellow Gold", class: "thumb-color-yellow" },
+  white: { label: "⚪ Pure White", class: "thumb-color-white" },
+  cyan: { label: "🔵 Cyan Glow", class: "thumb-color-cyan" },
+};
+
+export const TEXT_EFFECTS: Record<TextEffect, { label: string }> = {
+  none: { label: "None" },
+  "3d": { label: "3D Text" },
+  gradient: { label: "Gradient" },
+  highlight: { label: "Highlight Box" },
+};
+
+export const SHAPE_OVERLAYS: Record<ShapeOverlay, { label: string }> = {
+  none: { label: "None" },
+  arrow: { label: "→ Arrow" },
+  circle: { label: "◯ Circle" },
+  "glow-lines": { label: "✦ Glow Lines" },
 };

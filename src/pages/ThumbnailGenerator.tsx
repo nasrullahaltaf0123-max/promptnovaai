@@ -21,11 +21,16 @@ const ThumbnailGenerator = () => {
     textPosition: "left",
     fontPreset: "siyam",
     textColor: "yellow",
+    textEffect: "none",
+    textSize: 100,
     enableGlow: true,
     enableStroke: true,
     subjectImage: null,
     subjectScale: 85,
+    subjectFlip: false,
     backgroundImage: null,
+    backgroundBlur: 0,
+    shapeOverlay: "none",
   });
 
   useEffect(() => {
@@ -36,11 +41,9 @@ const ThumbnailGenerator = () => {
     setConfig((prev) => ({ ...prev, ...partial }));
   };
 
-  const handleSubjectUpload = (file: File) => {
+  const handleFileUpload = (file: File, key: "subjectImage" | "backgroundImage") => {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      updateConfig({ subjectImage: e.target?.result as string });
-    };
+    reader.onload = (e) => updateConfig({ [key]: e.target?.result as string });
     reader.readAsDataURL(file);
   };
 
@@ -52,7 +55,6 @@ const ThumbnailGenerator = () => {
     }
     setIsGenerating(true);
     setError("");
-    updateConfig({ backgroundImage: null });
 
     const ok = await incrementUsage(user.id, "image");
     if (!ok) {
@@ -99,7 +101,8 @@ const ThumbnailGenerator = () => {
           config={config}
           onChange={updateConfig}
           onGenerate={handleGenerate}
-          onSubjectUpload={handleSubjectUpload}
+          onSubjectUpload={(f) => handleFileUpload(f, "subjectImage")}
+          onBgUpload={(f) => handleFileUpload(f, "backgroundImage")}
           isGenerating={isGenerating}
           usage={usage}
           limit={limit}
