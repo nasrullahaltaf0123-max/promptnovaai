@@ -353,8 +353,8 @@ serve(async (req) => {
       model: isImageGen ? IMAGE_MODEL : MODEL,
       messages: chatMessages,
       stream,
-      max_tokens: toolType === "blog" ? 4096 : 2048,
-      temperature: toolType === "chat" ? 0.7 : 0.8,
+      max_tokens: isHeadlineSuggest ? 256 : toolType === "blog" ? 4096 : 2048,
+      temperature: isHeadlineSuggest ? 0.9 : toolType === "chat" ? 0.7 : 0.8,
     };
 
     if (isImageGen) {
