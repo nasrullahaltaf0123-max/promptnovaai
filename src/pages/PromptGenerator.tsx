@@ -36,7 +36,7 @@ const PromptGenerator = () => {
       return;
     }
     setIsGenerating(true);
-    await incrementUsage(user.id, "prompt");
+    await incrementUsage(user.id, "prompt", isAdmin);
     setUsage((u) => u + 1);
 
     const { result, error } = await generateContent("prompt", idea, { category, complexity });
