@@ -35,7 +35,7 @@ const AIChat = () => {
 
   const handleSend = async () => {
     if (!input.trim() || isLoading || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", description: `You've used all ${limit} chat messages for today.`, variant: "destructive" });
       return;
     }
