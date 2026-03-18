@@ -159,7 +159,7 @@ export default function ThumbnailControls({ config, onChange, onGenerate, onSubj
       <button onClick={onGenerate} disabled={isGenerating || !config.title.trim()} className="w-full bg-foreground text-background font-semibold py-3 rounded-xl hover:bg-foreground/90 transition-all duration-200 text-sm disabled:opacity-30 flex items-center justify-center gap-2">
         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <><Sparkles className="w-4 h-4" /> Generate AI Background</>}
       </button>
-      <p className="text-center text-xs text-muted-foreground">{usage}/{limit} today</p>
+      {!isAdmin && <p className="text-center text-xs text-muted-foreground">{usage}/{limit} today</p>}
     </div>
   );
 }

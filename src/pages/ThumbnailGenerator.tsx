@@ -57,7 +57,7 @@ const ThumbnailGenerator = () => {
     setIsGenerating(true);
     setError("");
 
-    const ok = await incrementUsage(user.id, "image");
+    const ok = await incrementUsage(user.id, "image", isAdmin);
     if (!ok) {
       setIsGenerating(false);
       toast({ title: "Limit reached", variant: "destructive" });
