@@ -180,6 +180,7 @@ serve(async (req) => {
     const userId = user.id;
 
     // ── Credit check ──
+    const today = new Date().toISOString().split("T")[0];
     const serviceClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const { data: profile } = await serviceClient
       .from("profiles")
