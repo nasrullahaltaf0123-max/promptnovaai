@@ -36,7 +36,7 @@ const BlogWriter = () => {
       return;
     }
     setIsGenerating(true);
-    const ok = await incrementUsage(user.id, "blog");
+    const ok = await incrementUsage(user.id, "blog", isAdmin);
     if (!ok) { setIsGenerating(false); toast({ title: "Limit reached", variant: "destructive" }); return; }
     setUsage((u) => u + 1);
 
