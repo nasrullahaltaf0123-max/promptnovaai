@@ -32,7 +32,7 @@ const TikTokScriptGenerator = () => {
 
   const handleGenerate = async () => {
     if (!idea.trim() || !user) return;
-    if (usage >= limit) {
+    if (!isAdmin && usage >= limit) {
       toast({ title: "Daily limit reached", variant: "destructive" });
       return;
     }
