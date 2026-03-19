@@ -332,6 +332,16 @@ function buildBackgroundPrompt(strategy: any) {
   return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
 }
 }
+function detectLayout(strategy: any) {
+  const { strategy: type } = strategy;
+
+  if (type === "contrast") return "split_screen";
+  if (type === "transformation") return "before_after";
+  if (type === "scale") return "scale";
+  if (type === "direct_subject") return "zoom_face";
+
+  return "cinematic";
+}
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
   const category = detectTopicCategory(prompt);
