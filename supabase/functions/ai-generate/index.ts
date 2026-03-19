@@ -325,6 +325,49 @@ Randomize:
 
 Never repeat the same composition or layout.
 Avoid generating similar-looking backgrounds across requests.
+STYLE DIVERSITY ENGINE:
+
+Do NOT use a fixed layout.
+
+Randomly choose layout:
+- Full background cinematic scene
+- Split screen (ONLY if needed)
+- Subject zoom + blurred background
+- Minimal clean background
+- Chaos collage (for viral topics)
+
+Avoid repeating:
+- same split layout
+- same subject position
+- same composition
+
+---
+
+COLOR & MOOD ENGINE:
+
+Color grading MUST match topic emotion:
+
+- War / history → desaturated, dusty, dark tones
+- Mystery → dark blue, green, foggy, low light
+- Tech / AI → neon, cyan, futuristic glow
+- Economy / serious → muted, grey, cold tones
+- Viral / MrBeast → bright, high contrast, colorful
+
+Never reuse same color grading repeatedly.
+
+---
+
+CONTEXT AWARE ENGINE:
+
+Background MUST match topic strictly.
+
+- No random futuristic elements unless topic is tech/AI
+- No brain / hologram / sci-fi unless relevant
+- Historical topic → historical environment ONLY
+- Sports → stadium / action ONLY
+- Politics → realistic environment
+
+If mismatch → REJECT and regenerate internally
 OUTPUT:
 Return ONLY JSON:
 
