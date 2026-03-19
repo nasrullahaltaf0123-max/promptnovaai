@@ -531,6 +531,8 @@ serve(async (req) => {
 
     // ── Build request ──
     const { type, messages, prompt, options } = await req.json();
+    const strategyData = await generateStrategy(prompt);
+console.log("STRATEGY:", strategyData);
     const toolType = type || "chat";
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
