@@ -340,11 +340,14 @@ function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string
 
   const subject = buildSubjectPrompt(strategyData);
 const background = buildBackgroundPrompt(strategyData);
+  const layout = detectLayout(strategyData);
 
 return `
 ${subject}
 
-${background} 
+${background}
+
+LAYOUT: ${layout}
 
 Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 
