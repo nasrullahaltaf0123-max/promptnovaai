@@ -315,6 +315,7 @@ OUTPUT ONLY JSON.
 }
 }`,
   logo: "You are an AI logo designer. Generate a professional logo image. Do not describe — actually generate the image.",
+  "thumbnail-image": "You are an AI image generator specializing in cinematic YouTube thumbnail backgrounds. Generate the exact scene described. Do not describe — actually generate the visual image.",
   "thumbnail-headlines": `You are a viral YouTube headline expert specializing in Bangla and English content. Generate exactly 3 short, powerful, clickable thumbnail headlines.
 
 RULES:
