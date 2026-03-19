@@ -512,9 +512,13 @@ serve(async (req) => {
       });
     } else if (isImageGen) {
       const data = await gatewayResponse.json();
+      console.log("Image gen response keys:", Object.keys(data));
       const message = data.choices?.[0]?.message;
       const images = message?.images?.map((img: any) => img?.image_url?.url) || [];
       const text = message?.content || "";
+      if (images.length === 0) {
+        console.warn("EMPTY IMAGE RESPONSE. Full message:", JSON.stringify(message).slice(0, 500));
+      }
       return new Response(JSON.stringify({ result: text, images }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
