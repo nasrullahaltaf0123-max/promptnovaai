@@ -73,7 +73,7 @@ const ThumbnailGenerator = () => {
   };
 
   const generateBackgroundImage = async (bgPrompt: string) => {
-    const { images, error: genError } = await generateContent("thumbnail", bgPrompt, {
+    const { images, error: genError } = await generateContent("thumbnail-image", bgPrompt, {
       style: "Cinematic",
       colorScheme: "Dark & Bold",
       width: String(config.platform.width),

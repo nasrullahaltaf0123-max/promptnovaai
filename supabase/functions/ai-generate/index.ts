@@ -416,8 +416,9 @@ serve(async (req) => {
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
-    const isImageGen = toolType === "image" || toolType === "thumbnail" || toolType === "logo";
+    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo";
     const isHeadlineSuggest = toolType === "thumbnail-headlines";
+    const isThumbnailStructure = toolType === "thumbnail";
 
     if (toolType === "chat" && messages) {
       chatMessages.push(...messages);
