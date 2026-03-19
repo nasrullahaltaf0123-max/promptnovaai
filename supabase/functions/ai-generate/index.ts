@@ -579,8 +579,9 @@ console.log("STRATEGY:", strategyData);
         userPrompt = `Generate a ${options.complexity || "Detailed"} AI prompt for the category "${options.category || "General"}" about: ${prompt}`;
       } else if (toolType === "image" && options) {
         userPrompt = buildImagePrompt(prompt, options.style || "photorealistic");
-      } else if ((toolType === "thumbnail" || toolType === "thumbnail-image") && options) {
-        userPrompt = buildThumbnailPrompt(prompt, options.style || "YouTube", options.colorScheme || "Vibrant");
+      } else if (toolType === "thumbnail" || toolType === "thumbnail-image") {
+  userPrompt = buildThumbnailPrompt(prompt, strategyData);
+}
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
       } else if (isHeadlineSuggest) {
