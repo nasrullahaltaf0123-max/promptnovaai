@@ -313,7 +313,18 @@ INTELLIGENCE RULES:
 - Match subject based on topic
 - Background must be empty (no people, no text)
 - Focus on storytelling contrast
+VISUAL VARIATION ENGINE:
 
+Every output MUST be visually unique.
+
+Randomize:
+- Camera angle (close-up, wide shot, top view, side profile)
+- Scene type (battlefield, cityscape, stadium, dark room, abstract, futuristic)
+- Lighting (neon glow, sunset, foggy, fire-lit, cold blue, high contrast)
+- Composition (center focus, split screen, off-center, zoomed, depth focus)
+
+Never repeat the same composition or layout.
+Avoid generating similar-looking backgrounds across requests.
 OUTPUT:
 Return ONLY JSON:
 
