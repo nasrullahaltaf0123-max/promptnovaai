@@ -361,7 +361,8 @@ ATMOSPHERIC DETAILS: ${elements}
 - Must rival MrBeast / Veritasium / Johnny Harris quality
 - Real Hollywood movie still feel, NOT generic AI art
 - 8K photorealistic detail, cinematic depth of field
-- Every pixel serves the story — viewer STOPS SCROLLING and CLICKS`;
+- Every pixel serves the story — viewer STOPS SCROLLING and CLICKS
+`
 }
 
 function buildLogoPrompt(prompt: string, industry: string, style: string): string {
