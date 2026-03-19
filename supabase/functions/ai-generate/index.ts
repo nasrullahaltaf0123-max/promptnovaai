@@ -276,11 +276,61 @@ function getEmotionForCategory(category: string): string {
   return emotions[category] || emotions.general;
 }
 function buildSubjectPrompt(strategy: any) {
-  return "test subject";
+  const { category, strategy: type, idea } = strategy;
+
+  let subject = "a human face";
+
+  if (category === "economy") {
+    subject = "a stressed South Asian man, worried expression";
+  }
+
+  if (category === "history") {
+    subject = "a serious historical leader, intense eyes, realistic face";
+  }
+
+  if (category === "tech") {
+    subject = "a shocked young man, eyes wide, reflecting light";
+  }
+
+  if (category === "survival") {
+    subject = "an exhausted man, dirty face, survival situation";
+  }
+
+  if (type === "contrast") {
+    subject += ", facing contrast, emotional tension";
+  }
+
+  return `MAIN SUBJECT: ${subject}, ultra realistic, cinematic lighting, sharp focus`;
+}
 }
 
 function buildBackgroundPrompt(strategy: any) {
-  return "test background";
+  const { category, strategy: type } = strategy;
+
+  let background = "cinematic environment";
+
+  if (type === "contrast") {
+    background = "split scene: left side dark poor environment, right side rich bright success environment";
+  }
+
+  if (type === "transformation") {
+    background = "before vs after transformation scene, dramatic difference";
+  }
+
+  if (category === "history") {
+    background = "ancient realistic battlefield or historical setting, no modern elements";
+  }
+
+  if (category === "tech") {
+    background = "modern tech environment, screens, realistic lighting, no sci-fi neon";
+  }
+
+  if (category === "survival") {
+    background = "harsh environment, snow/desert, extreme survival conditions";
+  }
+
+  return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
+}
 }
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
