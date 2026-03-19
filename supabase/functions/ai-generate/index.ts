@@ -288,12 +288,21 @@ function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string
   const { scene, tone, elements, visualClues } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
 
-  return `Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
+  const subject = buildSubjectPrompt(strategyData);
+const background = buildBackgroundPrompt(strategyData);
+
+return `
+${subject}
+
+${background} 
+
+Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 
 ═══ 1-SECOND STORY RULE (MOST IMPORTANT) ═══
 The viewer must understand the ENTIRE topic within 1 SECOND of seeing this thumbnail.
 Use VISUAL CLUES that instantly communicate the subject matter:
 ${visualClues}
+`
 - These objects/symbols must be clearly visible in the background composition
 - They act as instant visual shorthand — no text needed to understand the story
 
