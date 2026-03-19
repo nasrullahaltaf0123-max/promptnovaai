@@ -558,7 +558,6 @@ if (!validateStrategy(strategyData)) {
 }
 
 console.log("FINAL STRATEGY:", strategyData);
-console.log("STRATEGY:", strategyData);
     const toolType = type || "chat";
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
