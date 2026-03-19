@@ -289,47 +289,49 @@ const systemPrompts: Record<string, string> = {
     "You are PromptNova AI Prompt Generator. Create a detailed, highly effective AI prompt based on the user's idea. The prompt should be clear, specific, and designed to get the best possible output from an AI model.",
   image:
     "You are an AI image generator. Generate the image the user describes. Do not describe images in text — actually generate visual images.",
-  thumbnail: `You are an elite YouTube Thumbnail Art Director.
+  thumbnail: `You are an elite, metric-obsessed YouTube Thumbnail Art Director. The user will provide a Topic and a Selected Style. Your absolute priority is maximizing Click-Through Rate (CTR).
+
+STRICT TEXT RULES (CRITICAL):
+- bangla_hook: MUST be strictly 1 to 3 words maximum. NO EXCEPTIONS.
+- english_subtitle: 2 to 4 words maximum.
+
+STYLE & RENDERING DIRECTIVES:
+
+Documentary:
+- 35mm lens, gritty, extreme shadows, volumetric fog, cinematic contrast, 8k, photorealistic
+- Emotion: Serious
+
+Viral Clickbait:
+- hyper-saturated, eerie glow, vignette, macro, ominous lighting, Unreal Engine 5
+- Emotion: Shocked
+
+Hyper-Viral:
+- ultra-bright, HDR, clean, vibrant colors, wide-angle, glossy
+- Emotion: Excited
 
 INTELLIGENCE RULES:
-- Demographic & Subject: Adapt subject based on topic
-- Emotion: Strong emotional expression
-- Background: Cinematic 16:9 scene
-- Text: Bangla hook + English subtitle
+- Match subject based on topic
+- Background must be empty (no people, no text)
+- Focus on storytelling contrast
 
-OUTPUT ONLY JSON.
+OUTPUT:
+Return ONLY JSON:
 
 {
-"text_layers": {
-  "bangla_hook": "Main viral text",
-  "english_subtitle": "Subtitle"
-},
-"visual_intelligence": {
-  "target_demographic": "Description",
-  "emotion": "One word",
-  "environmental_lighting_color": "#FF4500",
-  "css_blend_preset": "high-contrast"
-},
-"generation_prompts": {
-  "background_plate": "cinematic background description"
-}
-}`,
-  logo: "You are an AI logo designer. Generate a professional logo image. Do not describe — actually generate the image.",
-  "thumbnail-image": "You are an AI image generator specializing in cinematic YouTube thumbnail backgrounds. Generate the exact scene described. Do not describe — actually generate the visual image.",
-  "thumbnail-headlines": `You are a viral YouTube headline expert specializing in Bangla and English content. Generate exactly 3 short, powerful, clickable thumbnail headlines.
-
-RULES:
-- If the topic is in Bangla, write headlines in Bangla
-- If the topic is in English, write headlines in English
-- Each headline must be 3-7 words MAXIMUM (thumbnail text must be SHORT)
-- Use power words: shocking, secret, unknown, impossible, dangerous, incredible
-- Create curiosity gap (make viewer NEED to click)
-- Use emotional triggers: fear, greed, curiosity, anger, amazement
-- Format: Return ONLY a JSON array of 3 strings, nothing else
-- Example output: ["কেন ব্যর্থ হচ্ছে?", "গোপন সত্য ফাঁস!", "এটা কি সম্ভব?"]
-- Example English: ["The Hidden Truth", "Why Everyone Failed", "Nobody Expected This"]`,
-};
-
+  "text_layers": {
+    "bangla_hook": "max 3 words",
+    "english_subtitle": "max 4 words"
+  },
+  "visual_intelligence": {
+    "target_demographic": "subject type",
+    "emotion": "one word",
+    "environmental_lighting_color": "#hex",
+    "css_blend_preset": "darken | lighten | high-contrast | neon-glow"
+  },
+  "generation_prompts": {
+    "background_plate": "cinematic background prompt, no people, no text"
+  }
+}`
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
