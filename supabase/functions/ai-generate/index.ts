@@ -10,7 +10,69 @@ const corsHeaders = {
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
 const IMAGE_MODEL = "google/gemini-2.5-flash-image";
+async function generateStrategy(prompt: string) {
+  const systemPrompt = `
+You are a YouTube Thumbnail Strategist AI.
 
+Your job is to analyze a topic and return a STRATEGY JSON.
+
+RULES:
+- Choose ONE category only
+- Choose ONE strategy only
+- Create ONE clear visual idea
+- Idea must be simple and instantly understandable
+- No abstract ideas
+
+CATEGORIES:
+history, economy, survival, politics, crime, tech, education, general
+
+STRATEGIES:
+contrast (A vs B)
+transformation (before vs after)
+scale (tiny vs massive)
+direct_subject (face emotion focused)
+mystery (hidden truth / unknown)
+
+OUTPUT FORMAT (STRICT JSON):
+{
+  "category": "...",
+  "strategy": "...",
+  "idea": "...",
+  "confidence": "high | medium | low"
+}
+`;
+
+  const response = await fetch(GATEWAY_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: prompt }
+      ],
+      max_tokens: 200,
+      temperature: 0.7
+    }),
+  });
+
+  const data = await response.json();
+  const text = data.choices?.[0]?.message?.content || "{}";
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {
+      category: "general",
+      strategy: "direct_subject",
+      idea: prompt,
+      confidence: "low"
+    };
+  }
+}
 const FREE_DAILY_CREDITS = 5;
 const PRO_DAILY_CREDITS = 999;
 
