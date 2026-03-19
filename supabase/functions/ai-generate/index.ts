@@ -547,7 +547,17 @@ serve(async (req) => {
 
     // ── Build request ──
     const { type, messages, prompt, options } = await req.json();
-    const strategyData = await generateStrategy(prompt);
+let strategyData = await generateStrategy(prompt);
+
+if (!validateStrategy(strategyData)) {
+  console.log("❌ Bad strategy, regenerating...");
+
+  strategyData = await generateStrategy(
+    prompt + " (simple, real-world, no futuristic elements)"
+  );
+}
+
+console.log("FINAL STRATEGY:", strategyData);
 console.log("STRATEGY:", strategyData);
     const toolType = type || "chat";
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
