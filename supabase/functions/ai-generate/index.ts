@@ -73,6 +73,22 @@ OUTPUT FORMAT (STRICT JSON):
     };
   }
 }
+function validateStrategy(strategy: any) {
+  // Reject weak / bad ideas
+  if (!strategy.idea || strategy.idea.length > 60) {
+    return false;
+  }
+
+  // Reject abstract / AI garbage
+  const badWords = ["future", "ai brain", "hologram", "cyber", "digital"];
+  const ideaLower = strategy.idea.toLowerCase();
+
+  for (const word of badWords) {
+    if (ideaLower.includes(word)) return false;
+  }
+
+  return true;
+}
 const FREE_DAILY_CREDITS = 5;
 const PRO_DAILY_CREDITS = 999;
 
