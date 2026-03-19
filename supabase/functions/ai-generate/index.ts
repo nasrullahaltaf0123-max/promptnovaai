@@ -275,6 +275,13 @@ function getEmotionForCategory(category: string): string {
   };
   return emotions[category] || emotions.general;
 }
+function buildSubjectPrompt(strategy: any) {
+  return "test subject";
+}
+
+function buildBackgroundPrompt(strategy: any) {
+  return "test background";
+}
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
   const category = detectTopicCategory(prompt);
