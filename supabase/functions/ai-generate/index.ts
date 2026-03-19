@@ -276,7 +276,7 @@ function getEmotionForCategory(category: string): string {
   return emotions[category] || emotions.general;
 }
 function buildSubjectPrompt(strategy: any) {
-  const { category, strategy: type, idea } = strategy;
+  const { category, strategy: type } = strategy;
 
   let subject = "a human face";
 
