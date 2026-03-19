@@ -73,12 +73,26 @@ const ThumbnailGenerator = () => {
   };
 
   const generateBackgroundImage = async (bgPrompt: string) => {
-    const { images, error: genError } = await generateContent("thumbnail-image", bgPrompt, {
-      style: "Cinematic",
-      colorScheme: "Dark & Bold",
-      width: String(config.platform.width),
-      height: String(config.platform.height),
-    });
+    const tryGenerate = async (prompt: string) => {
+      return await generateContent("thumbnail-image", prompt, {
+        style: "Cinematic",
+        colorScheme: "Dark & Bold",
+        width: String(config.platform.width),
+        height: String(config.platform.height),
+      });
+    };
+
+    let { images, error: genError } = await tryGenerate(bgPrompt);
+
+    // Fallback: retry with a generic prompt if no images returned
+    if (!genError && (!images || images.length === 0)) {
+      console.warn("No images from primary prompt, retrying with fallback...");
+      const fallback = await tryGenerate(
+        "A cinematic YouTube thumbnail background, high contrast, dramatic lighting, 16:9, ultra detailed, dark moody atmosphere"
+      );
+      images = fallback.images;
+      genError = fallback.error;
+    }
 
     setIsGenerating(false);
 
@@ -95,8 +109,8 @@ const ThumbnailGenerator = () => {
         await saveToHistory(user.id, "image", config.title, `Thumbnail: ${config.platform.label}`, `[thumbnail generated]`);
       }
     } else {
-      const msg = "No background generated — the API returned no images.";
-      console.error("IMAGE API ERROR PAYLOAD:", { message: msg });
+      const msg = "No background generated — the API returned no images after retry.";
+      console.error("EMPTY IMAGE RESPONSE:", { images, bgPrompt });
       setError(msg);
       toast({ title: "Image generation failed", description: msg, variant: "destructive" });
     }
