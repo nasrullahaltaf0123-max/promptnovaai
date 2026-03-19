@@ -315,6 +315,7 @@ OUTPUT ONLY JSON.
 }
 }`,
   logo: "You are an AI logo designer. Generate a professional logo image. Do not describe — actually generate the image.",
+  "thumbnail-image": "You are an AI image generator specializing in cinematic YouTube thumbnail backgrounds. Generate the exact scene described. Do not describe — actually generate the visual image.",
   "thumbnail-headlines": `You are a viral YouTube headline expert specializing in Bangla and English content. Generate exactly 3 short, powerful, clickable thumbnail headlines.
 
 RULES:
@@ -416,8 +417,9 @@ serve(async (req) => {
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
-    const isImageGen = toolType === "image" || toolType === "thumbnail" || toolType === "logo";
+    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo";
     const isHeadlineSuggest = toolType === "thumbnail-headlines";
+    const isThumbnailStructure = toolType === "thumbnail";
 
     if (toolType === "chat" && messages) {
       chatMessages.push(...messages);
@@ -431,7 +433,7 @@ serve(async (req) => {
         userPrompt = `Generate a ${options.complexity || "Detailed"} AI prompt for the category "${options.category || "General"}" about: ${prompt}`;
       } else if (toolType === "image" && options) {
         userPrompt = buildImagePrompt(prompt, options.style || "photorealistic");
-      } else if (toolType === "thumbnail" && options) {
+      } else if ((toolType === "thumbnail" || toolType === "thumbnail-image") && options) {
         userPrompt = buildThumbnailPrompt(prompt, options.style || "YouTube", options.colorScheme || "Vibrant");
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
@@ -511,9 +513,13 @@ serve(async (req) => {
       });
     } else if (isImageGen) {
       const data = await gatewayResponse.json();
+      console.log("Image gen response keys:", Object.keys(data));
       const message = data.choices?.[0]?.message;
       const images = message?.images?.map((img: any) => img?.image_url?.url) || [];
       const text = message?.content || "";
+      if (images.length === 0) {
+        console.warn("EMPTY IMAGE RESPONSE. Full message:", JSON.stringify(message).slice(0, 500));
+      }
       return new Response(JSON.stringify({ result: text, images }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
