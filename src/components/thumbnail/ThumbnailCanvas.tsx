@@ -97,7 +97,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     }
   }
 
-  function getThemeFilter(theme: string) {
+  filter: themeStyle.filter(theme: string) {
     switch (theme) {
       case "money":
         return "brightness(0.7) contrast(1.2) saturate(1.3)";
