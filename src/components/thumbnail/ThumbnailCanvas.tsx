@@ -43,6 +43,22 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
 
     return "default";
   }
+  function getThemeFilter(theme: string) {
+    switch (theme) {
+      case "money":
+        return "brightness(0.7) contrast(1.2) saturate(1.3)";
+      case "history":
+        return "brightness(0.6) contrast(1.1) sepia(0.3)";
+      case "dark":
+        return "brightness(0.5) contrast(1.3)";
+      case "tech":
+        return "brightness(0.7) contrast(1.2) hue-rotate(180deg)";
+      case "emotional":
+        return "brightness(0.8) contrast(1.05) saturate(1.1)";
+      default:
+        return "brightness(0.9)";
+    }
+  }
   const themeStyle: any = {
     money: "brightness-[0.7] contrast-[1.2] saturate-[1.3]",
     history: "brightness-[0.6] contrast-[1.1] sepia-[0.3]",
