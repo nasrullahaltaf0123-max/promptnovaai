@@ -321,6 +321,7 @@ translate-x-[-5%]
               style={{
                 fontFamily: fonts.titleFont,
                 fontSize: titleFontSize,
+                color: themeStyle.text,
                 ...titleEffectStyle,
               }}
             >
