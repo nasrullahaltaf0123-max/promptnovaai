@@ -332,6 +332,17 @@ function buildBackgroundPrompt(strategy: any) {
   return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
 }
 }
+function detectSubjectType(prompt: string) {
+  if (prompt.includes("no face") || prompt.includes("object")) {
+    return "object_only";
+  }
+
+  if (prompt.includes("person") || prompt.includes("face")) {
+    return "ai_face";
+  }
+
+  return "auto";
+}
 function detectLayout(strategy: any) {
   const { strategy: type } = strategy;
 
