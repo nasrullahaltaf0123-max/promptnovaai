@@ -157,7 +157,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       right-0
       bottom-0
       h-full
-      max-w-[50%]
+      max-w-[52%]
 translate-x-[-5%]
       object-contain
       z-20
@@ -188,7 +188,7 @@ translate-x-[-5%]
       )}
 
       {/* Text overlay */}
-      <div className="absolute left-[5%] top-0 w-[55%] h-full p-6 z-30 flex flex-col justify-center">
+      <div className="absolute left-[5%] top-[10%] w-[55%] h-full p-6 z-30 flex flex-col justify-center">
         <div className="relative max-w-full">
           {title && (
             <h2
