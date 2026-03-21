@@ -334,7 +334,6 @@ function buildBackgroundPrompt(strategy: any) {
 
   return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
 }
-}
 
 function detectStrategy(prompt: string) {
   if (prompt.includes("vs") || prompt.includes("battle")) return "contrast";
