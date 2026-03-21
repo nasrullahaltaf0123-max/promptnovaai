@@ -128,7 +128,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       <div className="absolute right-0 top-0 w-[45%] h-full bg-gradient-to-l from-transparent via-black/20 to-black/40 z-10" />
       {/* ✅ SNAP GUIDE — EXACT HERE */}
       {snapGuide && (
-        <div className="absolute inset-0 pointer-events-none z-40">
+        <div className="absolute inset-0 pointer-events-none z-50">
           {snapGuide === "center" && <div className="absolute left-1/2 top-0 h-full w-[2px] bg-yellow-400/70" />}
           {snapGuide === "left" && <div className="absolute left-[30%] top-0 h-full w-[2px] bg-yellow-400/50" />}
           {snapGuide === "right" && <div className="absolute right-[30%] top-0 h-full w-[2px] bg-yellow-400/50" />}
