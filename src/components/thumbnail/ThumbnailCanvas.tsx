@@ -1,79 +1,9 @@
-import { forwardRef } from "react";
-import { type ThumbnailConfig, FONT_PRESETS } from "./types";
+import { forwardRef, useState } from "react";
+import { type ThumbnailConfig, FONT_PRESETS, TEXT_COLORS } from "./types";
 
 interface Props {
   config: ThumbnailConfig;
   id?: string;
-}
-
-export type ContentType = "money" | "news" | "emotional" | "tech" | "default";
-
-export interface ThemeStyle {
-  filter: string;
-  overlay: string;
-  text: string;
-  glow: string;
-  subtitleColor: string;
-  vignette: string;
-}
-
-export function detectContentType(title: string): ContentType {
-  const t = (title || "").toLowerCase();
-  if (/টাকা|money|income|earn|million|dollar|profit|revenue|rich|ধনী|আয়|লাভ|কোটি|ব্যবসা|marketing|sell/i.test(t)) return "money";
-  if (/ইরান|iran|israel|war|attack|protest|breaking|politics|election|যুদ্ধ|হামলা|আক্রমণ|রাজনীতি|নির্বাচন|সংঘর্ষ|মৃত্যু|kill|dead|bomb|crisis/i.test(t)) return "news";
-  if (/secret|truth|why|emotional|sad|cry|story|life|কেন|গোপন|কাহিনী|জীবন|কষ্ট|ভালোবাসা|হৃদয়|love|miss/i.test(t)) return "emotional";
-  if (/ai|tech|code|software|robot|future|digital|প্রযুক্তি|ডিজিটাল|কৃত্রিম|বুদ্ধিমত্তা|hack|app|phone/i.test(t)) return "tech";
-  return "default";
-}
-
-export function getThemeStyle(type: ContentType): ThemeStyle {
-  switch (type) {
-    case "money":
-      return {
-        filter: "brightness(0.7) contrast(1.35) saturate(1.6)",
-        overlay: "linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(255,180,0,0.3) 100%)",
-        text: "#FFD700",
-        glow: "rgba(255,215,0,0.4)",
-        subtitleColor: "rgba(255,255,220,0.9)",
-        vignette: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%)",
-      };
-    case "news":
-      return {
-        filter: "brightness(0.5) contrast(1.3) saturate(1.25)",
-        overlay: "linear-gradient(to right, rgba(0,0,0,0.9), rgba(180,0,0,0.45))",
-        text: "#FF3B3B",
-        glow: "rgba(255,50,50,0.35)",
-        subtitleColor: "rgba(255,200,200,0.9)",
-        vignette: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)",
-      };
-    case "emotional":
-      return {
-        filter: "brightness(0.55) contrast(1.15) saturate(0.85)",
-        overlay: "radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%)",
-        text: "#FFFFFF",
-        glow: "rgba(255,255,255,0.12)",
-        subtitleColor: "rgba(255,255,255,0.75)",
-        vignette: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%)",
-      };
-    case "tech":
-      return {
-        filter: "brightness(0.65) contrast(1.25) saturate(1.35) hue-rotate(10deg)",
-        overlay: "linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,200,255,0.25) 100%)",
-        text: "#00E5FF",
-        glow: "rgba(0,229,255,0.35)",
-        subtitleColor: "rgba(200,240,255,0.9)",
-        vignette: "radial-gradient(ellipse at center, transparent 50%, rgba(0,20,40,0.6) 100%)",
-      };
-    default:
-      return {
-        filter: "brightness(0.7) contrast(1.2)",
-        overlay: "linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.15))",
-        text: "#FFFFFF",
-        glow: "rgba(255,255,255,0.1)",
-        subtitleColor: "rgba(255,255,255,0.85)",
-        vignette: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)",
-      };
-  }
 }
 
 const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) => {
@@ -81,83 +11,173 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     title,
     subtitle,
     platform,
+    textPosition,
     fontPreset,
+    textColor,
     textEffect,
     textSize,
     enableGlow,
     enableStroke,
     subjectImage,
-    subjectFlip,
     subjectScale,
+    subjectFlip,
     backgroundImage,
     backgroundBlur,
     shapeOverlay,
   } = config;
 
-  const contentType = detectContentType(title);
-  const theme = getThemeStyle(contentType);
+  const type = detectContentType(title);
+  const themeStyle = getThemeStyle(type);
+
+  console.log("TYPE:", type);
+  function detectContentType(title: string) {
+    const t = title.toLowerCase();
+
+    if (
+      t.includes("money") ||
+      t.includes("income") ||
+      t.includes("earn") ||
+      t.includes("million") ||
+      t.includes("dollar")
+    )
+      return "money";
+
+    if (
+      t.includes("iran") ||
+      t.includes("israel") ||
+      t.includes("war") ||
+      t.includes("attack") ||
+      t.includes("protest")
+    )
+      return "news";
+
+    if (t.includes("secret") || t.includes("truth") || t.includes("why")) return "emotional";
+
+    if (t.includes("ai") || t.includes("tech")) return "tech";
+
+    return "default";
+  }
+  function getThemeStyle(type: string) {
+    switch (type) {
+      case "money":
+        return {
+          filter: "brightness(0.75) contrast(1.3) saturate(1.4)",
+          overlay: "rgba(255, 215, 0, 0.15)",
+          text: "#FFD700",
+        };
+
+      case "news":
+        return {
+          filter: "brightness(0.6) contrast(1.2) saturate(1.2)",
+          overlay: "rgba(255, 0, 0, 0.25)",
+          text: "#FF3B3B",
+        };
+
+      case "emotional":
+        return {
+          filter: "brightness(0.7) contrast(1.1)",
+          overlay: "rgba(0,0,0,0.4)",
+          text: "#FFFFFF",
+        };
+
+      case "tech":
+        return {
+          filter: "brightness(0.8) contrast(1.2) hue-rotate(180deg)",
+          overlay: "rgba(0, 255, 255, 0.15)",
+          text: "#00FFFF",
+        };
+
+      default:
+        return {
+          filter: "brightness(0.9)",
+          overlay: "rgba(0,0,0,0.2)",
+          text: "#FFFFFF",
+        };
+    }
+  }
+
   const fonts = FONT_PRESETS[fontPreset];
+  const color = TEXT_COLORS[textColor];
   const aspectRatio = `${platform.width} / ${platform.height}`;
   const isVertical = platform.height > platform.width;
   const isSquare = platform.width === platform.height;
   const sizeScale = textSize / 100;
-  const hasSubject = !!subjectImage;
-  const subjectSizePercent = subjectScale || 85;
 
-  // Auto layout
-  const textAlign = hasSubject ? "left" : "center";
+  // Text container positioning
+  const textContainerClass = (() => {
+    if (isVertical) return "items-center justify-end pb-[15%] px-[8%] text-center";
+    if (textPosition === "center") return "items-center justify-center px-[8%] text-center";
+    if (textPosition === "bottom-left") return "items-start justify-end pb-[8%] pl-[5%] pr-[40%] text-left";
+    return "items-start justify-center pl-[5%] pr-[45%] text-left";
+  })();
 
-  // Dynamic font sizes
-  const baseTitleRem = isVertical ? 2.6 : isSquare ? 2.2 : 3.0;
-  const baseSubRem = isVertical ? 1.1 : 1.0;
+  // Dynamic title size based on platform & slider
+  const baseTitleRem = isVertical ? 2.8 : isSquare ? 2.4 : 3;
+  const baseSubRem = isVertical ? 1.2 : 1;
   const titleFontSize = `${baseTitleRem * sizeScale}rem`;
   const subtitleFontSize = `${baseSubRem * sizeScale}rem`;
 
-  // Text effect styles — color always from theme
-  const titleEffectStyle = ((): React.CSSProperties => {
-    const base: React.CSSProperties = {
-      color: theme.text,
-      textShadow: `0 4px 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,1)`,
-    };
-
-    if (enableGlow) {
-      base.textShadow += `, 0 0 40px ${theme.glow}, 0 0 80px ${theme.glow}`;
-    }
-
+  // Text effect inline styles
+  const titleEffectStyle = (() => {
     switch (textEffect) {
       case "3d":
-        base.textShadow = `
-          2px 2px 0 rgba(0,0,0,0.95),
-          4px 4px 0 rgba(0,0,0,0.75),
-          6px 6px 0 rgba(0,0,0,0.55),
-          8px 8px 24px rgba(0,0,0,0.85)
-        `;
-        break;
+        return {
+          textShadow: `
+            2px 2px 0 rgba(0,0,0,0.8),
+            4px 4px 0 rgba(0,0,0,0.6),
+            6px 6px 0 rgba(0,0,0,0.4),
+            8px 8px 16px rgba(0,0,0,0.5)
+          `,
+        };
       case "gradient":
         return {
           background:
-            contentType === "money"
+            textColor === "yellow"
               ? "linear-gradient(180deg, #FFD700 0%, #FF8C00 100%)"
-              : contentType === "tech"
-                ? "linear-gradient(180deg, #00E5FF 0%, #3b82f6 100%)"
-                : contentType === "news"
-                  ? "linear-gradient(180deg, #FF3B3B 0%, #FF6B6B 100%)"
-                  : "linear-gradient(180deg, #FFFFFF 0%, #94a3b8 100%)",
+              : textColor === "cyan"
+                ? "linear-gradient(180deg, #06b6d4 0%, #3b82f6 100%)"
+                : "linear-gradient(180deg, #FFFFFF 0%, #94a3b8 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          filter: enableGlow ? `drop-shadow(0 0 24px ${theme.glow})` : undefined,
-          textShadow: "none",
-        };
-      case "highlight":
-        break;
+          filter: enableGlow ? "drop-shadow(0 0 16px rgba(255,215,0,0.4))" : undefined,
+        } as React.CSSProperties;
+      default:
+        return {};
     }
-
-    return base;
   })();
 
   const highlightActive = textEffect === "highlight";
+  const [snapGuide, setSnapGuide] = useState<null | "center" | "left" | "right">(null);
+  const [textPos, setTextPos] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const handleMouseDown = () => {
+    setDragging(true);
+  };
 
+  const handleMouseUp = () => {
+    setDragging(false);
+    setSnapGuide(null);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!dragging) return;
+
+    const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // SNAP LOGIC
+    if (x < rect.width * 0.3) {
+      setSnapGuide("left");
+    } else if (x > rect.width * 0.7) {
+      setSnapGuide("right");
+    } else {
+      setSnapGuide("center");
+    }
+
+    setTextPos({ x, y });
+  };
   return (
     <div
       ref={ref}
@@ -165,61 +185,44 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       className="relative w-full overflow-hidden rounded-xl"
       style={{ aspectRatio, maxWidth: "100%" }}
     >
-      {/* Layer 1: Background Image */}
+      {/* Background */}
       {backgroundImage ? (
-        <img
-          src={backgroundImage}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            filter: `${theme.filter}${backgroundBlur > 0 ? ` blur(${backgroundBlur}px)` : ""}`,
-          }}
-        />
+        <>
+          <img
+            src={backgroundImage}
+            className="w-full h-full object-cover scale-105"
+            style={{
+              filter: themeStyle.filter,
+            }}
+          />
+
+          <div
+            className="absolute inset-0"
+            style={{
+              background: themeStyle.overlay,
+            }}
+          />
+        </>
       ) : (
-        <div
-          className="absolute inset-0"
-          style={{
-            background: contentType === "news"
-              ? "linear-gradient(135deg, #1a0000 0%, #0a0a0a 50%, #1a0000 100%)"
-              : contentType === "money"
-                ? "linear-gradient(135deg, #1a1200 0%, #0a0a0a 50%, #1a1500 100%)"
-                : contentType === "tech"
-                  ? "linear-gradient(135deg, #001520 0%, #0a0a0a 50%, #001a2e 100%)"
-                  : "linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%)",
-          }}
-        />
+        <div className="absolute inset-0 thumb-bg-cinematic" />
       )}
 
-      {/* Layer 2: Theme Overlay */}
-      <div className="absolute inset-0 z-[1]" style={{ background: theme.overlay }} />
-
-      {/* Layer 3: Vignette */}
-      <div className="absolute inset-0 z-[2] pointer-events-none" style={{ background: theme.vignette }} />
-
-      {/* Layer 4: Cinematic gradients (soft) */}
-      <div className="absolute inset-0 z-[3] pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: hasSubject
-              ? "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)"
-              : "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 100%)",
-            opacity: 0.3,
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 35%)",
-            opacity: 0.25,
-          }}
-        />
-      </div>
-
+      {/* Cinematic overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
+      <div className="absolute right-0 top-0 w-[45%] h-full bg-gradient-to-l from-transparent via-black/20 to-black/40 z-10" />
+      {/* ✅ SNAP GUIDE — EXACT HERE */}
+      {snapGuide && (
+        <div className="absolute inset-0 pointer-events-none z-50">
+          {snapGuide === "center" && <div className="absolute left-1/2 top-0 h-full w-[2px] bg-yellow-400/70" />}
+          {snapGuide === "left" && <div className="absolute left-[30%] top-0 h-full w-[2px] bg-yellow-400/50" />}
+          {snapGuide === "right" && <div className="absolute right-[30%] top-0 h-full w-[2px] bg-yellow-400/50" />}
+        </div>
+      )}
       {/* Shape overlays */}
       {shapeOverlay === "arrow" && (
         <div
-          className="absolute z-[5] pointer-events-none"
+          className="absolute z-20 pointer-events-none"
           style={
             isVertical
               ? { bottom: "52%", left: "50%", transform: "translateX(-50%)" }
@@ -227,110 +230,114 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
           }
         >
           <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
-            <path d="M10 30 L55 30 L45 15 L70 30 L45 45 L55 30" stroke={theme.text} strokeWidth="4" fill={theme.text} opacity="0.9" />
+            <path
+              d="M10 30 L55 30 L45 15 L70 30 L45 45 L55 30"
+              stroke="#FFD700"
+              strokeWidth="4"
+              fill="#FFD700"
+              opacity="0.9"
+            />
           </svg>
         </div>
       )}
-      {shapeOverlay === "circle" && hasSubject && (
+      {shapeOverlay === "circle" && subjectImage && (
         <div
           className="absolute z-[5] rounded-full pointer-events-none"
           style={{
-            border: `4px solid ${theme.glow}`,
-            boxShadow: `0 0 30px ${theme.glow}, inset 0 0 30px ${theme.glow}`,
+            border: "4px solid rgba(255,215,0,0.6)",
+            boxShadow: "0 0 30px rgba(255,215,0,0.3), inset 0 0 30px rgba(255,215,0,0.1)",
             ...(isVertical
-              ? { bottom: "30%", left: "50%", transform: "translateX(-50%)", width: "55%", aspectRatio: "1" }
+              ? {
+                  bottom: "30%",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "55%",
+                  height: "auto",
+                  aspectRatio: "1",
+                }
               : { right: "2%", top: "10%", width: "40%", height: "80%" }),
           }}
         />
       )}
       {shapeOverlay === "glow-lines" && (
         <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-1/4 w-px h-full" style={{ background: `linear-gradient(to bottom, transparent, ${theme.glow}, transparent)` }} />
-          <div className="absolute top-0 right-1/3 w-px h-full" style={{ background: `linear-gradient(to bottom, transparent, ${theme.glow}, transparent)`, opacity: 0.5 }} />
-          <div className="absolute top-1/3 left-0 w-full h-px" style={{ background: `linear-gradient(to right, transparent, ${theme.glow}, transparent)`, opacity: 0.4 }} />
+          <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-yellow-400/30 to-transparent" />
+          <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent" />
+          <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent" />
         </div>
       )}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10" />
 
-      {/* Layer 5: Subject Image — auto positioned RIGHT (landscape) or CENTER-BOTTOM (vertical) */}
-      {hasSubject && !isVertical && (
-        <div
-          className="absolute right-0 bottom-0 z-[10] flex items-end justify-end"
-          style={{ width: "50%", height: "100%" }}
-        >
-          {/* Glow behind subject */}
-          <div
-            className="absolute rounded-full blur-3xl"
-            style={{
-              bottom: "10%",
-              right: "12%",
-              width: "65%",
-              height: "65%",
-              background: theme.glow,
-              opacity: 0.5,
-            }}
-          />
-          <img
-            src={subjectImage!}
-            alt="Subject"
-            className="relative object-contain"
-            style={{
-              height: `${subjectSizePercent}%`,
-              maxWidth: "100%",
-              transform: subjectFlip ? "scaleX(-1)" : "none",
-              filter: `drop-shadow(0 8px 35px rgba(0,0,0,0.95)) drop-shadow(0 0 60px rgba(0,0,0,0.5)) drop-shadow(0 0 15px ${theme.glow})`,
-            }}
-          />
-        </div>
-      )}
-      {hasSubject && (isVertical || isSquare) && (
-        <div
-          className="absolute left-1/2 -translate-x-1/2 z-[10] pointer-events-none"
+      {/* Subject image */}
+      {subjectImage && !isVertical && (
+        <img
+          src={subjectImage}
+          alt="Subject"
+          className="
+      absolute
+      right-0
+      bottom-0
+      h-full
+      max-w-[52%]
+translate-x-[-5%]
+      object-contain
+      z-20
+      drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]
+    "
           style={{
-            bottom: isVertical ? "28%" : "5%",
-            height: `${subjectSizePercent * 0.55}%`,
+            transform: subjectFlip ? "scaleX(-1)" : "none",
+          }}
+        />
+      )}
+      {subjectImage && isVertical && (
+        <div
+          className="absolute bottom-[35%] left-1/2 -translate-x-1/2 pointer-events-none z-10"
+          style={{
+            height: `${subjectScale * 0.6}%`,
+            transform: subjectFlip ? "translateX(-50%) scaleX(-1)" : undefined,
           }}
         >
-          <div
-            className="absolute inset-0 rounded-full blur-3xl -z-10"
-            style={{ background: theme.glow, opacity: 0.35, transform: "scale(1.4)" }}
-          />
           <img
-            src={subjectImage!}
+            src={subjectImage}
             alt="Subject"
             className="h-full w-auto object-contain"
             style={{
-              transform: subjectFlip ? "scaleX(-1)" : undefined,
-              filter: `drop-shadow(0 8px 28px rgba(0,0,0,0.9)) drop-shadow(0 0 40px rgba(0,0,0,0.4)) drop-shadow(0 0 12px ${theme.glow})`,
+              filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.7)) drop-shadow(0 0 30px rgba(255,200,0,0.2))",
             }}
           />
         </div>
       )}
 
-      {/* Layer 6: Text — auto positioned LEFT (with subject) or CENTER */}
+      {/* Text overlay */}
       <div
-        className={`absolute inset-0 z-[20] flex flex-col p-6 ${
-          isVertical
-            ? "items-center justify-end pb-[10%] text-center"
-            : textAlign === "center"
-              ? "items-center justify-center text-center px-[8%]"
-              : "items-start justify-center pl-[5%] pr-[52%] text-left"
-        }`}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        className={`
+    absolute top-0 h-full p-6 z-30 flex flex-col justify-center transition-all duration-200
+    ${snapGuide === "left" ? "left-0 w-[55%]" : ""}
+    ${snapGuide === "center" ? "left-1/2 -translate-x-1/2 w-[60%] text-center items-center" : ""}
+    ${snapGuide === "right" ? "right-0 w-[55%] text-right items-end" : ""}
+  `}
+        style={{
+          transform: `translate(${textPos.x * 0.02}px, ${textPos.y * 0.02}px)`,
+        }}
       >
         <div className="relative max-w-full">
           {title && (
             <h2
-              className={`font-black leading-[1.05] ${enableStroke ? "thumb-stroke-heavy" : ""}`}
+              className={`font-black leading-[1.05] ${textEffect !== "gradient" ? color.class : ""} ${enableStroke ? "thumb-stroke-heavy" : ""} ${enableGlow && textEffect !== "gradient" ? "thumb-glow-active" : ""}`}
               style={{
                 fontFamily: fonts.titleFont,
                 fontSize: titleFontSize,
-                letterSpacing: "-0.01em",
+                color: themeStyle.text,
                 ...titleEffectStyle,
               }}
             >
               {highlightActive ? (
                 <span
                   style={{
-                    background: theme.text,
+                    background: "rgba(255,215,0,0.9)",
                     color: "#000",
                     padding: "0.05em 0.3em",
                     borderRadius: "0.15em",
@@ -349,12 +356,11 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
           )}
           {subtitle && (
             <p
-              className="font-semibold mt-2"
+              className="font-semibold mt-1 text-white/90"
               style={{
                 fontFamily: fonts.subtitleFont,
                 fontSize: subtitleFontSize,
-                color: theme.subtitleColor,
-                textShadow: "0 2px 12px rgba(0,0,0,1), 0 0 24px rgba(0,0,0,0.7)",
+                textShadow: "0 2px 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.5)",
               }}
             >
               {subtitle}
