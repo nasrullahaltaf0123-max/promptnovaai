@@ -354,11 +354,15 @@ function detectSubjectType(prompt: string) {
   return "auto";
 }
 function detectLayout(strategy: any) {
-  const { strategy: type } = strategy;
+  const { strategy: type, subjectType, hasImage } = strategy;
+
+  // 💥 IMAGE MODE
+  if (hasImage) return "clean_subject_left";
+
+  if (subjectType === "object_only") return "center_object";
 
   if (type === "contrast") return "split_screen";
   if (type === "transformation") return "before_after";
-  if (type === "scale") return "scale";
   if (type === "direct_subject") return "zoom_face";
 
   return "cinematic";
