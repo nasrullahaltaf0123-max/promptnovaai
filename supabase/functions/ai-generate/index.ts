@@ -388,7 +388,23 @@ ${subject}
 
 ${background}
 
-LAYOUT: ${layout}
+COMPOSITION:
+- Layout: ${layout}
+
+- If split_screen → left dark / right bright contrast
+- If before_after → clear transformation divide
+- If zoom_face → face fills 70% frame
+- If clean_subject_left → subject left, empty space right for text
+- If center_object → object center, no human
+
+SUBJECT RULES:
+- If hasImage → MUST use uploaded image, NO AI FACE
+- If object_only → NO human at all
+
+VISUAL PRIORITY:
+- Subject must be biggest element
+- Background must support story, not dominate
+- Strong contrast lighting
 
 Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 
@@ -400,13 +416,15 @@ ${visualClues}
 - These objects/symbols must be clearly visible in the background composition
 - They act as instant visual shorthand — no text needed to understand the story
 
-═══ MANDATORY SUBJECT (RIGHT 40% OF FRAME) ═══
-- Ultra-photorealistic South Asian male face and upper body, age 25-35
-- EMOTION: ${emotion}
-- Camera angle: medium close-up, chest to head, slightly angled 15° to the right
-- Subject must be SHARP (f/2.8 focus on face) while background is BLURRED
-- Skin: hyper-detailed pores, natural imperfections, realistic lighting
-- Hair slightly wind-blown or dramatic
+— SUBJECT SYSTEM —
+
+Follow SUBJECT RULES above strictly.
+
+- If hasImage → use uploaded image only (no AI face)
+- If object_only → no human, no face
+- Otherwise → generate cinematic subject based on topic
+
+Subject must match topic perfectly and be visually dominant.
 
 ═══ RED GLOW RIM LIGHT (CRITICAL) ═══
 - Strong RED/CRIMSON neon rim light outlining subject's head, shoulders, body edge
