@@ -29,43 +29,69 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   const theme = detectTheme(title);
 
   function detectContentType(title: string) {
-    const t = title.toLowerCase();
+function detectContentType(title: string) {
+  const t = title.toLowerCase();
 
-    // MONEY / SUCCESS
-    if (
-      t.includes("money") ||
-      t.includes("income") ||
-      t.includes("earn") ||
-      t.includes("million") ||
-      t.includes("dollar") ||
-      t.includes("$")
-    ) {
-      return "money";
-    }
+  if (
+    t.includes("money") || t.includes("income") ||
+    t.includes("earn") || t.includes("million") ||
+    t.includes("dollar")
+  ) return "money";
 
-    // WAR / NEWS / POLITICS
-    if (
-      t.includes("iran") ||
-      t.includes("israel") ||
-      t.includes("war") ||
-      t.includes("attack") ||
-      t.includes("protest") ||
-      t.includes("conflict")
-    ) {
-      return "news";
-    }
+  if (
+    t.includes("iran") || t.includes("israel") ||
+    t.includes("war") || t.includes("attack") ||
+    t.includes("protest")
+  ) return "news";
 
-    // SHOCK / EMOTIONAL
-    if (t.includes("why") || t.includes("truth") || t.includes("secret") || t.includes("what happened")) {
-      return "emotional";
-    }
+  if (
+    t.includes("secret") || t.includes("truth") ||
+    t.includes("why")
+  ) return "emotional";
 
-    // TECH / AI
-    if (t.includes("ai") || t.includes("tech") || t.includes("future")) {
-      return "tech";
-    }
+  if (
+    t.includes("ai") || t.includes("tech")
+  ) return "tech";
 
-    return "default";
+  return "default";
+}
+  function getThemeStyle(type: string) {
+  switch (type) {
+    case "money":
+      return {
+        filter: "brightness(0.75) contrast(1.3) saturate(1.4)",
+        overlay: "rgba(255, 215, 0, 0.15)",
+        text: "#FFD700"
+      };
+
+    case "news":
+      return {
+        filter: "brightness(0.6) contrast(1.2) saturate(1.2)",
+        overlay: "rgba(255, 0, 0, 0.25)",
+        text: "#FF3B3B"
+      };
+
+    case "emotional":
+      return {
+        filter: "brightness(0.7) contrast(1.1)",
+        overlay: "rgba(0,0,0,0.4)",
+        text: "#FFFFFF"
+      };
+
+    case "tech":
+      return {
+        filter: "brightness(0.8) contrast(1.2) hue-rotate(180deg)",
+        overlay: "rgba(0, 255, 255, 0.15)",
+        text: "#00FFFF"
+      };
+
+    default:
+      return {
+        filter: "brightness(0.9)",
+        overlay: "rgba(0,0,0,0.2)",
+        text: "#FFFFFF"
+      };
+  }
   }
 
   function getThemeFilter(theme: string) {
@@ -84,22 +110,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
         return "brightness(0.9)";
     }
   }
-  const themeStyle: any = {
-    money: "brightness-[0.7] contrast-[1.2] saturate-[1.3]",
-    history: "brightness-[0.6] contrast-[1.1] sepia-[0.3]",
-    dark: "brightness-[0.5] contrast-[1.3]",
-    tech: "brightness-[0.7] contrast-[1.2] hue-rotate-[180deg]",
-    emotional: "brightness-[0.8] contrast-[1.05] saturate-[1.1]",
-    default: "brightness-[0.6] contrast-[1.2]",
-  };
-  const themeOverlay: any = {
-    money: "bg-gradient-to-tr from-black via-green-900/40 to-yellow-500/20",
-    history: "bg-gradient-to-tr from-black via-orange-900/40 to-yellow-600/20",
-    dark: "bg-gradient-to-tr from-black via-red-900/50 to-black",
-    tech: "bg-gradient-to-tr from-black via-blue-900/40 to-cyan-400/20",
-    emotional: "bg-gradient-to-tr from-black via-orange-800/30 to-transparent",
-    default: "bg-black/50",
-  };
+ 
   const fonts = FONT_PRESETS[fontPreset];
   const color = TEXT_COLORS[textColor];
   const aspectRatio = `${platform.width} / ${platform.height}`;
