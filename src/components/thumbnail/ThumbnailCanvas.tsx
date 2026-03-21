@@ -187,7 +187,22 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     >
       {/* Background */}
       {backgroundImage ? (
-        <img src={backgroundImage} className="w-full h-full object-cover scale-105" style={{}} />
+        <>
+          <img
+            src={backgroundImage}
+            className="w-full h-full object-cover scale-105"
+            style={{
+              filter: themeStyle.filter,
+            }}
+          />
+
+          <div
+            className="absolute inset-0"
+            style={{
+              background: themeStyle.overlay,
+            }}
+          />
+        </>
       ) : (
         <div className="absolute inset-0 thumb-bg-cinematic" />
       )}
