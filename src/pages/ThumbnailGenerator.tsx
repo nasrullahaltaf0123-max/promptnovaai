@@ -6,6 +6,57 @@ import { toast } from "@/hooks/use-toast";
 import ThumbnailControls from "@/components/thumbnail/ThumbnailControls";
 import ThumbnailPreview from "@/components/thumbnail/ThumbnailPreview";
 import { PLATFORMS, type ThumbnailConfig } from "@/components/thumbnail/types";
+import { detectContentType, getThemeStyle } from "@/components/thumbnail/ThumbnailCanvas";
+
+function autoConfigFromTitle(title: string, hasSubject: boolean): Partial<ThumbnailConfig> {
+  const type = detectContentType(title);
+  const theme = getThemeStyle(type);
+
+  // Auto-select best text effect and visual config per content type
+  const autoEffects: Record<string, Partial<ThumbnailConfig>> = {
+    news: {
+      textEffect: "none",
+      enableGlow: true,
+      enableStroke: true,
+      shapeOverlay: "none",
+      textColor: "white",
+    },
+    money: {
+      textEffect: "gradient",
+      enableGlow: true,
+      enableStroke: true,
+      shapeOverlay: "glow-lines",
+      textColor: "yellow",
+    },
+    tech: {
+      textEffect: "gradient",
+      enableGlow: true,
+      enableStroke: false,
+      shapeOverlay: "glow-lines",
+      textColor: "cyan",
+    },
+    emotional: {
+      textEffect: "none",
+      enableGlow: false,
+      enableStroke: true,
+      shapeOverlay: "none",
+      textColor: "white",
+    },
+    default: {
+      textEffect: "none",
+      enableGlow: true,
+      enableStroke: true,
+      shapeOverlay: "none",
+      textColor: "white",
+    },
+  };
+
+  return {
+    ...autoEffects[type],
+    textPosition: hasSubject ? "left" : "center",
+    textSize: hasSubject ? 95 : 100,
+  };
+}
 
 const ThumbnailGenerator = () => {
   const { user, profile } = useAuth();
@@ -61,13 +112,11 @@ const ThumbnailGenerator = () => {
         const match = result.match(/\[[\s\S]*?\]/);
         if (match) {
           const parsed = JSON.parse(match[0]);
-          if (Array.isArray(parsed)) {
-            setHeadlines(parsed.slice(0, 3));
-          }
+          if (Array.isArray(parsed)) setHeadlines(parsed.slice(0, 3));
         }
       }
     } catch {
-      // Silently fail — headlines are optional
+      // Headlines are optional
     }
     setIsLoadingHeadlines(false);
   };
@@ -84,9 +133,7 @@ const ThumbnailGenerator = () => {
 
     let { images, error: genError } = await tryGenerate(bgPrompt);
 
-    // Fallback: retry with a generic prompt if no images returned
     if (!genError && (!images || images.length === 0)) {
-      console.warn("No images from primary prompt, retrying with fallback...");
       const fallback = await tryGenerate(
         "A cinematic YouTube thumbnail background, high contrast, dramatic lighting, 16:9, ultra detailed, dark moody atmosphere"
       );
@@ -97,7 +144,6 @@ const ThumbnailGenerator = () => {
     setIsGenerating(false);
 
     if (genError) {
-      console.error("IMAGE API ERROR PAYLOAD:", genError);
       setError(genError);
       toast({ title: "Image generation failed", description: genError, variant: "destructive" });
       return;
@@ -110,7 +156,6 @@ const ThumbnailGenerator = () => {
       }
     } else {
       const msg = "No background generated — the API returned no images after retry.";
-      console.error("EMPTY IMAGE RESPONSE:", { images, bgPrompt });
       setError(msg);
       toast({ title: "Image generation failed", description: msg, variant: "destructive" });
     }
@@ -124,6 +169,10 @@ const ThumbnailGenerator = () => {
     }
     setIsGenerating(true);
     setError("");
+
+    // Step 0: Auto-configure based on content type detection
+    const autoConfig = autoConfigFromTitle(config.title, !!config.subjectImage);
+    updateConfig(autoConfig);
 
     const ok = await incrementUsage(user.id, "image", isAdmin);
     if (!ok) {
@@ -157,12 +206,11 @@ const ThumbnailGenerator = () => {
       return;
     }
 
-    // Step 2: Parse nested JSON from Gemini response (strip markdown fences)
+    // Step 2: Parse AI JSON
     try {
-      const cleanJsonString = result.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const cleanJsonString = result.replace(/```json/gi, "").replace(/```/g, "").trim();
       const parsedData = JSON.parse(cleanJsonString);
 
-      // Map nested fields to UI state
       updateConfig({
         title: parsedData.text_layers?.bangla_hook || config.title,
         subtitle: parsedData.text_layers?.english_subtitle || config.subtitle,
@@ -170,7 +218,7 @@ const ThumbnailGenerator = () => {
         blendPreset: parsedData.visual_intelligence?.css_blend_preset || null,
       });
 
-      // Step 3: Trigger image generation with the structured background prompt
+      // Step 3: Generate background
       const bgPrompt = parsedData.generation_prompts?.background_plate;
       if (bgPrompt) {
         await generateBackgroundImage(bgPrompt);
@@ -178,8 +226,7 @@ const ThumbnailGenerator = () => {
         setIsGenerating(false);
         setError("No background prompt in AI response.");
       }
-    } catch (parseErr) {
-      console.error("Failed to parse AI structure. Raw response:", result);
+    } catch {
       setIsGenerating(false);
       setError("Failed to parse AI structure.");
       toast({ title: "Parse error", description: "Failed to parse AI structure.", variant: "destructive" });
