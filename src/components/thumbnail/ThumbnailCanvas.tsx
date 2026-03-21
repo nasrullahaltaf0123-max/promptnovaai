@@ -26,6 +26,23 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     shapeOverlay,
   } = config;
 
+  const theme = detectTheme(title);
+
+  function detectTheme(title: string) {
+    const t = title.toLowerCase();
+
+    if (t.includes("money") || t.includes("income") || t.includes("earn")) return "money";
+
+    if (t.includes("history") || t.includes("war") || t.includes("past")) return "history";
+
+    if (t.includes("dark") || t.includes("mystery") || t.includes("secret")) return "dark";
+
+    if (t.includes("tech") || t.includes("ai") || t.includes("future")) return "tech";
+
+    if (t.includes("islam") || t.includes("life") || t.includes("emotion")) return "emotional";
+
+    return "default";
+  }
   const fonts = FONT_PRESETS[fontPreset];
   const color = TEXT_COLORS[textColor];
   const aspectRatio = `${platform.width} / ${platform.height}`;
