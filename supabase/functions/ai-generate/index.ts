@@ -415,7 +415,6 @@ ${visualClues}
 - These objects/symbols must be clearly visible in the background composition
 - They act as instant visual shorthand — no text needed to understand the story
 
-— SUBJECT SYSTEM —
 
 — SUBJECT SYSTEM —
 
