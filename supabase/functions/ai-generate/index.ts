@@ -337,6 +337,13 @@ function detectSubjectType(prompt: string) {
     return "object_only";
   }
 
+  function detectStrategy(prompt: string) {
+  if (prompt.includes("vs") || prompt.includes("battle")) return "contrast";
+  if (prompt.includes("before") || prompt.includes("after")) return "transformation";
+  if (prompt.includes("story")) return "cinematic";
+  if (prompt.includes("focus")) return "direct_subject";
+  return "cinematic";
+  }
   if (prompt.includes("person") || prompt.includes("face")) {
     return "ai_face";
   }
