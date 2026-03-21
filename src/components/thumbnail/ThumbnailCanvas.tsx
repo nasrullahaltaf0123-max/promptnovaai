@@ -89,12 +89,9 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       {/* Background */}
       {backgroundImage ? (
         <img
-          src={backgroundImage}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: backgroundBlur > 0 ? `blur(${backgroundBlur}px)` : undefined }}
-          crossOrigin="anonymous"
-        />
+  src={background}
+  className="w-full h-full object-cover blur-[2px] scale-105"
+/>
       ) : (
         <div className="absolute inset-0 thumb-bg-cinematic" />
       )}
@@ -103,6 +100,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
 
+      <div className="absolute right-0 top-0 w-[45%] h-full bg-gradient-to-l from-transparent via-black/20 to-black/40 z-10" />
       {/* Shape overlays */}
       {shapeOverlay === "arrow" && (
         <div
@@ -193,7 +191,7 @@ translate-x-[-5%]
       )}
 
       {/* Text overlay */}
-      <div className={`absolute inset-0 flex flex-col ${textContainerClass} pointer-events-none select-none z-20`}>
+      className="absolute left-0 top-0 w-[55%] h-full p-6 z-30 flex flex-col justify-center"
         <div className="relative max-w-full">
           {title && (
             <h2
