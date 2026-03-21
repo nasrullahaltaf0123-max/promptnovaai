@@ -27,7 +27,10 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   } = config;
 
   const theme = detectTheme(title);
+  const type = detectContentType(title);
+  const themeStyle = getThemeStyle(type);
 
+  console.log("TYPE:", type);
   function detectContentType(title: string) {
     const t = title.toLowerCase();
 
