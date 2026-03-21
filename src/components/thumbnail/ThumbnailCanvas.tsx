@@ -31,15 +31,44 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   function detectTheme(title: string) {
     const t = title.toLowerCase();
 
-    if (t.includes("money") || t.includes("income") || t.includes("earn")) return "money";
+    // MONEY
+    if (
+      t.includes("money") ||
+      t.includes("income") ||
+      t.includes("earn") ||
+      t.includes("gift") ||
+      t.includes("million") ||
+      t.includes("dollar")
+    )
+      return "money";
 
-    if (t.includes("history") || t.includes("war") || t.includes("past")) return "history";
+    // WAR / HISTORY
+    if (
+      t.includes("war") ||
+      t.includes("battle") ||
+      t.includes("history") ||
+      t.includes("iran") ||
+      t.includes("israel") ||
+      t.includes("world")
+    )
+      return "history";
 
-    if (t.includes("dark") || t.includes("mystery") || t.includes("secret")) return "dark";
+    // DARK / MYSTERY
+    if (
+      t.includes("mystery") ||
+      t.includes("secret") ||
+      t.includes("dark") ||
+      t.includes("unknown") ||
+      t.includes("hidden")
+    )
+      return "dark";
 
-    if (t.includes("tech") || t.includes("ai") || t.includes("future")) return "tech";
+    // TECH / AI
+    if (t.includes("ai") || t.includes("tech") || t.includes("future") || t.includes("robot") || t.includes("brain"))
+      return "tech";
 
-    if (t.includes("islam") || t.includes("life") || t.includes("emotion")) return "emotional";
+    // ISLAM / LIFE / EMOTION
+    if (t.includes("islam") || t.includes("life") || t.includes("emotion") || t.includes("story")) return "emotional";
 
     return "default";
   }
