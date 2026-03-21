@@ -81,6 +81,33 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   const [snapGuide, setSnapGuide] = useState<null | "center" | "left" | "right">(null);
   const [textPos, setTextPos] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
+  const handleMouseDown = () => {
+    setDragging(true);
+  };
+
+  const handleMouseUp = () => {
+    setDragging(false);
+    setSnapGuide(null);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!dragging) return;
+
+    const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // SNAP LOGIC
+    if (x < rect.width * 0.3) {
+      setSnapGuide("left");
+    } else if (x > rect.width * 0.7) {
+      setSnapGuide("right");
+    } else {
+      setSnapGuide("center");
+    }
+
+    setTextPos({ x, y });
+  };
   return (
     <div
       ref={ref}
@@ -190,7 +217,20 @@ translate-x-[-5%]
       )}
 
       {/* Text overlay */}
-      <div className="absolute left-[5%] top-[10%] w-[55%] h-full p-6 z-30 flex flex-col justify-center">
+      <div
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        className={`
+    absolute top-0 h-full p-6 z-30 flex flex-col justify-center transition-all duration-200
+    ${snapGuide === "left" ? "left-0 w-[55%]" : ""}
+    ${snapGuide === "center" ? "left-1/2 -translate-x-1/2 w-[60%] text-center items-center" : ""}
+    ${snapGuide === "right" ? "right-0 w-[55%] text-right items-end" : ""}
+  `}
+        style={{
+          transform: `translate(${textPos.x * 0.02}px, ${textPos.y * 0.02}px)`,
+        }}
+      >
         <div className="relative max-w-full">
           {title && (
             <h2
