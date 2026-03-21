@@ -356,6 +356,11 @@ function detectLayout(strategy: any) {
 
 function buildThumbnailPrompt(prompt: string, style: string, colorScheme: string): string {
   const category = detectTopicCategory(prompt);
+  const strategyData = {
+  category,
+  strategy: "contrast",
+  subjectType: detectSubjectType(prompt),
+};
   const { scene, tone, elements, visualClues } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
 
