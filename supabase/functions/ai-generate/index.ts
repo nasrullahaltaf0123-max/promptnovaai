@@ -45,7 +45,7 @@ OUTPUT FORMAT (STRICT JSON):
   const response = await fetch(GATEWAY_URL, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
