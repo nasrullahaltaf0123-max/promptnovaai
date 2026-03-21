@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { type ThumbnailConfig, FONT_PRESETS, TEXT_COLORS } from "./types";
 
 interface Props {
@@ -78,7 +78,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   })();
 
   const highlightActive = textEffect === "highlight";
-
+  const [snapGuide, setSnapGuide] = useState<null | "center" | "left" | "right">(null);
   return (
     <div
       ref={ref}
