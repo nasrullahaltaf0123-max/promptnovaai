@@ -8,10 +8,22 @@ interface Props {
 
 const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) => {
   const {
-    title, subtitle, platform, textPosition, fontPreset, textColor,
-    textEffect, textSize, enableGlow, enableStroke,
-    subjectImage, subjectScale, subjectFlip,
-    backgroundImage, backgroundBlur, shapeOverlay,
+    title,
+    subtitle,
+    platform,
+    textPosition,
+    fontPreset,
+    textColor,
+    textEffect,
+    textSize,
+    enableGlow,
+    enableStroke,
+    subjectImage,
+    subjectScale,
+    subjectFlip,
+    backgroundImage,
+    backgroundBlur,
+    shapeOverlay,
   } = config;
 
   const fonts = FONT_PRESETS[fontPreset];
@@ -49,11 +61,12 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
         };
       case "gradient":
         return {
-          background: textColor === "yellow"
-            ? "linear-gradient(180deg, #FFD700 0%, #FF8C00 100%)"
-            : textColor === "cyan"
-            ? "linear-gradient(180deg, #06b6d4 0%, #3b82f6 100%)"
-            : "linear-gradient(180deg, #FFFFFF 0%, #94a3b8 100%)",
+          background:
+            textColor === "yellow"
+              ? "linear-gradient(180deg, #FFD700 0%, #FF8C00 100%)"
+              : textColor === "cyan"
+                ? "linear-gradient(180deg, #06b6d4 0%, #3b82f6 100%)"
+                : "linear-gradient(180deg, #FFFFFF 0%, #94a3b8 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
@@ -92,9 +105,22 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
 
       {/* Shape overlays */}
       {shapeOverlay === "arrow" && (
-        <div className="absolute z-20 pointer-events-none" style={isVertical ? { bottom: "52%", left: "50%", transform: "translateX(-50%)" } : { top: "50%", left: "42%", transform: "translateY(-50%)" }}>
+        <div
+          className="absolute z-20 pointer-events-none"
+          style={
+            isVertical
+              ? { bottom: "52%", left: "50%", transform: "translateX(-50%)" }
+              : { top: "50%", left: "42%", transform: "translateY(-50%)" }
+          }
+        >
           <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
-            <path d="M10 30 L55 30 L45 15 L70 30 L45 45 L55 30" stroke="#FFD700" strokeWidth="4" fill="#FFD700" opacity="0.9" />
+            <path
+              d="M10 30 L55 30 L45 15 L70 30 L45 45 L55 30"
+              stroke="#FFD700"
+              strokeWidth="4"
+              fill="#FFD700"
+              opacity="0.9"
+            />
           </svg>
         </div>
       )}
@@ -105,7 +131,14 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
             border: "4px solid rgba(255,215,0,0.6)",
             boxShadow: "0 0 30px rgba(255,215,0,0.3), inset 0 0 30px rgba(255,215,0,0.1)",
             ...(isVertical
-              ? { bottom: "30%", left: "50%", transform: "translateX(-50%)", width: "55%", height: "auto", aspectRatio: "1" }
+              ? {
+                  bottom: "30%",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "55%",
+                  height: "auto",
+                  aspectRatio: "1",
+                }
               : { right: "2%", top: "10%", width: "40%", height: "80%" }),
           }}
         />
@@ -117,25 +150,27 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
           <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent" />
         </div>
       )}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10" />
 
       {/* Subject image */}
       {subjectImage && !isVertical && (
-        <div
-          className="absolute right-0 bottom-0 pointer-events-none z-10"
+        <img
+          src={subjectImage}
+          alt="Subject"
+          className="
+      absolute
+      right-0
+      bottom-0
+      h-full
+      max-w-[45%]
+      object-contain
+      z-20
+      drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]
+    "
           style={{
-            height: `${subjectScale}%`,
-            transform: subjectFlip ? "scaleX(-1)" : undefined,
+            transform: subjectFlip ? "scaleX(-1)" : "none",
           }}
-        >
-          <img
-            src={subjectImage}
-            alt="Subject"
-            className="h-full w-auto object-contain"
-            style={{
-              filter: `drop-shadow(0 8px 24px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(255,200,0,0.25))`,
-            }}
-          />
-        </div>
+        />
       )}
       {subjectImage && isVertical && (
         <div
