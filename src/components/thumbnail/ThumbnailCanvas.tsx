@@ -162,7 +162,8 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       right-0
       bottom-0
       h-full
-      max-w-[45%]
+      max-w-[40%]
+translate-x-[-5%]
       object-contain
       z-20
       drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]
