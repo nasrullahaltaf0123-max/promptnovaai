@@ -43,6 +43,22 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
 
     return "default";
   }
+  const themeStyle: any = {
+    money: "brightness-[0.7] contrast-[1.2] saturate-[1.3]",
+    history: "brightness-[0.6] contrast-[1.1] sepia-[0.3]",
+    dark: "brightness-[0.5] contrast-[1.3]",
+    tech: "brightness-[0.7] contrast-[1.2] hue-rotate-[180deg]",
+    emotional: "brightness-[0.8] contrast-[1.05] saturate-[1.1]",
+    default: "brightness-[0.6] contrast-[1.2]",
+  };
+  const themeOverlay: any = {
+    money: "bg-gradient-to-tr from-black via-green-900/40 to-yellow-500/20",
+    history: "bg-gradient-to-tr from-black via-orange-900/40 to-yellow-600/20",
+    dark: "bg-gradient-to-tr from-black via-red-900/50 to-black",
+    tech: "bg-gradient-to-tr from-black via-blue-900/40 to-cyan-400/20",
+    emotional: "bg-gradient-to-tr from-black via-orange-800/30 to-transparent",
+    default: "bg-black/50",
+  };
   const fonts = FONT_PRESETS[fontPreset];
   const color = TEXT_COLORS[textColor];
   const aspectRatio = `${platform.width} / ${platform.height}`;
