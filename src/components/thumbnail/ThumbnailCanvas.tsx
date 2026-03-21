@@ -28,50 +28,46 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
 
   const theme = detectTheme(title);
 
-  function detectTheme(title: string) {
+  function detectContentType(title: string) {
     const t = title.toLowerCase();
 
-    // MONEY
+    // MONEY / SUCCESS
     if (
       t.includes("money") ||
       t.includes("income") ||
       t.includes("earn") ||
-      t.includes("gift") ||
       t.includes("million") ||
-      t.includes("dollar")
-    )
+      t.includes("dollar") ||
+      t.includes("$")
+    ) {
       return "money";
+    }
 
-    // WAR / HISTORY
+    // WAR / NEWS / POLITICS
     if (
-      t.includes("war") ||
-      t.includes("battle") ||
-      t.includes("history") ||
       t.includes("iran") ||
       t.includes("israel") ||
-      t.includes("world")
-    )
-      return "history";
+      t.includes("war") ||
+      t.includes("attack") ||
+      t.includes("protest") ||
+      t.includes("conflict")
+    ) {
+      return "news";
+    }
 
-    // DARK / MYSTERY
-    if (
-      t.includes("mystery") ||
-      t.includes("secret") ||
-      t.includes("dark") ||
-      t.includes("unknown") ||
-      t.includes("hidden")
-    )
-      return "dark";
+    // SHOCK / EMOTIONAL
+    if (t.includes("why") || t.includes("truth") || t.includes("secret") || t.includes("what happened")) {
+      return "emotional";
+    }
 
     // TECH / AI
-    if (t.includes("ai") || t.includes("tech") || t.includes("future") || t.includes("robot") || t.includes("brain"))
+    if (t.includes("ai") || t.includes("tech") || t.includes("future")) {
       return "tech";
-
-    // ISLAM / LIFE / EMOTION
-    if (t.includes("islam") || t.includes("life") || t.includes("emotion") || t.includes("story")) return "emotional";
+    }
 
     return "default";
   }
+
   function getThemeFilter(theme: string) {
     switch (theme) {
       case "money":
