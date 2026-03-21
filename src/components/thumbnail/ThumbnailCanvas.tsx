@@ -26,7 +26,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     shapeOverlay,
   } = config;
 
-  const theme = detectTheme(title);
+  const type = detectContentType(title);
   const themeStyle = getThemeStyle(type);
 
   console.log("TYPE:", type);
