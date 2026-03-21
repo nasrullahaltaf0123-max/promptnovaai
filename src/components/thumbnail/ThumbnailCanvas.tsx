@@ -29,69 +29,69 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   const theme = detectTheme(title);
 
   function detectContentType(title: string) {
-function detectContentType(title: string) {
-  const t = title.toLowerCase();
+    const t = title.toLowerCase();
 
-  if (
-    t.includes("money") || t.includes("income") ||
-    t.includes("earn") || t.includes("million") ||
-    t.includes("dollar")
-  ) return "money";
+    if (
+      t.includes("money") ||
+      t.includes("income") ||
+      t.includes("earn") ||
+      t.includes("million") ||
+      t.includes("dollar")
+    )
+      return "money";
 
-  if (
-    t.includes("iran") || t.includes("israel") ||
-    t.includes("war") || t.includes("attack") ||
-    t.includes("protest")
-  ) return "news";
+    if (
+      t.includes("iran") ||
+      t.includes("israel") ||
+      t.includes("war") ||
+      t.includes("attack") ||
+      t.includes("protest")
+    )
+      return "news";
 
-  if (
-    t.includes("secret") || t.includes("truth") ||
-    t.includes("why")
-  ) return "emotional";
+    if (t.includes("secret") || t.includes("truth") || t.includes("why")) return "emotional";
 
-  if (
-    t.includes("ai") || t.includes("tech")
-  ) return "tech";
+    if (t.includes("ai") || t.includes("tech")) return "tech";
 
-  return "default";
-}
-  function getThemeStyle(type: string) {
-  switch (type) {
-    case "money":
-      return {
-        filter: "brightness(0.75) contrast(1.3) saturate(1.4)",
-        overlay: "rgba(255, 215, 0, 0.15)",
-        text: "#FFD700"
-      };
-
-    case "news":
-      return {
-        filter: "brightness(0.6) contrast(1.2) saturate(1.2)",
-        overlay: "rgba(255, 0, 0, 0.25)",
-        text: "#FF3B3B"
-      };
-
-    case "emotional":
-      return {
-        filter: "brightness(0.7) contrast(1.1)",
-        overlay: "rgba(0,0,0,0.4)",
-        text: "#FFFFFF"
-      };
-
-    case "tech":
-      return {
-        filter: "brightness(0.8) contrast(1.2) hue-rotate(180deg)",
-        overlay: "rgba(0, 255, 255, 0.15)",
-        text: "#00FFFF"
-      };
-
-    default:
-      return {
-        filter: "brightness(0.9)",
-        overlay: "rgba(0,0,0,0.2)",
-        text: "#FFFFFF"
-      };
+    return "default";
   }
+  function getThemeStyle(type: string) {
+    switch (type) {
+      case "money":
+        return {
+          filter: "brightness(0.75) contrast(1.3) saturate(1.4)",
+          overlay: "rgba(255, 215, 0, 0.15)",
+          text: "#FFD700",
+        };
+
+      case "news":
+        return {
+          filter: "brightness(0.6) contrast(1.2) saturate(1.2)",
+          overlay: "rgba(255, 0, 0, 0.25)",
+          text: "#FF3B3B",
+        };
+
+      case "emotional":
+        return {
+          filter: "brightness(0.7) contrast(1.1)",
+          overlay: "rgba(0,0,0,0.4)",
+          text: "#FFFFFF",
+        };
+
+      case "tech":
+        return {
+          filter: "brightness(0.8) contrast(1.2) hue-rotate(180deg)",
+          overlay: "rgba(0, 255, 255, 0.15)",
+          text: "#00FFFF",
+        };
+
+      default:
+        return {
+          filter: "brightness(0.9)",
+          overlay: "rgba(0,0,0,0.2)",
+          text: "#FFFFFF",
+        };
+    }
   }
 
   function getThemeFilter(theme: string) {
@@ -110,7 +110,7 @@ function detectContentType(title: string) {
         return "brightness(0.9)";
     }
   }
- 
+
   const fonts = FONT_PRESETS[fontPreset];
   const color = TEXT_COLORS[textColor];
   const aspectRatio = `${platform.width} / ${platform.height}`;
