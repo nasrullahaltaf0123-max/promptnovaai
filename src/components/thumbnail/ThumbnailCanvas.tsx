@@ -88,7 +88,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     >
       {/* Background */}
       {backgroundImage ? (
-        <img src={background} className="w-full h-full object-cover blur-[2px] scale-105" />
+        <img src={backgroundImage} className="w-full h-full object-cover blur-[2px] scale-105" />
       ) : (
         <div className="absolute inset-0 thumb-bg-cinematic" />
       )}
