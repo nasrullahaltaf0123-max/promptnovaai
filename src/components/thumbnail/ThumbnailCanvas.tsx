@@ -79,6 +79,8 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
 
   const highlightActive = textEffect === "highlight";
   const [snapGuide, setSnapGuide] = useState<null | "center" | "left" | "right">(null);
+  const [textPos, setTextPos] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
   return (
     <div
       ref={ref}
