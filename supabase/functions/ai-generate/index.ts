@@ -10,7 +10,7 @@ const corsHeaders = {
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
 const IMAGE_MODEL = "google/gemini-2.5-flash-image";
-async function generateStrategy(prompt: string) {
+async function generateStrategy(prompt: string, apiKey: string) {
   const systemPrompt = `
 You are a YouTube Thumbnail Strategist AI.
 
@@ -45,7 +45,7 @@ OUTPUT FORMAT (STRICT JSON):
   const response = await fetch(GATEWAY_URL, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -677,13 +677,13 @@ serve(async (req) => {
 
     // ── Build request ──
     const { type, messages, prompt, options } = await req.json();
-let strategyData = await generateStrategy(prompt);
+let strategyData = await generateStrategy(prompt, LOVABLE_API_KEY);
 
 if (!validateStrategy(strategyData)) {
   console.log("❌ Bad strategy, regenerating...");
 
   strategyData = await generateStrategy(
-    prompt + " (simple, real-world, no futuristic elements)"
+    prompt + " (simple, real-world, no futuristic elements)", LOVABLE_API_KEY
   );
 }
 
