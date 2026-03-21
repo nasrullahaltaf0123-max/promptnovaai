@@ -276,32 +276,35 @@ function getEmotionForCategory(category: string): string {
   return emotions[category] || emotions.general;
 }
 function buildSubjectPrompt(strategy: any) {
-  const { category, strategy: type } = strategy;
+  const { category, strategy: type, subjectType, hasImage } = strategy;
 
-  let subject = "a human face";
-
-  if (category === "economy") {
-    subject = "a stressed South Asian man, worried expression";
+  // 💥 IMAGE PRIORITY (MOST IMPORTANT)
+  if (hasImage) {
+    return "USE PROVIDED IMAGE AS MAIN SUBJECT, NO AI FACE, clean cutout, high contrast lighting";
   }
 
-  if (category === "history") {
-    subject = "a serious historical leader, intense eyes, realistic face";
+  // 🎯 SUBJECT TYPE CONTROL
+  if (subjectType === "object_only") {
+    return "NO human, NO face, focus on objects only, cinematic scene";
   }
 
-  if (category === "tech") {
-    subject = "a shocked young man, eyes wide, reflecting light";
+  let subject = "";
+
+  if (subjectType === "ai_face") {
+    subject = "ultra realistic cinematic human face";
+  } else {
+    subject = "cinematic subject relevant to topic";
   }
 
-  if (category === "survival") {
-    subject = "an exhausted man, dirty face, survival situation";
-  }
+  // category logic
+  if (category === "economy") subject += " stressed South Asian man";
+  if (category === "tech") subject += " shocked young man";
+  if (category === "history") subject += " serious historical leader";
 
-  if (type === "contrast") {
-    subject += ", facing contrast, emotional tension";
-  }
+  // strategy influence
+  if (type === "contrast") subject += ", strong emotional contrast";
 
-  return `MAIN SUBJECT: ${subject}, ultra realistic, cinematic lighting, sharp focus`;
-}
+  return `MAIN SUBJECT: ${subject}`;
 }
 
 function buildBackgroundPrompt(strategy: any) {
