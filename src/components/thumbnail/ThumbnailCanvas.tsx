@@ -125,8 +125,15 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       {/* Cinematic overlays */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
-
       <div className="absolute right-0 top-0 w-[45%] h-full bg-gradient-to-l from-transparent via-black/20 to-black/40 z-10" />
+      {/* ✅ SNAP GUIDE — EXACT HERE */}
+      {snapGuide && (
+        <div className="absolute inset-0 pointer-events-none z-40">
+          {snapGuide === "center" && <div className="absolute left-1/2 top-0 h-full w-[2px] bg-yellow-400/70" />}
+          {snapGuide === "left" && <div className="absolute left-[30%] top-0 h-full w-[2px] bg-yellow-400/50" />}
+          {snapGuide === "right" && <div className="absolute right-[30%] top-0 h-full w-[2px] bg-yellow-400/50" />}
+        </div>
+      )}
       {/* Shape overlays */}
       {shapeOverlay === "arrow" && (
         <div
