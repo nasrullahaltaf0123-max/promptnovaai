@@ -10,7 +10,7 @@ const corsHeaders = {
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-3-flash-preview";
 const IMAGE_MODEL = "google/gemini-2.5-flash-image";
-async function generateStrategy(prompt: string) {
+async function generateStrategy(prompt: string, apiKey: string) {
   const systemPrompt = `
 You are a YouTube Thumbnail Strategist AI.
 
