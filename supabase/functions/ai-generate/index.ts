@@ -334,23 +334,22 @@ function buildBackgroundPrompt(strategy: any) {
 
   return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
 }
-}
-function detectSubjectType(prompt: string) {
-  if (prompt.includes("no face") || prompt.includes("object")) {
-    return "object_only";
-  }
 
-  function detectStrategy(prompt: string) {
+function detectStrategy(prompt: string) {
   if (prompt.includes("vs") || prompt.includes("battle")) return "contrast";
   if (prompt.includes("before") || prompt.includes("after")) return "transformation";
   if (prompt.includes("story")) return "cinematic";
   if (prompt.includes("focus")) return "direct_subject";
   return "cinematic";
+}
+
+function detectSubjectType(prompt: string) {
+  if (prompt.includes("no face") || prompt.includes("object")) {
+    return "object_only";
   }
   if (prompt.includes("person") || prompt.includes("face")) {
     return "ai_face";
   }
-
   return "auto";
 }
 function detectLayout(strategy: any) {
@@ -412,9 +411,9 @@ Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 The viewer must understand the ENTIRE topic within 1 SECOND of seeing this thumbnail.
 Use VISUAL CLUES that instantly communicate the subject matter:
 ${visualClues}
-`
 - These objects/symbols must be clearly visible in the background composition
 - They act as instant visual shorthand — no text needed to understand the story
+
 
 — SUBJECT SYSTEM —
 
@@ -592,7 +591,9 @@ Return ONLY JSON:
   "generation_prompts": {
     "background_plate": "cinematic background prompt, no people, no text"
   }
-}`
+}`,
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -708,8 +709,7 @@ console.log("FINAL STRATEGY:", strategyData);
       } else if (toolType === "image" && options) {
         userPrompt = buildImagePrompt(prompt, options.style || "photorealistic");
       } else if (toolType === "thumbnail" || toolType === "thumbnail-image") {
-  userPrompt = buildThumbnailPrompt(prompt, strategyData);
-}
+        userPrompt = buildThumbnailPrompt(prompt, options?.style || "Cinematic", options?.colorScheme || "Dark & Bold");
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
       } else if (isHeadlineSuggest) {
