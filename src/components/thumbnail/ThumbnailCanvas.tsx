@@ -88,10 +88,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
     >
       {/* Background */}
       {backgroundImage ? (
-        <img
-  src={background}
-  className="w-full h-full object-cover blur-[2px] scale-105"
-/>
+        <img src={background} className="w-full h-full object-cover blur-[2px] scale-105" />
       ) : (
         <div className="absolute inset-0 thumb-bg-cinematic" />
       )}
@@ -160,7 +157,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
       right-0
       bottom-0
       h-full
-      max-w-[40%]
+      max-w-[50%]
 translate-x-[-5%]
       object-contain
       z-20
@@ -191,7 +188,7 @@ translate-x-[-5%]
       )}
 
       {/* Text overlay */}
-      className="absolute left-0 top-0 w-[55%] h-full p-6 z-30 flex flex-col justify-center"
+      <div className="absolute left-[5%] top-0 w-[55%] h-full p-6 z-30 flex flex-col justify-center">
         <div className="relative max-w-full">
           {title && (
             <h2
