@@ -248,21 +248,6 @@ const Upgrade = () => {
           </div>
         )}
 
-        {step === "verify" && (
-          <div className="glass-card-highlight rounded-2xl p-7 text-center space-y-4">
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto"
-            >
-              <Check className="w-8 h-8 text-primary" />
-            </motion.div>
-            <h2 className="text-body-lg font-bold text-foreground">Payment Verified!</h2>
-            <p className="text-caption text-muted-foreground">You now have Pro access. Enjoy unlimited AI tools!</p>
-          </div>
-        )}
-
         <p className="text-micro text-muted-foreground/50 text-center flex items-center justify-center gap-1">
           <Shield className="w-3 h-3" /> Payments verified server-side. No fake upgrades possible.
         </p>
