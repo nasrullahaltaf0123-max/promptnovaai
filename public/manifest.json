@@ -5,14 +5,12 @@
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#f59e0b",
-  "orientation": "any",
-  "scope": "/",
+  "description": "Create viral YouTube thumbnails with AI. Auto layout, auto color detection, face crop, and professional thumbnail generator.",
   "icons": [
     {
       "src": "/favicon.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
