@@ -226,7 +226,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      claim_daily_reward: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never
