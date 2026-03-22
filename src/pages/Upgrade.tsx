@@ -39,7 +39,9 @@ const Upgrade = () => {
           <Crown className="w-16 h-16 text-primary mx-auto mb-4" />
           <h1 className="text-heading text-foreground mb-2">You're a Pro!</h1>
           <p className="text-caption text-muted-foreground mb-6">You have full access to all PromptNova AI tools.</p>
-          <Link to="/dashboard" className="text-primary hover:underline text-caption">← Back to Dashboard</Link>
+          <Link to="/dashboard" className="text-primary hover:underline text-caption">
+            ← Back to Dashboard
+          </Link>
         </motion.div>
       </div>
     );
@@ -58,7 +60,7 @@ const Upgrade = () => {
             Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ action: "create" }),
-        }
+        },
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -71,28 +73,27 @@ const Upgrade = () => {
   };
 
   const verifyPayment = async () => {
-    if (!session || !transactionId.trim()) return;
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/process-payment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ action: "verify", paymentId, transactionId: transactionId.trim() }),
-        }
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      toast({ title: "🎉 Upgraded to Pro!", description: "Refreshing your account..." });
-      setStep("verify");
-      setTimeout(() => window.location.reload(), 1500);
-    } catch (e: any) {
-      toast({ title: "Verification failed", description: e.message, variant: "destructive" });
+    if (!session || !transactionId.trim()) {
+      alert("Enter valid transaction ID");
+      return;
     }
+
+    setLoading(true);
+
+    try {
+      await supabase.from("payments").insert([
+        {
+          trx_id: transactionId,
+          status: "pending",
+          user_id: session.user.id,
+        },
+      ]);
+
+      alert("Submitted! Wait for admin approval.");
+    } catch (e: any) {
+      alert("Error submitting payment");
+    }
+
     setLoading(false);
   };
 
@@ -100,13 +101,15 @@ const Upgrade = () => {
     <div className="max-w-2xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         <div>
-          <Link to="/dashboard" className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground text-micro mb-4 transition-colors">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground text-micro mb-4 transition-colors"
+          >
             <ArrowLeft className="w-3 h-3" /> Back
           </Link>
           <h1 className="text-heading text-foreground">Upgrade to Pro</h1>
           <p className="text-caption text-muted-foreground mt-1">
-            Unlock unlimited AI power for{" "}
-            <span className="text-foreground font-bold">৳{PRO_PRICE}/month</span>{" "}
+            Unlock unlimited AI power for <span className="text-foreground font-bold">৳{PRO_PRICE}/month</span>{" "}
             <span className="text-muted-foreground/50 line-through">৳299</span>
           </p>
           <p className="text-micro text-primary font-semibold mt-1">🔥 Launch Offer — Only for first 100 users</p>
@@ -195,16 +198,15 @@ const Upgrade = () => {
               </div>
 
               <p className="text-micro text-muted-foreground">
-                Send exact amount <span className="text-foreground font-medium">৳{PRO_PRICE}</span> and include reference <span className="text-foreground font-medium">"{BKASH_REFERENCE}"</span>
+                Send exact amount <span className="text-foreground font-medium">৳{PRO_PRICE}</span> and include
+                reference <span className="text-foreground font-medium">"{BKASH_REFERENCE}"</span>
               </p>
             </div>
 
             {/* Warning */}
             <div className="flex items-start gap-2.5 bg-destructive/5 border border-destructive/20 rounded-xl p-3.5">
               <AlertTriangle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" />
-              <p className="text-micro text-destructive/90">
-                Wrong reference or amount = payment will NOT be verified
-              </p>
+              <p className="text-micro text-destructive/90">Wrong reference or amount = payment will NOT be verified</p>
             </div>
 
             {/* Transaction ID input */}
@@ -229,11 +231,18 @@ const Upgrade = () => {
 
             {/* Trust indicators */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-micro text-muted-foreground pt-1">
-              <span className="flex items-center gap-1"><Shield className="w-3 h-3 text-primary" /> Secure server-side verification</span>
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-primary" /> Usually verifies within 1–5 minutes</span>
+              <span className="flex items-center gap-1">
+                <Shield className="w-3 h-3 text-primary" /> Secure server-side verification
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3 text-primary" /> Usually verifies within 1–5 minutes
+              </span>
             </div>
 
-            <button onClick={() => setStep("plan")} className="w-full text-micro text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={() => setStep("plan")}
+              className="w-full text-micro text-muted-foreground hover:text-foreground transition-colors"
+            >
               ← Go back
             </button>
           </div>
