@@ -35,35 +35,17 @@ const GamificationWidget = () => {
     if (!user || claiming || !canClaim) return;
     setClaiming(true);
 
-    const credits = 5 + Math.min(streak, 10); // streak bonus
-    const today = new Date().toISOString().split("T")[0];
+    const { data, error } = await supabase.rpc("claim_daily_reward");
 
-    const { error } = await supabase.from("daily_rewards").insert({
-      user_id: user.id,
-      claimed_at: today,
-      credits_earned: credits,
-    });
-
-    if (!error) {
-      // Update profile streak & XP
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const lastActive = (profile as any)?.last_active_date;
-      const isConsecutive = lastActive === yesterday.toISOString().split("T")[0];
-      const newStreak = isConsecutive ? streak + 1 : 1;
-
-      await supabase.from("profiles").update({
-        bonus_credits: bonusCredits + credits,
-        streak_count: newStreak,
-        last_active_date: today,
-        total_xp: xp + credits * 10,
-      } as any).eq("id", user.id);
-
-      setStreak(newStreak);
-      setBonusCredits((b) => b + credits);
-      setXp((x) => x + credits * 10);
+    if (!error && data && (data as any).success) {
+      const result = data as any;
+      setStreak(result.streak);
+      setBonusCredits(result.bonus_credits);
+      setXp(result.total_xp);
       setCanClaim(false);
-      toast({ title: `🎁 +${credits} credits claimed!`, description: `${newStreak} day streak! Keep it up!` });
+      toast({ title: `🎁 +${result.credits} credits claimed!`, description: `${result.streak} day streak! Keep it up!` });
+    } else if (data && (data as any).error) {
+      toast({ title: "Could not claim reward", description: (data as any).error, variant: "destructive" });
     }
     setClaiming(false);
   };
