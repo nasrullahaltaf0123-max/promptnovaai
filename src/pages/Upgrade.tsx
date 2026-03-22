@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { useCredits } from "@/hooks/use-credits";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const BKASH_NUMBER = "01760208757";
 const BKASH_REFERENCE = "promptnova";
@@ -73,27 +74,43 @@ const Upgrade = () => {
   };
 
   const verifyPayment = async () => {
-    if (!session || !transactionId.trim()) {
-      alert("Enter valid transaction ID");
+    const trimmedTxId = transactionId.trim();
+    if (!session || !trimmedTxId) {
+      toast({ title: "Error", description: "Enter a valid transaction ID", variant: "destructive" });
+      return;
+    }
+    if (trimmedTxId.length < 6) {
+      toast({ title: "Error", description: "Transaction ID must be at least 6 characters", variant: "destructive" });
+      return;
+    }
+    if (!/^[A-Za-z0-9]+$/.test(trimmedTxId)) {
+      toast({ title: "Error", description: "Transaction ID must be alphanumeric only", variant: "destructive" });
       return;
     }
 
     setLoading(true);
-
     try {
-      await supabase.from("payments").insert([
-        {
-          trx_id: transactionId,
-          status: "pending",
-          user_id: session.user.id,
-        },
-      ]);
+      const { error } = await supabase.from("payments").insert({
+        user_id: session.user.id,
+        transaction_id: trimmedTxId,
+        amount: PRO_PRICE,
+        currency: "BDT",
+        method: "bkash",
+        status: "pending",
+      });
 
-      alert("Submitted! Wait for admin approval.");
+      if (error) {
+        console.error("Payment insert error:", error);
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Submitted!", description: "Your payment is pending admin verification." });
+        setStep("plan");
+        setTransactionId("");
+      }
     } catch (e: any) {
-      alert("Error submitting payment");
+      console.error("Payment submission error:", e);
+      toast({ title: "Error", description: e.message || "Failed to submit payment", variant: "destructive" });
     }
-
     setLoading(false);
   };
 
