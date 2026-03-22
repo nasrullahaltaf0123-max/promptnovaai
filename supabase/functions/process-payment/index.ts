@@ -148,37 +148,29 @@ serve(async (req) => {
 
       // In production: call bKash Execute/Query Payment API here
       // to verify transactionId is legitimate and matches amount.
-      // For simulation, we accept valid-format IDs.
+      // DO NOT auto-upgrade — admin must manually verify and approve.
 
-      // Mark payment as completed
+      // Record the transaction ID for admin review (keep status as pending)
       const { error: updateError } = await supabaseAdmin
         .from("payments")
         .update({
-          status: "completed",
           transaction_id: transactionId,
-          verified_at: new Date().toISOString(),
         })
         .eq("id", paymentId)
-        .eq("status", "pending"); // Only update if still pending (race condition guard)
+        .eq("status", "pending");
 
       if (updateError) {
-        return new Response(JSON.stringify({ error: "Failed to verify payment" }), {
+        return new Response(JSON.stringify({ error: "Failed to record transaction" }), {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      // Upgrade user to pro ONLY after successful payment update
-      await supabaseAdmin
-        .from("profiles")
-        .update({ plan: "pro" })
-        .eq("id", userId);
-
       return new Response(
         JSON.stringify({
           success: true,
-          message: "Payment verified! You are now a Pro user.",
-          plan: "pro",
+          message: "Transaction ID recorded. Your payment is pending admin verification.",
+          status: "pending",
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
