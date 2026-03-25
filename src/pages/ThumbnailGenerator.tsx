@@ -47,6 +47,8 @@ const ThumbnailGenerator = () => {
     removeBg: false,
     imageBorder: "none",
     textStyles: [],
+    aiAutoMode: true,
+    autoRemoveBg: true,
   });
 
   useEffect(() => {

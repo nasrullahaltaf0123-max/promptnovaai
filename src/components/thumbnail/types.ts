@@ -14,8 +14,8 @@ export const PLATFORMS: Platform[] = [
 ];
 
 export type TextPosition = "left" | "center" | "bottom-left";
-export type FontPreset = "siyam" | "hind" | "noto";
-export type TextColor = "yellow" | "white" | "cyan";
+export type FontPreset = "siyam" | "hind" | "noto" | "kalpurush" | "poppins" | "montserrat" | "bebas" | "anton" | "oswald" | "inter";
+export type TextColor = "yellow" | "white" | "cyan" | "red" | "blue" | "purple" | "green" | "orange" | "ice" | "bw";
 export type TextEffect = "none" | "3d" | "gradient" | "highlight";
 export type ShapeOverlay = "none" | "arrow" | "circle" | "glow-lines";
 export type FontStyle = "bold" | "clean" | "youtube" | "gaming" | "minimal";
@@ -43,7 +43,6 @@ export interface ThumbnailConfig {
   shapeOverlay: ShapeOverlay;
   themeColor: string | null;
   blendPreset: string | null;
-  // New controls
   fontStyle: FontStyle;
   colorStyle: ColorStyle;
   customColor: string;
@@ -54,18 +53,34 @@ export interface ThumbnailConfig {
   removeBg: boolean;
   imageBorder: ImageBorder;
   textStyles: TextStyleOption[];
+  aiAutoMode: boolean;
+  autoRemoveBg: boolean;
 }
 
-export const FONT_PRESETS: Record<FontPreset, { label: string; titleFont: string; subtitleFont: string }> = {
-  siyam: { label: "Siyam Rupali", titleFont: "'SiyamRupali', 'Hind Siliguri', sans-serif", subtitleFont: "'Noto Sans Bengali', sans-serif" },
-  hind: { label: "Hind Siliguri", titleFont: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", subtitleFont: "'Noto Sans Bengali', sans-serif" },
-  noto: { label: "Noto Sans", titleFont: "'Noto Sans Bengali', 'Hind Siliguri', sans-serif", subtitleFont: "'Hind Siliguri', sans-serif" },
+export const FONT_PRESETS: Record<FontPreset, { label: string; titleFont: string; subtitleFont: string; group: "bangla" | "english" }> = {
+  siyam: { label: "Siyam Rupali", titleFont: "'SiyamRupali', 'Hind Siliguri', sans-serif", subtitleFont: "'Noto Sans Bengali', sans-serif", group: "bangla" },
+  hind: { label: "Hind Siliguri", titleFont: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", subtitleFont: "'Noto Sans Bengali', sans-serif", group: "bangla" },
+  noto: { label: "Noto Sans Bengali", titleFont: "'Noto Sans Bengali', 'Hind Siliguri', sans-serif", subtitleFont: "'Hind Siliguri', sans-serif", group: "bangla" },
+  kalpurush: { label: "Kalpurush", titleFont: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", subtitleFont: "'Noto Sans Bengali', sans-serif", group: "bangla" },
+  poppins: { label: "Poppins", titleFont: "'Poppins', sans-serif", subtitleFont: "'Inter', sans-serif", group: "english" },
+  montserrat: { label: "Montserrat", titleFont: "'Montserrat', sans-serif", subtitleFont: "'Inter', sans-serif", group: "english" },
+  bebas: { label: "Bebas Neue", titleFont: "'Bebas Neue', sans-serif", subtitleFont: "'Inter', sans-serif", group: "english" },
+  anton: { label: "Anton", titleFont: "'Anton', sans-serif", subtitleFont: "'Inter', sans-serif", group: "english" },
+  oswald: { label: "Oswald", titleFont: "'Oswald', sans-serif", subtitleFont: "'Inter', sans-serif", group: "english" },
+  inter: { label: "Inter", titleFont: "'Inter', sans-serif", subtitleFont: "'Inter', sans-serif", group: "english" },
 };
 
-export const TEXT_COLORS: Record<TextColor, { label: string; class: string }> = {
-  yellow: { label: "🟡 Yellow Gold", class: "thumb-color-yellow" },
-  white: { label: "⚪ Pure White", class: "thumb-color-white" },
-  cyan: { label: "🔵 Cyan Glow", class: "thumb-color-cyan" },
+export const TEXT_COLORS: Record<TextColor, { label: string; class: string; hex: string }> = {
+  yellow: { label: "💛 Yellow Gold", class: "thumb-color-yellow", hex: "#FFD700" },
+  white: { label: "⚪ Pure White", class: "thumb-color-white", hex: "#FFFFFF" },
+  cyan: { label: "🔵 Cyan Glow", class: "thumb-color-cyan", hex: "#00E5FF" },
+  red: { label: "🔥 Viral Red", class: "thumb-color-red", hex: "#FF3B3B" },
+  blue: { label: "💙 Neon Blue", class: "thumb-color-blue", hex: "#4D8EFF" },
+  purple: { label: "💜 Purple Glow", class: "thumb-color-purple", hex: "#A855F7" },
+  green: { label: "🟢 Green Tech", class: "thumb-color-green", hex: "#22C55E" },
+  orange: { label: "🔥 Orange Fire", class: "thumb-color-orange", hex: "#FF8C00" },
+  ice: { label: "🧊 Ice Blue", class: "thumb-color-ice", hex: "#7DD3FC" },
+  bw: { label: "⬛ B&W Contrast", class: "thumb-color-bw", hex: "#FFFFFF" },
 };
 
 export const TEXT_EFFECTS: Record<TextEffect, { label: string }> = {
@@ -104,6 +119,11 @@ export type TopicTheme = {
   textColor: string;
   accentColor: string;
   bgGradient: string;
+  suggestedFont: FontPreset;
+  suggestedFontStyle: FontStyle;
+  suggestedTextColor: TextColor;
+  suggestedTextEffect: TextEffect;
+  suggestedTextStyles: TextStyleOption[];
 };
 
 const TOPIC_KEYWORDS: Record<string, string[]> = {
@@ -129,6 +149,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#00E5FF",
     accentColor: "#7B61FF",
     bgGradient: "linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #1a0a3e 100%)",
+    suggestedFont: "montserrat",
+    suggestedFontStyle: "clean",
+    suggestedTextColor: "cyan",
+    suggestedTextEffect: "gradient",
+    suggestedTextStyles: ["glow"],
   },
   motivation: {
     filter: "brightness(0.85) contrast(1.25) saturate(1.4)",
@@ -136,6 +161,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FFD700",
     accentColor: "#FF8C00",
     bgGradient: "linear-gradient(135deg, #1a1000 0%, #2a1800 50%, #1a0a00 100%)",
+    suggestedFont: "anton",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "yellow",
+    suggestedTextEffect: "3d",
+    suggestedTextStyles: ["stroke", "shadow"],
   },
   horror: {
     filter: "brightness(0.5) contrast(1.4) saturate(0.8)",
@@ -143,6 +173,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FF1A1A",
     accentColor: "#8B0000",
     bgGradient: "linear-gradient(135deg, #0a0000 0%, #1a0505 50%, #0d0000 100%)",
+    suggestedFont: "oswald",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "red",
+    suggestedTextEffect: "3d",
+    suggestedTextStyles: ["stroke", "glow"],
   },
   gaming: {
     filter: "brightness(0.85) contrast(1.3) saturate(1.6)",
@@ -150,6 +185,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#A855F7",
     accentColor: "#22D3EE",
     bgGradient: "linear-gradient(135deg, #0a001a 0%, #1a0040 50%, #000a1a 100%)",
+    suggestedFont: "bebas",
+    suggestedFontStyle: "gaming",
+    suggestedTextColor: "purple",
+    suggestedTextEffect: "gradient",
+    suggestedTextStyles: ["glow", "stroke"],
   },
   education: {
     filter: "brightness(0.95) contrast(1.1) saturate(1.1)",
@@ -157,6 +197,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FFFFFF",
     accentColor: "#3B82F6",
     bgGradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+    suggestedFont: "poppins",
+    suggestedFontStyle: "clean",
+    suggestedTextColor: "white",
+    suggestedTextEffect: "none",
+    suggestedTextStyles: ["shadow"],
   },
   money: {
     filter: "brightness(0.75) contrast(1.3) saturate(1.4)",
@@ -164,6 +209,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FFD700",
     accentColor: "#22C55E",
     bgGradient: "linear-gradient(135deg, #0a1a00 0%, #1a2a00 50%, #0a0a00 100%)",
+    suggestedFont: "anton",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "yellow",
+    suggestedTextEffect: "highlight",
+    suggestedTextStyles: ["stroke", "shadow"],
   },
   news: {
     filter: "brightness(0.6) contrast(1.2) saturate(1.2)",
@@ -171,6 +221,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FF3B3B",
     accentColor: "#FFFFFF",
     bgGradient: "linear-gradient(135deg, #1a0000 0%, #2a0505 50%, #0a0000 100%)",
+    suggestedFont: "oswald",
+    suggestedFontStyle: "youtube",
+    suggestedTextColor: "red",
+    suggestedTextEffect: "highlight",
+    suggestedTextStyles: ["stroke"],
   },
   food: {
     filter: "brightness(0.9) contrast(1.15) saturate(1.5)",
@@ -178,6 +233,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FFA500",
     accentColor: "#FF6347",
     bgGradient: "linear-gradient(135deg, #1a0f00 0%, #2a1a00 50%, #1a0800 100%)",
+    suggestedFont: "poppins",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "orange",
+    suggestedTextEffect: "3d",
+    suggestedTextStyles: ["shadow"],
   },
   travel: {
     filter: "brightness(0.9) contrast(1.15) saturate(1.3)",
@@ -185,6 +245,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#00E5FF",
     accentColor: "#48BB78",
     bgGradient: "linear-gradient(135deg, #001a2a 0%, #002a3a 50%, #00101a 100%)",
+    suggestedFont: "montserrat",
+    suggestedFontStyle: "clean",
+    suggestedTextColor: "ice",
+    suggestedTextEffect: "gradient",
+    suggestedTextStyles: ["glow"],
   },
   fitness: {
     filter: "brightness(0.8) contrast(1.3) saturate(1.2)",
@@ -192,6 +257,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#EF4444",
     accentColor: "#F59E0B",
     bgGradient: "linear-gradient(135deg, #1a0505 0%, #2a0a0a 50%, #0a0000 100%)",
+    suggestedFont: "bebas",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "red",
+    suggestedTextEffect: "3d",
+    suggestedTextStyles: ["stroke", "shadow"],
   },
   music: {
     filter: "brightness(0.8) contrast(1.2) saturate(1.4)",
@@ -199,6 +269,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#E879F9",
     accentColor: "#EC4899",
     bgGradient: "linear-gradient(135deg, #1a001a 0%, #2a0040 50%, #0a001a 100%)",
+    suggestedFont: "bebas",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "purple",
+    suggestedTextEffect: "gradient",
+    suggestedTextStyles: ["glow"],
   },
   fashion: {
     filter: "brightness(0.85) contrast(1.15) saturate(1.2)",
@@ -206,6 +281,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#F9A8D4",
     accentColor: "#C084FC",
     bgGradient: "linear-gradient(135deg, #1a0010 0%, #2a0020 50%, #1a000a 100%)",
+    suggestedFont: "poppins",
+    suggestedFontStyle: "minimal",
+    suggestedTextColor: "purple",
+    suggestedTextEffect: "none",
+    suggestedTextStyles: ["shadow"],
   },
   emotional: {
     filter: "brightness(0.7) contrast(1.1)",
@@ -213,6 +293,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FFFFFF",
     accentColor: "#94A3B8",
     bgGradient: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #050505 100%)",
+    suggestedFont: "hind",
+    suggestedFontStyle: "clean",
+    suggestedTextColor: "white",
+    suggestedTextEffect: "none",
+    suggestedTextStyles: ["shadow"],
   },
   default: {
     filter: "brightness(0.85) contrast(1.15)",
@@ -220,6 +305,11 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     textColor: "#FFFFFF",
     accentColor: "#8B5CF6",
     bgGradient: "linear-gradient(135deg, hsl(0 70% 20%) 0%, hsl(225 60% 15%) 50%, hsl(260 50% 12%) 100%)",
+    suggestedFont: "siyam",
+    suggestedFontStyle: "bold",
+    suggestedTextColor: "yellow",
+    suggestedTextEffect: "none",
+    suggestedTextStyles: ["stroke"],
   },
 };
 
@@ -240,4 +330,40 @@ export function detectTopicFromTitle(title: string): string {
   }
 
   return bestMatch;
+}
+
+// Detect if text is primarily Bangla
+export function isBanglaText(text: string): boolean {
+  const banglaRange = /[\u0980-\u09FF]/;
+  let banglaCount = 0;
+  let latinCount = 0;
+  for (const ch of text) {
+    if (banglaRange.test(ch)) banglaCount++;
+    else if (/[a-zA-Z]/.test(ch)) latinCount++;
+  }
+  return banglaCount > latinCount;
+}
+
+// Get AI-recommended config based on topic + language
+export function getAutoConfig(title: string): Partial<ThumbnailConfig> {
+  const topic = detectTopicFromTitle(title);
+  const theme = TOPIC_THEMES[topic] || TOPIC_THEMES.default;
+  const bangla = isBanglaText(title);
+
+  // If bangla text detected, override font to a bangla font
+  const font = bangla
+    ? (["siyam", "hind", "noto"] as FontPreset[])[Math.floor(Math.random() * 3)]
+    : theme.suggestedFont;
+
+  return {
+    fontPreset: font,
+    fontStyle: theme.suggestedFontStyle,
+    textColor: theme.suggestedTextColor,
+    colorStyle: "auto",
+    textEffect: theme.suggestedTextEffect,
+    textStyles: theme.suggestedTextStyles,
+    textSize: bangla ? 90 : 100,
+    enableGlow: theme.suggestedTextStyles.includes("glow"),
+    enableStroke: theme.suggestedTextStyles.includes("stroke"),
+  };
 }
