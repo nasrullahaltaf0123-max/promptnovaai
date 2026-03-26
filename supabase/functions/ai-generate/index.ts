@@ -589,7 +589,9 @@ Return ONLY JSON:
   "generation_prompts": {
     "background_plate": "cinematic background prompt, no people, no text"
   }
-}`
+}`,
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
