@@ -144,8 +144,8 @@ const TOPIC_KEYWORDS: Record<string, string[]> = {
 
 export const TOPIC_THEMES: Record<string, TopicTheme> = {
   tech: {
-    filter: "brightness(0.8) contrast(1.2) saturate(1.3)",
-    overlay: "rgba(0, 200, 255, 0.12)",
+    filter: "brightness(0.9) contrast(1.15) saturate(1.3)",
+    overlay: "rgba(0, 200, 255, 0.08)",
     textColor: "#00E5FF",
     accentColor: "#7B61FF",
     bgGradient: "linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #1a0a3e 100%)",
@@ -156,8 +156,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["glow"],
   },
   motivation: {
-    filter: "brightness(0.85) contrast(1.25) saturate(1.4)",
-    overlay: "rgba(255, 200, 0, 0.1)",
+    filter: "brightness(1.0) contrast(1.15) saturate(1.4)",
+    overlay: "rgba(255, 200, 0, 0.06)",
     textColor: "#FFD700",
     accentColor: "#FF8C00",
     bgGradient: "linear-gradient(135deg, #1a1000 0%, #2a1800 50%, #1a0a00 100%)",
@@ -180,8 +180,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["stroke", "glow"],
   },
   gaming: {
-    filter: "brightness(0.85) contrast(1.3) saturate(1.6)",
-    overlay: "rgba(120, 0, 255, 0.12)",
+    filter: "brightness(0.95) contrast(1.2) saturate(1.6)",
+    overlay: "rgba(120, 0, 255, 0.08)",
     textColor: "#A855F7",
     accentColor: "#22D3EE",
     bgGradient: "linear-gradient(135deg, #0a001a 0%, #1a0040 50%, #000a1a 100%)",
@@ -192,8 +192,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["glow", "stroke"],
   },
   education: {
-    filter: "brightness(0.95) contrast(1.1) saturate(1.1)",
-    overlay: "rgba(59, 130, 246, 0.08)",
+    filter: "brightness(1.05) contrast(1.05) saturate(1.1)",
+    overlay: "rgba(59, 130, 246, 0.05)",
     textColor: "#FFFFFF",
     accentColor: "#3B82F6",
     bgGradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
@@ -204,8 +204,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["shadow"],
   },
   money: {
-    filter: "brightness(0.75) contrast(1.3) saturate(1.4)",
-    overlay: "rgba(255, 215, 0, 0.15)",
+    filter: "brightness(0.95) contrast(1.2) saturate(1.4)",
+    overlay: "rgba(255, 215, 0, 0.08)",
     textColor: "#FFD700",
     accentColor: "#22C55E",
     bgGradient: "linear-gradient(135deg, #0a1a00 0%, #1a2a00 50%, #0a0a00 100%)",
@@ -228,8 +228,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["stroke"],
   },
   food: {
-    filter: "brightness(0.9) contrast(1.15) saturate(1.5)",
-    overlay: "rgba(255, 140, 0, 0.1)",
+    filter: "brightness(1.0) contrast(1.1) saturate(1.5)",
+    overlay: "rgba(255, 140, 0, 0.05)",
     textColor: "#FFA500",
     accentColor: "#FF6347",
     bgGradient: "linear-gradient(135deg, #1a0f00 0%, #2a1a00 50%, #1a0800 100%)",
@@ -240,8 +240,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["shadow"],
   },
   travel: {
-    filter: "brightness(0.9) contrast(1.15) saturate(1.3)",
-    overlay: "rgba(0, 180, 216, 0.1)",
+    filter: "brightness(1.0) contrast(1.1) saturate(1.3)",
+    overlay: "rgba(0, 180, 216, 0.05)",
     textColor: "#00E5FF",
     accentColor: "#48BB78",
     bgGradient: "linear-gradient(135deg, #001a2a 0%, #002a3a 50%, #00101a 100%)",
@@ -252,8 +252,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["glow"],
   },
   fitness: {
-    filter: "brightness(0.8) contrast(1.3) saturate(1.2)",
-    overlay: "rgba(239, 68, 68, 0.1)",
+    filter: "brightness(0.9) contrast(1.2) saturate(1.2)",
+    overlay: "rgba(239, 68, 68, 0.06)",
     textColor: "#EF4444",
     accentColor: "#F59E0B",
     bgGradient: "linear-gradient(135deg, #1a0505 0%, #2a0a0a 50%, #0a0000 100%)",
@@ -264,8 +264,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["stroke", "shadow"],
   },
   music: {
-    filter: "brightness(0.8) contrast(1.2) saturate(1.4)",
-    overlay: "rgba(168, 85, 247, 0.12)",
+    filter: "brightness(0.9) contrast(1.15) saturate(1.4)",
+    overlay: "rgba(168, 85, 247, 0.08)",
     textColor: "#E879F9",
     accentColor: "#EC4899",
     bgGradient: "linear-gradient(135deg, #1a001a 0%, #2a0040 50%, #0a001a 100%)",
@@ -276,8 +276,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["glow"],
   },
   fashion: {
-    filter: "brightness(0.85) contrast(1.15) saturate(1.2)",
-    overlay: "rgba(236, 72, 153, 0.1)",
+    filter: "brightness(1.0) contrast(1.1) saturate(1.2)",
+    overlay: "rgba(236, 72, 153, 0.05)",
     textColor: "#F9A8D4",
     accentColor: "#C084FC",
     bgGradient: "linear-gradient(135deg, #1a0010 0%, #2a0020 50%, #1a000a 100%)",
@@ -300,8 +300,8 @@ export const TOPIC_THEMES: Record<string, TopicTheme> = {
     suggestedTextStyles: ["shadow"],
   },
   default: {
-    filter: "brightness(0.85) contrast(1.15)",
-    overlay: "rgba(0,0,0,0.2)",
+    filter: "brightness(0.95) contrast(1.1)",
+    overlay: "rgba(0,0,0,0.1)",
     textColor: "#FFFFFF",
     accentColor: "#8B5CF6",
     bgGradient: "linear-gradient(135deg, hsl(0 70% 20%) 0%, hsl(225 60% 15%) 50%, hsl(260 50% 12%) 100%)",

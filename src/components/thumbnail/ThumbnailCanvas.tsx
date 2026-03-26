@@ -26,6 +26,11 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
   const topic = detectTopicFromTitle(title);
   const theme = TOPIC_THEMES[topic] || TOPIC_THEMES.default;
 
+  // Topic-based overlay intensity (dark topics get heavier overlays)
+  const isDarkTopic = ["horror", "crime", "news", "emotional"].includes(topic);
+  const isBrightTopic = ["education", "food", "travel", "fashion", "motivation"].includes(topic);
+  const overlayIntensity = isDarkTopic ? 0.7 : isBrightTopic ? 0.25 : 0.4;
+
   const fonts = FONT_PRESETS[fontPreset];
   const fontStyleConfig = FONT_STYLES[fontStyle];
   const color = TEXT_COLORS[textColor];
@@ -137,9 +142,9 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
         <div className="absolute inset-0" style={bgStyle} />
       )}
 
-      {/* Cinematic overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
+      {/* Cinematic overlays — intensity varies by topic */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to right, rgba(0,0,0,${overlayIntensity}), rgba(0,0,0,${overlayIntensity * 0.3}), transparent)` }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top, rgba(0,0,0,${overlayIntensity * 0.65}), transparent, rgba(0,0,0,${overlayIntensity * 0.25}))` }} />
 
       {/* Snap guides */}
       {snapGuide && (
@@ -177,7 +182,7 @@ const ThumbnailCanvas = forwardRef<HTMLDivElement, Props>(({ config, id }, ref) 
           <div className="absolute top-1/3 left-0 w-full h-px" style={{ background: `linear-gradient(to right, transparent, ${theme.accentColor}33, transparent)` }} />
         </div>
       )}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10" />
+      <div className="absolute inset-0 z-10 pointer-events-none" style={{ background: `linear-gradient(to right, rgba(0,0,0,${overlayIntensity * 0.85}), transparent)` }} />
 
       {/* Subject image */}
       {subjectImage && !isVertical && (
