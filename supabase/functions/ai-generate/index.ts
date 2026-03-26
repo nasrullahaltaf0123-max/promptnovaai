@@ -373,7 +373,7 @@ const strategyData = {
   category,
   strategy: detectStrategy(prompt), // 🔥 NEW
   subjectType: detectSubjectType(prompt),
-  hasImage: !!style?.includes("image"), // 🔥 NEW (UI signal)
+  hasImage: typeof style === "string" && style.includes("image"),
 };
   const { scene, tone, elements, visualClues } = getCategoryScene(category);
   const emotion = getEmotionForCategory(category);
