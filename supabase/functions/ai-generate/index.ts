@@ -725,7 +725,9 @@ console.log("FINAL STRATEGY:", strategyData);
       } else if (isHeadlineSuggest) {
         userPrompt = `Generate 3 viral clickable thumbnail headlines for this topic: "${prompt}". Return ONLY a JSON array of 3 short headline strings.`;
       }
-      chatMessages.push({ role: "user", content: userPrompt });
+      if (toolType !== "remove-bg" || !options?.image) {
+        chatMessages.push({ role: "user", content: userPrompt });
+      }
     }
 
     const stream = toolType === "chat";
