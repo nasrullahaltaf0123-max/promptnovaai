@@ -675,13 +675,13 @@ serve(async (req) => {
 
     // ── Build request ──
     const { type, messages, prompt, options } = await req.json();
-let strategyData = await generateStrategy(prompt);
+let strategyData = await generateStrategy(prompt, LOVABLE_API_KEY);
 
 if (!validateStrategy(strategyData)) {
   console.log("❌ Bad strategy, regenerating...");
 
   strategyData = await generateStrategy(
-    prompt + " (simple, real-world, no futuristic elements)"
+    prompt + " (simple, real-world, no futuristic elements)", LOVABLE_API_KEY
   );
 }
 
