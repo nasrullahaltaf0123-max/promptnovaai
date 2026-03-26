@@ -691,7 +691,7 @@ console.log("FINAL STRATEGY:", strategyData);
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
-    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo";
+    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo" || toolType === "remove-bg";
     const isHeadlineSuggest = toolType === "thumbnail-headlines";
     const isThumbnailStructure = toolType === "thumbnail";
 
@@ -708,8 +708,21 @@ console.log("FINAL STRATEGY:", strategyData);
       } else if (toolType === "image" && options) {
         userPrompt = buildImagePrompt(prompt, options.style || "photorealistic");
       } else if (toolType === "thumbnail" || toolType === "thumbnail-image") {
-  userPrompt = buildThumbnailPrompt(prompt, strategyData);
-}
+        userPrompt = buildThumbnailPrompt(prompt, strategyData);
+      } else if (toolType === "remove-bg") {
+        // For remove-bg, the prompt is unused; the image is sent as multimodal content
+        userPrompt = "Remove the background from this image completely. Keep ONLY the main subject (person, object, or character). Output the subject on a fully transparent/clean background. Make the edges smooth and clean — no rough cuts. Return ONLY the processed image.";
+        // The image data URL will be in options.image
+        if (options?.image) {
+          chatMessages.length = 0; // Clear existing messages
+          chatMessages.push({
+            role: "user",
+            content: [
+              { type: "text", text: userPrompt },
+              { type: "image_url", image_url: { url: options.image } },
+            ],
+          });
+        }
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
       } else if (isHeadlineSuggest) {
