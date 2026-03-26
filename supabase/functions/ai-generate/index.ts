@@ -334,23 +334,22 @@ function buildBackgroundPrompt(strategy: any) {
 
   return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
 }
-}
-function detectSubjectType(prompt: string) {
-  if (prompt.includes("no face") || prompt.includes("object")) {
-    return "object_only";
-  }
 
-  function detectStrategy(prompt: string) {
+function detectStrategy(prompt: string) {
   if (prompt.includes("vs") || prompt.includes("battle")) return "contrast";
   if (prompt.includes("before") || prompt.includes("after")) return "transformation";
   if (prompt.includes("story")) return "cinematic";
   if (prompt.includes("focus")) return "direct_subject";
   return "cinematic";
+}
+
+function detectSubjectType(prompt: string) {
+  if (prompt.includes("no face") || prompt.includes("object")) {
+    return "object_only";
   }
   if (prompt.includes("person") || prompt.includes("face")) {
     return "ai_face";
   }
-
   return "auto";
 }
 function detectLayout(strategy: any) {
@@ -412,7 +411,6 @@ Generate a MASTER-LEVEL CINEMATIC YOUTUBE THUMBNAIL for the topic: "${prompt}".
 The viewer must understand the ENTIRE topic within 1 SECOND of seeing this thumbnail.
 Use VISUAL CLUES that instantly communicate the subject matter:
 ${visualClues}
-`
 - These objects/symbols must be clearly visible in the background composition
 - They act as instant visual shorthand — no text needed to understand the story
 
@@ -426,46 +424,45 @@ Follow SUBJECT RULES above strictly.
 
 Subject must match topic perfectly and be visually dominant.
 
-═══ RED GLOW RIM LIGHT (CRITICAL) ═══
-- Strong RED/CRIMSON neon rim light outlining subject's head, shoulders, body edge
+═══ RIM LIGHT (TOPIC-ADAPTIVE) ═══
+- Strong colored rim light outlining subject's head, shoulders, body edge
+- Color should match the topic mood (red for drama, blue for tech, gold for motivation)
 - Bright edge light separating subject from background
 - Warm backlight halo behind subject's head
-- This red outline is the KEY visual signature
 
 ═══ STORYTELLING BACKGROUND WITH CONTRAST ═══
 ${scene}
 COLOR GRADING: ${tone}
 ATMOSPHERIC DETAILS: ${elements}
-- CONTRAST STORY RULE: Always show BEFORE vs AFTER or PROBLEM vs SOLUTION
-  → Left half = the problem/past/struggle (darker, desaturated, broken)
-  → Right half = the solution/future/success (brighter, vibrant, fixed)
-  → The visual contrast between both sides IS the clickbait story
 - Background MUST directly represent the topic — NEVER generic
 - 3 depth layers: far background (very blurry), mid-ground (slightly blurry), foreground particles
+- IMPORTANT: Match brightness to topic. Education/motivation = brighter. Horror/crime = darker.
 
 ═══ CINEMATIC COMPOSITION ═══
-- LEFT 55%: Dark atmospheric story zone with visible contextual elements + dark gradient overlay
+- LEFT 55%: Atmospheric story zone with visible contextual elements
 - RIGHT 45%: Subject dominates with dramatic lighting, face is focal point
-- VIGNETTE: Strong dark vignette on all edges (cinema framing)
+- VIGNETTE: Moderate vignette on edges (adapt intensity to topic mood)
 
 ═══ LIGHTING (5-POINT) ═══
 1. KEY: Strong warm light from upper-right on subject's face
-2. RIM: Intense RED edge light from behind-left (glow outline)
-3. FILL: Subtle cool teal ambient from left
+2. RIM: Colored edge light from behind-left (topic-adaptive color)
+3. FILL: Subtle ambient from left
 4. BG LIGHT: Volumetric god rays in story background
 5. HAIR: Top-down edge light for separation
 
-═══ COLOR GRADING (HOLLYWOOD) ═══
-- Teal shadows + orange highlights (complementary split)
-- Left: cooler, desaturated. Right: warmer, vibrant
-- Crushed blacks, controlled highlight bloom
-- Dark, moody, high-contrast cinematic look
+═══ COLOR GRADING (TOPIC-ADAPTIVE) ═══
+- Match color grade to topic mood:
+  * Tech/AI → cyan shadows + blue highlights
+  * Motivation/Money → warm gold + orange tones
+  * Horror/Crime → desaturated + red accents
+  * Education → clean, bright, slightly warm
+  * Default → balanced cinematic with good contrast
+- Avoid making everything uniformly dark
 
 ═══ CTR-BOOST EFFECTS ═══
 - Volumetric god rays from behind/above subject
 - Atmospheric particles (smoke, dust, embers per topic)
 - Lens flare from strongest light source
-- Motion energy blur on background elements
 - Depth layers creating parallax 3D feel
 
 ═══ ABSOLUTE RULES ═══
@@ -592,7 +589,9 @@ Return ONLY JSON:
   "generation_prompts": {
     "background_plate": "cinematic background prompt, no people, no text"
   }
-}`
+}`,
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -691,7 +690,7 @@ console.log("FINAL STRATEGY:", strategyData);
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
-    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo";
+    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo" || toolType === "remove-bg";
     const isHeadlineSuggest = toolType === "thumbnail-headlines";
     const isThumbnailStructure = toolType === "thumbnail";
 
@@ -708,14 +707,29 @@ console.log("FINAL STRATEGY:", strategyData);
       } else if (toolType === "image" && options) {
         userPrompt = buildImagePrompt(prompt, options.style || "photorealistic");
       } else if (toolType === "thumbnail" || toolType === "thumbnail-image") {
-  userPrompt = buildThumbnailPrompt(prompt, strategyData);
-}
+        userPrompt = buildThumbnailPrompt(prompt, strategyData);
+      } else if (toolType === "remove-bg") {
+        // For remove-bg, the prompt is unused; the image is sent as multimodal content
+        userPrompt = "Remove the background from this image completely. Keep ONLY the main subject (person, object, or character). Output the subject on a fully transparent/clean background. Make the edges smooth and clean — no rough cuts. Return ONLY the processed image.";
+        // The image data URL will be in options.image
+        if (options?.image) {
+          chatMessages.length = 0; // Clear existing messages
+          chatMessages.push({
+            role: "user",
+            content: [
+              { type: "text", text: userPrompt },
+              { type: "image_url", image_url: { url: options.image } },
+            ],
+          });
+        }
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
       } else if (isHeadlineSuggest) {
         userPrompt = `Generate 3 viral clickable thumbnail headlines for this topic: "${prompt}". Return ONLY a JSON array of 3 short headline strings.`;
       }
-      chatMessages.push({ role: "user", content: userPrompt });
+      if (toolType !== "remove-bg" || !options?.image) {
+        chatMessages.push({ role: "user", content: userPrompt });
+      }
     }
 
     const stream = toolType === "chat";

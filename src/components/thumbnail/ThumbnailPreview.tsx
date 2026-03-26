@@ -7,10 +7,11 @@ import type { ThumbnailConfig } from "./types";
 interface Props {
   config: ThumbnailConfig;
   isGenerating: boolean;
+  isRemovingBg?: boolean;
   error: string;
 }
 
-export default function ThumbnailPreview({ config, isGenerating, error }: Props) {
+export default function ThumbnailPreview({ config, isGenerating, isRemovingBg, error }: Props) {
   const [preview, setPreview] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const hasBackground = !!config.backgroundImage;
@@ -62,7 +63,7 @@ export default function ThumbnailPreview({ config, isGenerating, error }: Props)
               <div className="w-16 h-16 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
               <Sparkles className="w-6 h-6 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>
-            <p className="text-xs text-muted-foreground">Creating cinematic background...</p>
+            <p className="text-xs text-muted-foreground">{isRemovingBg ? "Removing background..." : "Creating cinematic background..."}</p>
             <div className="flex gap-1">{[0, 1, 2].map((i) => <motion.div key={i} className="w-2 h-2 rounded-full bg-primary/60" animate={{ scale: [1, 1.4, 1], opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }} />)}</div>
           </motion.div>
         )}
