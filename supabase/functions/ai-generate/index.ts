@@ -334,23 +334,22 @@ function buildBackgroundPrompt(strategy: any) {
 
   return `BACKGROUND: ${background}, depth, cinematic atmosphere, storytelling`;
 }
-}
-function detectSubjectType(prompt: string) {
-  if (prompt.includes("no face") || prompt.includes("object")) {
-    return "object_only";
-  }
 
-  function detectStrategy(prompt: string) {
+function detectStrategy(prompt: string) {
   if (prompt.includes("vs") || prompt.includes("battle")) return "contrast";
   if (prompt.includes("before") || prompt.includes("after")) return "transformation";
   if (prompt.includes("story")) return "cinematic";
   if (prompt.includes("focus")) return "direct_subject";
   return "cinematic";
+}
+
+function detectSubjectType(prompt: string) {
+  if (prompt.includes("no face") || prompt.includes("object")) {
+    return "object_only";
   }
   if (prompt.includes("person") || prompt.includes("face")) {
     return "ai_face";
   }
-
   return "auto";
 }
 function detectLayout(strategy: any) {
