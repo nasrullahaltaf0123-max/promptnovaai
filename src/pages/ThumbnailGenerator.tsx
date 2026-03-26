@@ -233,7 +233,7 @@ const ThumbnailGenerator = () => {
           isLoadingHeadlines={isLoadingHeadlines}
           onSelectHeadline={(h) => updateConfig({ title: h })}
         />
-        <ThumbnailPreview config={config} isGenerating={isGenerating} error={error} />
+        <ThumbnailPreview config={config} isGenerating={isGenerating} isRemovingBg={isRemovingBg} error={error} />
       </div>
     </div>
   );
