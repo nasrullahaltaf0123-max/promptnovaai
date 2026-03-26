@@ -13,6 +13,7 @@ const ThumbnailGenerator = () => {
   const [usage, setUsage] = useState(0);
   const limit = getLimit("image");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isRemovingBg, setIsRemovingBg] = useState(false);
   const [error, setError] = useState("");
   const [headlines, setHeadlines] = useState<string[]>([]);
   const [isLoadingHeadlines, setIsLoadingHeadlines] = useState(false);
@@ -59,9 +60,30 @@ const ThumbnailGenerator = () => {
     setConfig((prev) => ({ ...prev, ...partial }));
   };
 
-  const handleFileUpload = (file: File, key: "subjectImage" | "backgroundImage") => {
+  const handleFileUpload = async (file: File, key: "subjectImage" | "backgroundImage") => {
     const reader = new FileReader();
-    reader.onload = (e) => updateConfig({ [key]: e.target?.result as string });
+    reader.onload = async (e) => {
+      const dataUrl = e.target?.result as string;
+      updateConfig({ [key]: dataUrl });
+
+      // Auto remove BG for subject images when toggle is ON
+      if (key === "subjectImage" && config.autoRemoveBg && dataUrl) {
+        setIsRemovingBg(true);
+        try {
+          const { images, error: bgError } = await generateContent("remove-bg", "remove background", { image: dataUrl });
+          if (!bgError && images && images.length > 0) {
+            updateConfig({ subjectImage: images[0] });
+            toast({ title: "Background removed!", description: "Subject isolated successfully." });
+          } else {
+            // Fallback: keep original image
+            toast({ title: "BG removal failed", description: "Using original image.", variant: "destructive" });
+          }
+        } catch {
+          toast({ title: "BG removal error", description: "Using original image.", variant: "destructive" });
+        }
+        setIsRemovingBg(false);
+      }
+    };
     reader.readAsDataURL(file);
   };
 
