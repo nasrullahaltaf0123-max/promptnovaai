@@ -8,6 +8,7 @@ const corsHeaders = {
 };
 
 const PRO_PRICE_BDT = 99;
+const ADMIN_EMAILS = ["aipromptnova@gmail.com"];
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -26,7 +27,6 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Validate user via getUser (server-side JWT verification)
     const supabaseUser = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
@@ -40,13 +40,14 @@ serve(async (req) => {
     }
 
     const userId = user.id;
-    const { action, paymentId, transactionId } = await req.json();
+    const body = await req.json();
+    const action = typeof body.action === "string" ? body.action : "";
 
     // Admin client for privileged operations
     const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
 
+    // ─── CREATE: user submits a new payment ───
     if (action === "create") {
-      // Create a pending payment record
       const { data: payment, error } = await supabaseAdmin
         .from("payments")
         .insert({
@@ -60,36 +61,45 @@ serve(async (req) => {
         .single();
 
       if (error) {
-        return new Response(JSON.stringify({ error: "Failed to create payment" }), {
+        console.error("Payment create error:", error);
+        return new Response(JSON.stringify({ error: "Failed to create payment. Please try again." }), {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      // In production, this would call bKash tokenized checkout API
-      // For now, return a simulated payment ID for the user to "confirm"
       return new Response(
         JSON.stringify({
           paymentId: payment.id,
           amount: PRO_PRICE_BDT,
           currency: "BDT",
-          // Simulated bKash payment URL — replace with real bKash API in production
-          bkashUrl: `https://bkash.com/pay?ref=${payment.id}`,
           message: "Payment created. Complete payment to upgrade.",
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // ─── VERIFY: user submits transaction ID ───
     if (action === "verify") {
+      const paymentId = typeof body.paymentId === "string" ? body.paymentId : "";
+      const transactionId = typeof body.transactionId === "string" ? body.transactionId.trim() : "";
+
       if (!paymentId || !transactionId) {
-        return new Response(JSON.stringify({ error: "Missing paymentId or transactionId" }), {
+        return new Response(JSON.stringify({ error: "Missing payment ID or transaction ID" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      // Fetch the payment record (admin client bypasses RLS)
+      // Validate transaction ID format
+      if (transactionId.length < 6 || transactionId.length > 30 || !/^[A-Za-z0-9]+$/.test(transactionId)) {
+        return new Response(JSON.stringify({ error: "Invalid transaction ID format" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Fetch the payment record
       const { data: payment } = await supabaseAdmin
         .from("payments")
         .select("*")
@@ -111,35 +121,15 @@ serve(async (req) => {
         });
       }
 
-      // Validate transaction ID format (alphanumeric, 6-30 chars)
-      const txIdRegex = /^[A-Za-z0-9]{6,30}$/;
-      if (!txIdRegex.test(transactionId)) {
-        // Log failed attempt
-        await supabaseAdmin
-          .from("payments")
-          .update({ status: "failed", transaction_id: transactionId })
-          .eq("id", paymentId);
-
-        return new Response(JSON.stringify({ error: "Invalid transaction ID format" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      // Check for duplicate transaction ID (prevent reuse)
+      // Check for duplicate transaction ID
       const { data: existingTx } = await supabaseAdmin
         .from("payments")
         .select("id")
         .eq("transaction_id", transactionId)
-        .eq("status", "completed")
+        .neq("id", paymentId)
         .maybeSingle();
 
       if (existingTx) {
-        await supabaseAdmin
-          .from("payments")
-          .update({ status: "failed", transaction_id: transactionId })
-          .eq("id", paymentId);
-
         return new Response(JSON.stringify({ error: "Transaction ID already used" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -153,14 +143,13 @@ serve(async (req) => {
       // Record the transaction ID for admin review (keep status as pending)
       const { error: updateError } = await supabaseAdmin
         .from("payments")
-        .update({
-          transaction_id: transactionId,
-        })
+        .update({ transaction_id: transactionId })
         .eq("id", paymentId)
         .eq("status", "pending");
 
       if (updateError) {
-        return new Response(JSON.stringify({ error: "Failed to record transaction" }), {
+        console.error("Payment update error:", updateError);
+        return new Response(JSON.stringify({ error: "Failed to record transaction. Please try again." }), {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -176,6 +165,111 @@ serve(async (req) => {
       );
     }
 
+    // ─── CHECK: user checks their payment status ───
+    if (action === "check") {
+      const { data: latestPayment } = await supabaseAdmin
+        .from("payments")
+        .select("id, status, verified_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      return new Response(
+        JSON.stringify({ payment: latestPayment || null }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // ─── ADMIN APPROVE: only admin can approve payments ───
+    if (action === "approve") {
+      // Server-side admin check via email
+      if (!ADMIN_EMAILS.includes(user.email || "")) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const targetPaymentId = typeof body.targetPaymentId === "string" ? body.targetPaymentId : "";
+      if (!targetPaymentId) {
+        return new Response(JSON.stringify({ error: "Missing targetPaymentId" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Fetch the payment
+      const { data: payment } = await supabaseAdmin
+        .from("payments")
+        .select("*")
+        .eq("id", targetPaymentId)
+        .single();
+
+      if (!payment) {
+        return new Response(JSON.stringify({ error: "Payment not found" }), {
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      if (payment.status === "completed") {
+        return new Response(JSON.stringify({ error: "Payment already approved" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      if (!payment.transaction_id) {
+        return new Response(JSON.stringify({ error: "No transaction ID submitted yet" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Mark payment as completed
+      const { error: paymentError } = await supabaseAdmin
+        .from("payments")
+        .update({
+          status: "completed",
+          verified_at: new Date().toISOString(),
+        })
+        .eq("id", targetPaymentId);
+
+      if (paymentError) {
+        console.error("Approve payment error:", paymentError);
+        return new Response(JSON.stringify({ error: "Failed to approve payment" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Upgrade user profile to Pro (service_role bypasses triggers)
+      const { error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .update({
+          plan: "pro",
+          bonus_credits: 999,
+        })
+        .eq("id", payment.user_id);
+
+      if (profileError) {
+        console.error("Profile upgrade error:", profileError);
+        return new Response(JSON.stringify({ error: "Payment approved but profile upgrade failed" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: `User ${payment.user_id} upgraded to Pro successfully.`,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     return new Response(JSON.stringify({ error: "Invalid action" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -183,7 +277,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("process-payment error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
+      JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
