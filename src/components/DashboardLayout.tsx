@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, Image, FileText, Palette, Video,
   Wand2, Film, ImageIcon, Clock, User, Menu, X, LogOut, ChevronRight,
-  Type, Clapperboard, Gift, Crown,
+  Type, Clapperboard, Gift, Crown, Camera,
 } from "lucide-react";
 import logoPn from "@/assets/logo-pn.png";
 import { useAuth } from "@/lib/auth";
