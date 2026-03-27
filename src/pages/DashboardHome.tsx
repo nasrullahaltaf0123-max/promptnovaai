@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown, Camera } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/use-credits";
@@ -9,6 +9,7 @@ import GamificationWidget from "@/components/GamificationWidget";
 import { UpgradeBanner } from "@/components/UpgradePrompt";
 
 const quickTools = [
+  { icon: Camera, title: "Photo Maker", path: "/dashboard/photo-maker", gradient: "from-amber-500/20 to-orange-500/5", isNew: true },
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
   { icon: Image, title: "Image Gen", path: "/dashboard/image", gradient: "from-cyan-500/20 to-cyan-500/5" },
   { icon: FileText, title: "Blog Writer", path: "/dashboard/blog", gradient: "from-blue-500/20 to-blue-500/5" },
@@ -119,8 +120,13 @@ const DashboardHome = () => {
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {quickTools.map((tool) => (
-              <Link key={tool.path} to={tool.path} className="group glass-card rounded-2xl p-4 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5">
+            {quickTools.map((tool: any) => (
+              <Link key={tool.path} to={tool.path} className={`group glass-card rounded-2xl p-4 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5 relative ${tool.isNew ? "ring-1 ring-primary/30" : ""}`}>
+                {tool.isNew && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">
+                    🔥 NEW
+                  </span>
+                )}
                 <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mx-auto mb-2.5 transition-transform duration-300 group-hover:scale-110`}>
                   <tool.icon className="w-4.5 h-4.5 text-foreground" />
                 </div>
