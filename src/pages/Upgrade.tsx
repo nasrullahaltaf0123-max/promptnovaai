@@ -242,7 +242,7 @@ const Upgrade = () => {
               disabled={loading || !transactionId.trim()}
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-caption flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 shadow-[0_0_24px_-4px_hsl(var(--primary)/0.5)]"
             >
-              {loading ? "Verifying..." : "✅ Verify Payment"}
+              {loading ? "⏳ Verifying payment..." : "✅ Verify Payment"}
             </button>
 
             {/* Trust indicators */}
