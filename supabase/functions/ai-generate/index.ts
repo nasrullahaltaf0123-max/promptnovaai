@@ -690,7 +690,7 @@ console.log("FINAL STRATEGY:", strategyData);
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
-    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo" || toolType === "remove-bg";
+    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo" || toolType === "remove-bg" || toolType === "photo-enhance";
     const isHeadlineSuggest = toolType === "thumbnail-headlines";
     const isThumbnailStructure = toolType === "thumbnail";
 
@@ -714,6 +714,18 @@ console.log("FINAL STRATEGY:", strategyData);
         // The image data URL will be in options.image
         if (options?.image) {
           chatMessages.length = 0; // Clear existing messages
+          chatMessages.push({
+            role: "user",
+            content: [
+              { type: "text", text: userPrompt },
+              { type: "image_url", image_url: { url: options.image } },
+            ],
+          });
+        }
+      } else if (toolType === "photo-enhance") {
+        userPrompt = prompt || "Enhance this photo professionally";
+        if (options?.image) {
+          chatMessages.length = 0;
           chatMessages.push({
             role: "user",
             content: [
