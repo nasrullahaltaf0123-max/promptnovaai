@@ -90,26 +90,25 @@ const Upgrade = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.from("payments").insert({
-        user_id: session.user.id,
-        transaction_id: trimmedTxId,
-        amount: PRO_PRICE,
-        currency: "BDT",
-        method: "bkash",
-        status: "pending",
-      });
+      const res = await fetch(
+        `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/process-payment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ action: "verify", paymentId, transactionId: trimmedTxId }),
+        },
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-      if (error) {
-        console.error("Payment insert error:", error);
-        toast({ title: "Error", description: error.message, variant: "destructive" });
-      } else {
-        toast({ title: "Submitted!", description: "Your payment is pending admin verification." });
-        setStep("plan");
-        setTransactionId("");
-      }
+      toast({ title: "✅ Submitted!", description: "Your payment is pending admin verification. You'll be upgraded once verified." });
+      setStep("plan");
+      setTransactionId("");
     } catch (e: any) {
-      console.error("Payment submission error:", e);
-      toast({ title: "Error", description: e.message || "Failed to submit payment", variant: "destructive" });
+      toast({ title: "Error", description: e.message || "Something went wrong. Please try again.", variant: "destructive" });
     }
     setLoading(false);
   };
@@ -243,7 +242,7 @@ const Upgrade = () => {
               disabled={loading || !transactionId.trim()}
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-caption flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 shadow-[0_0_24px_-4px_hsl(var(--primary)/0.5)]"
             >
-              {loading ? "Verifying..." : "✅ Verify Payment"}
+              {loading ? "⏳ Verifying payment..." : "✅ Verify Payment"}
             </button>
 
             {/* Trust indicators */}
