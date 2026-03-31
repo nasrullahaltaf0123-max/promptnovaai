@@ -20,6 +20,7 @@ import ThumbnailGenerator from "./pages/ThumbnailGenerator";
 import CaptionGenerator from "./pages/CaptionGenerator";
 import TikTokScriptGenerator from "./pages/TikTokScriptGenerator";
 import PhotoMaker from "./pages/PhotoMaker";
+import IDCardPro from "./pages/IDCardPro";
 import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
