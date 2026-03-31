@@ -10,6 +10,7 @@ import { UpgradeBanner } from "@/components/UpgradePrompt";
 
 const quickTools = [
   { icon: Camera, title: "Photo Maker", path: "/dashboard/photo-maker", gradient: "from-amber-500/20 to-orange-500/5", isNew: true },
+  { icon: CreditCard, title: "ID Card Pro", path: "/dashboard/id-card", gradient: "from-amber-500/20 to-yellow-500/5", isNew: true },
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
   { icon: Image, title: "Image Gen", path: "/dashboard/image", gradient: "from-cyan-500/20 to-cyan-500/5" },
   { icon: FileText, title: "Blog Writer", path: "/dashboard/blog", gradient: "from-blue-500/20 to-blue-500/5" },
