@@ -1,137 +1,99 @@
-import { useEffect, useRef } from "react";
+import { memo } from "react";
 
-const GradientMeshBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+/**
+ * Lightweight CSS-only gradient mesh — replaces the expensive canvas version.
+ * Uses GPU-composited transforms + opacity only for 60fps on budget devices.
+ */
+const GradientMeshBackground = memo(() => (
+  <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+    {/* Base deep gradient */}
+    <div
+      className="absolute inset-0"
+      style={{
+        background:
+          "linear-gradient(135deg, hsl(225 20% 4%) 0%, hsl(240 18% 6%) 40%, hsl(225 15% 5%) 100%)",
+      }}
+    />
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    {/* Orb 1 — violet, top-left drift */}
+    <div
+      className="absolute rounded-full will-change-transform"
+      style={{
+        width: "min(55vw, 600px)",
+        height: "min(55vw, 600px)",
+        left: "10%",
+        top: "15%",
+        background:
+          "radial-gradient(circle, hsl(250 80% 60% / 0.12) 0%, hsl(250 80% 60% / 0.04) 50%, transparent 70%)",
+        animation: "mesh-drift-1 18s ease-in-out infinite",
+      }}
+    />
 
-    let animationId: number;
-    let time = 0;
-    let dpr = window.devicePixelRatio || 1;
+    {/* Orb 2 — cyan, right drift */}
+    <div
+      className="absolute rounded-full will-change-transform"
+      style={{
+        width: "min(45vw, 500px)",
+        height: "min(45vw, 500px)",
+        right: "5%",
+        top: "30%",
+        background:
+          "radial-gradient(circle, hsl(200 90% 50% / 0.09) 0%, hsl(200 90% 50% / 0.03) 50%, transparent 70%)",
+        animation: "mesh-drift-2 22s ease-in-out infinite",
+      }}
+    />
 
-    const resize = () => {
-      dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-    };
-    resize();
-    window.addEventListener("resize", resize);
+    {/* Orb 3 — blue, center pulse */}
+    <div
+      className="absolute rounded-full will-change-transform"
+      style={{
+        width: "min(35vw, 400px)",
+        height: "min(35vw, 400px)",
+        left: "30%",
+        top: "10%",
+        background:
+          "radial-gradient(circle, hsl(220 80% 56% / 0.08) 0%, transparent 60%)",
+        animation: "mesh-drift-3 15s ease-in-out infinite",
+      }}
+    />
 
-    const w = () => window.innerWidth;
-    const h = () => window.innerHeight;
+    {/* Core glow — center spotlight */}
+    <div
+      className="absolute left-1/2 -translate-x-1/2 will-change-transform"
+      style={{
+        width: "min(60vw, 500px)",
+        height: "min(40vh, 350px)",
+        top: "25%",
+        background:
+          "radial-gradient(ellipse 100% 100% at 50% 50%, hsl(250 70% 60% / 0.1) 0%, transparent 70%)",
+        animation: "mesh-pulse 6s ease-in-out infinite",
+      }}
+    />
 
-    const animate = () => {
-      time += 0.002;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w(), h());
+    {/* Subtle particles — CSS only, no canvas */}
+    {[...Array(12)].map((_, i) => (
+      <div
+        key={i}
+        className="absolute rounded-full will-change-transform"
+        style={{
+          width: `${1 + (i % 3)}px`,
+          height: `${1 + (i % 3)}px`,
+          left: `${8 + i * 7.5}%`,
+          top: `${15 + (i * 17) % 70}%`,
+          background:
+            i % 3 === 0
+              ? "hsl(200 90% 70% / 0.4)"
+              : i % 3 === 1
+              ? "hsl(250 80% 75% / 0.35)"
+              : "hsl(220 70% 65% / 0.3)",
+          animation: `particle-css-${(i % 3) + 1} ${10 + i * 2}s ease-in-out infinite`,
+          animationDelay: `${i * 0.8}s`,
+        }}
+      />
+    ))}
+  </div>
+));
 
-      // Deep base wash
-      const baseGrad = ctx.createLinearGradient(0, 0, w(), h());
-      baseGrad.addColorStop(0, "rgba(15, 10, 35, 0.4)");
-      baseGrad.addColorStop(0.5, "rgba(8, 15, 40, 0.3)");
-      baseGrad.addColorStop(1, "rgba(10, 8, 30, 0.4)");
-      ctx.fillStyle = baseGrad;
-      ctx.fillRect(0, 0, w(), h());
-
-      // Large ambient orbs — richer colors, more movement
-      const orbs = [
-        {
-          x: w() * 0.2 + Math.sin(time * 0.6) * w() * 0.08,
-          y: h() * 0.3 + Math.cos(time * 0.4) * h() * 0.06,
-          r: Math.min(w(), h()) * 0.55,
-          color: [130, 80, 230],
-          opacity: 0.12,
-        },
-        {
-          x: w() * 0.8 + Math.cos(time * 0.35) * w() * 0.07,
-          y: h() * 0.5 + Math.sin(time * 0.3) * h() * 0.06,
-          r: Math.min(w(), h()) * 0.5,
-          color: [6, 182, 212],
-          opacity: 0.09,
-        },
-        {
-          x: w() * 0.5 + Math.sin(time * 0.5) * w() * 0.06,
-          y: h() * 0.2 + Math.cos(time * 0.7) * h() * 0.05,
-          r: Math.min(w(), h()) * 0.4,
-          color: [100, 60, 220],
-          opacity: 0.08,
-        },
-        {
-          x: w() * 0.35 + Math.cos(time * 0.45) * w() * 0.05,
-          y: h() * 0.7 + Math.sin(time * 0.55) * h() * 0.04,
-          r: Math.min(w(), h()) * 0.35,
-          color: [60, 100, 240],
-          opacity: 0.07,
-        },
-      ];
-
-      for (const orb of orbs) {
-        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
-        gradient.addColorStop(0, `rgba(${orb.color.join(",")}, ${orb.opacity})`);
-        gradient.addColorStop(0.4, `rgba(${orb.color.join(",")}, ${orb.opacity * 0.5})`);
-        gradient.addColorStop(1, `rgba(${orb.color.join(",")}, 0)`);
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, w(), h());
-      }
-
-      // Central hero glow — AI energy core
-      const coreX = w() * 0.5;
-      const coreY = h() * 0.38;
-      const corePulse = 0.7 + Math.sin(time * 1.5) * 0.3;
-      const coreR = Math.min(w(), h()) * 0.3 * corePulse;
-      const coreGrad = ctx.createRadialGradient(coreX, coreY, 0, coreX, coreY, coreR);
-      coreGrad.addColorStop(0, `rgba(140, 90, 255, ${0.08 * corePulse})`);
-      coreGrad.addColorStop(0.5, `rgba(80, 60, 220, ${0.04 * corePulse})`);
-      coreGrad.addColorStop(1, "rgba(80, 60, 220, 0)");
-      ctx.fillStyle = coreGrad;
-      ctx.fillRect(0, 0, w(), h());
-
-      // Floating particles — more and varied
-      for (let i = 0; i < 50; i++) {
-        const speed = 0.15 + (i % 5) * 0.05;
-        const px = (Math.sin(time * speed + i * 1.7) * 0.5 + 0.5) * w();
-        const py = (Math.cos(time * (speed * 0.8) + i * 2.3) * 0.5 + 0.5) * h();
-        const size = 0.5 + Math.sin(time * 0.8 + i) * 0.5 + (i % 3) * 0.3;
-        const alpha = 0.12 + Math.sin(time * 1.2 + i * 0.6) * 0.08;
-        ctx.beginPath();
-        ctx.arc(px, py, size, 0, Math.PI * 2);
-        const colors = [
-          `rgba(6, 182, 212, ${alpha})`,
-          `rgba(139, 92, 246, ${alpha})`,
-          `rgba(99, 102, 241, ${alpha})`,
-        ];
-        ctx.fillStyle = colors[i % 3];
-        ctx.fill();
-      }
-
-      // Subtle noise grain overlay
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixels = imgData.data;
-      for (let i = 0; i < pixels.length; i += 16) {
-        const noise = (Math.random() - 0.5) * 8;
-        pixels[i] = Math.min(255, Math.max(0, pixels[i] + noise));
-        pixels[i + 1] = Math.min(255, Math.max(0, pixels[i + 1] + noise));
-        pixels[i + 2] = Math.min(255, Math.max(0, pixels[i + 2] + noise));
-      }
-      ctx.putImageData(imgData, 0, 0);
-
-      animationId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0" />;
-};
+GradientMeshBackground.displayName = "GradientMeshBackground";
 
 export default GradientMeshBackground;
