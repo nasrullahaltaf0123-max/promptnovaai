@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown, Camera } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown, Camera, CreditCard } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/use-credits";
@@ -10,6 +10,7 @@ import { UpgradeBanner } from "@/components/UpgradePrompt";
 
 const quickTools = [
   { icon: Camera, title: "Photo Maker", path: "/dashboard/photo-maker", gradient: "from-amber-500/20 to-orange-500/5", isNew: true },
+  { icon: CreditCard, title: "ID Card Pro", path: "/dashboard/id-card", gradient: "from-amber-500/20 to-yellow-500/5", isNew: true },
   { icon: MessageSquare, title: "AI Chat", path: "/dashboard/chat", gradient: "from-violet-500/20 to-violet-500/5" },
   { icon: Image, title: "Image Gen", path: "/dashboard/image", gradient: "from-cyan-500/20 to-cyan-500/5" },
   { icon: FileText, title: "Blog Writer", path: "/dashboard/blog", gradient: "from-blue-500/20 to-blue-500/5" },
