@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import logoFull from "@/assets/logo-full.png";
 
-const Navbar = () => {
+const Navbar = memo(() => {
   const { lang, setLang, t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const toggle = useCallback(() => setMobileOpen((v) => !v), []);
+  const close = useCallback(() => setMobileOpen(false), []);
 
   const navLinks = [
     { label: t.features as string, href: "#features" },
@@ -19,12 +21,11 @@ const Navbar = () => {
     <motion.nav
       initial={{ y: -10, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 right-0 z-50"
     >
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6">
         <div className="mt-3 sm:mt-4 rounded-2xl glass-strong shadow-xl shadow-background/60 px-5 sm:px-7 h-[4.5rem] sm:h-[4.75rem] flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center group shrink-0">
             <img
               src={logoFull}
@@ -34,7 +35,6 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Center links — desktop with animated underline */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((item) => (
               <a
@@ -48,7 +48,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right actions */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setLang(lang === "en" ? "bn" : "en")}
@@ -68,11 +67,9 @@ const Navbar = () => {
             >
               {t.startFree}
             </Link>
-
-            {/* Mobile hamburger */}
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+              onClick={toggle}
+              className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors active:scale-95"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -80,22 +77,21 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile menu */}
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.2 }}
               className="md:hidden mt-2 rounded-2xl glass-strong shadow-lg shadow-background/50 p-4 flex flex-col gap-1"
             >
               {navLinks.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-body text-muted-foreground hover:text-foreground px-4 py-3 rounded-xl transition-all duration-200 hover:bg-secondary/50"
+                  onClick={close}
+                  className="text-body text-muted-foreground hover:text-foreground px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-secondary/50 active:bg-secondary/70"
                 >
                   {item.label}
                 </a>
@@ -103,15 +99,15 @@ const Navbar = () => {
               <hr className="border-border/30 my-1" />
               <Link
                 to="/login"
-                onClick={() => setMobileOpen(false)}
-                className="text-body text-muted-foreground hover:text-foreground px-4 py-3 rounded-xl transition-all duration-200 hover:bg-secondary/50"
+                onClick={close}
+                className="text-body text-muted-foreground hover:text-foreground px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-secondary/50"
               >
                 {t.logIn}
               </Link>
               <Link
                 to="/signup"
-                onClick={() => setMobileOpen(false)}
-                className="text-body font-semibold text-center bg-gradient-to-r from-primary to-accent text-primary-foreground px-4 py-3 rounded-xl hover:brightness-110 transition-all duration-200 shadow-md shadow-primary/20"
+                onClick={close}
+                className="text-body font-semibold text-center bg-gradient-to-r from-primary to-accent text-primary-foreground px-4 py-3.5 rounded-xl hover:brightness-110 transition-all duration-200 shadow-md shadow-primary/20"
               >
                 {t.startFree}
               </Link>
@@ -121,6 +117,8 @@ const Navbar = () => {
       </div>
     </motion.nav>
   );
-};
+});
+
+Navbar.displayName = "Navbar";
 
 export default Navbar;
