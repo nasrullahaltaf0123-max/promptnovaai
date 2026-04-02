@@ -13,9 +13,9 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
 type DressStyle = "suit" | "shirt-tie" | "casual";
-type Background = "white" | "light-gray" | "office" | "studio";
+type Background = "white" | "light-gray" | "light-blue" | "red" | "office" | "studio";
 type Enhancement = "natural" | "medium" | "high";
-type ExportSize = "passport" | "square" | "hd";
+type ExportSize = "passport" | "square" | "hd" | "print-sheet";
 
 const DRESS_OPTIONS: { value: DressStyle; label: string; icon: string }[] = [
   { value: "suit", label: "Formal Suit", icon: "🤵" },
@@ -25,6 +25,8 @@ const DRESS_OPTIONS: { value: DressStyle; label: string; icon: string }[] = [
 
 const BG_OPTIONS: { value: Background; label: string; icon: string; proOnly?: boolean }[] = [
   { value: "white", label: "White (Passport)", icon: "⬜" },
+  { value: "light-blue", label: "Light Blue", icon: "🔵" },
+  { value: "red", label: "Red", icon: "🔴" },
   { value: "light-gray", label: "Light Gray", icon: "🔘" },
   { value: "office", label: "Office Blur", icon: "🏢", proOnly: true },
   { value: "studio", label: "Studio", icon: "📸", proOnly: true },
