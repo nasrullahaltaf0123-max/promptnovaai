@@ -42,6 +42,7 @@ const EXPORT_OPTIONS: { value: ExportSize; label: string; dimensions: string }[]
   { value: "passport", label: "Passport Size", dimensions: "413×531" },
   { value: "square", label: "Square (LinkedIn)", dimensions: "800×800" },
   { value: "hd", label: "HD Image", dimensions: "1200×1500" },
+  { value: "print-sheet", label: "Print Sheet (6x)", dimensions: "1800×1200" },
 ];
 
 const FREE_DAILY_LIMIT = 2;
