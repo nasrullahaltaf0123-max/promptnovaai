@@ -291,7 +291,9 @@ const IDCardPro = () => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [data, setData] = useState<CardData>({
-    fullName: "", role: "", organization: "", idNumber: "", expiryDate: "", phone: "", email: ""
+    fullName: "", role: "", organization: "", idNumber: "", expiryDate: "", phone: "", email: "",
+    department: "", session: "", bloodGroup: "", visitReason: "", host: "", visitTime: "", visitDate: "",
+    accessLevel: "", seatZone: "", eventDate: "", designation: "", authority: ""
   });
 
   const photoRef = useRef<HTMLInputElement>(null);
