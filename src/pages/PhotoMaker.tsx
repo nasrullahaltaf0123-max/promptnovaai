@@ -153,7 +153,7 @@ const PhotoMaker = () => {
         ? "Output in standard quality (720p equivalent)."
         : "Output in maximum HD quality with sharp details.";
 
-      const prompt = `Transform this person's photo into a PROFESSIONAL OFFICIAL PHOTO suitable for CV, LinkedIn, or job applications.
+      const prompt = `Transform this person's photo into a PROFESSIONAL OFFICIAL PHOTO suitable for CV, LinkedIn, passport, or job applications.
 
 ${autoNote}
 ${removeBgNote}
@@ -164,13 +164,22 @@ CRITICAL RULES:
 - Keep the person's natural facial features, skin tone, and identity
 - The result must look like the SAME PERSON
 
+PASSPORT CROP RULES (VERY IMPORTANT):
+- Face must be perfectly centered in the frame
+- Maintain safe margin above forehead (15-20% of image height)
+- Chin spacing balanced with equal space below
+- Both ears should be visible if possible
+- Shoulders aligned and evenly cropped
+- Follow standard passport photo ratio (35mm × 45mm proportions)
+- Head should occupy 70-80% of the frame height
+
 BACKGROUND: ${bgDesc[effectiveBg]}
 CLOTHING: Replace current clothing with ${dressDesc[dressStyle]}. Match lighting and shadows naturally.
 ENHANCEMENT: ${enhanceDesc[isFree ? "natural" : enhancement]}
 ${qualityNote}
 
 ADDITIONAL: Fix lighting, clean hair, remove noise, natural skin tones, professional lighting.
-OUTPUT: A clean, professional headshot photo ready for official use.`;
+OUTPUT: A clean, professional headshot photo ready for official use with perfect passport-standard cropping.`;
 
       const result = await generateContent("photo-enhance", prompt, { image: uploadedImage });
 
