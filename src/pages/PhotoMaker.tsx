@@ -125,6 +125,8 @@ const PhotoMaker = () => {
       const bgDesc: Record<Background, string> = {
         white: "pure white clean passport-style background",
         "light-gray": "soft light gray gradient studio background",
+        "light-blue": "official light blue passport background (standard government blue)",
+        red: "solid red background for official ID photos",
         office: "professional office environment with soft bokeh blur background",
         studio: "professional photography studio with soft lighting background",
       };
