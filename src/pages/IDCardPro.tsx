@@ -498,16 +498,9 @@ const IDCardPro = () => {
               </div>
             </div>
 
-            {/* Fields */}
+            {/* Dynamic Fields based on card type */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {([
-                { key: "fullName" as const, label: "Full Name", placeholder: "John Doe", icon: User },
-                { key: "role" as const, label: "Role / Position", placeholder: "Software Engineer", icon: PenLine },
-                { key: "organization" as const, label: "Company / School", placeholder: "Acme Corp", icon: Building2 },
-                { key: "idNumber" as const, label: "ID Number", placeholder: "EMP-001234", icon: Hash },
-                { key: "expiryDate" as const, label: "Expiry Date", placeholder: "2027-12-31", icon: Calendar },
-                { key: "email" as const, label: "Email", placeholder: "john@example.com", icon: QrCode },
-              ]).map(f => (
+              {(CARD_FIELDS[cardType] || CARD_FIELDS.employee).map(f => (
                 <div key={f.key} className="space-y-1">
                   <Label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     <f.icon className="w-3 h-3" /> {f.label}
