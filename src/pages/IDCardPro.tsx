@@ -33,7 +33,89 @@ interface CardData {
   expiryDate: string;
   phone: string;
   email: string;
+  department: string;
+  session: string;
+  bloodGroup: string;
+  visitReason: string;
+  host: string;
+  visitTime: string;
+  visitDate: string;
+  accessLevel: string;
+  seatZone: string;
+  eventDate: string;
+  designation: string;
+  authority: string;
 }
+
+/* ───── Dynamic fields by card type ───── */
+type FieldConfig = { key: keyof CardData; label: string; placeholder: string; icon: typeof User };
+
+const CARD_FIELDS: Record<CardType, FieldConfig[]> = {
+  student: [
+    { key: "fullName", label: "Full Name", placeholder: "John Doe", icon: User },
+    { key: "idNumber", label: "Student ID", placeholder: "STU-2025-001", icon: Hash },
+    { key: "department", label: "Department", placeholder: "Computer Science", icon: Building2 },
+    { key: "session", label: "Session", placeholder: "2024-2025", icon: Calendar },
+    { key: "bloodGroup", label: "Blood Group", placeholder: "O+", icon: PenLine },
+    { key: "expiryDate", label: "Expiry Date", placeholder: "2027-12-31", icon: Calendar },
+  ],
+  employee: [
+    { key: "fullName", label: "Full Name", placeholder: "Jane Smith", icon: User },
+    { key: "idNumber", label: "Employee ID", placeholder: "EMP-001234", icon: Hash },
+    { key: "role", label: "Role / Position", placeholder: "Software Engineer", icon: PenLine },
+    { key: "department", label: "Department", placeholder: "Engineering", icon: Building2 },
+    { key: "organization", label: "Company", placeholder: "Acme Corp", icon: Building2 },
+    { key: "expiryDate", label: "Validity", placeholder: "2027-12-31", icon: Calendar },
+  ],
+  corporate: [
+    { key: "fullName", label: "Full Name", placeholder: "John Doe", icon: User },
+    { key: "role", label: "Title", placeholder: "VP Engineering", icon: PenLine },
+    { key: "organization", label: "Company", placeholder: "TechCorp", icon: Building2 },
+    { key: "idNumber", label: "Badge ID", placeholder: "CORP-5678", icon: Hash },
+    { key: "department", label: "Division", placeholder: "Technology", icon: Building2 },
+    { key: "email", label: "Email", placeholder: "john@techcorp.com", icon: QrCode },
+  ],
+  event: [
+    { key: "fullName", label: "Full Name", placeholder: "VIP Guest", icon: User },
+    { key: "accessLevel", label: "Access Level", placeholder: "VIP / Backstage", icon: PenLine },
+    { key: "seatZone", label: "Seat / Zone", placeholder: "Zone A - Row 1", icon: Hash },
+    { key: "eventDate", label: "Event Date", placeholder: "2025-06-15", icon: Calendar },
+    { key: "organization", label: "Event Name", placeholder: "Tech Summit 2025", icon: Building2 },
+    { key: "idNumber", label: "Pass ID", placeholder: "EVT-9012", icon: Hash },
+  ],
+  visitor: [
+    { key: "fullName", label: "Visitor Name", placeholder: "Alex Brown", icon: User },
+    { key: "visitReason", label: "Visit Reason", placeholder: "Meeting", icon: PenLine },
+    { key: "host", label: "Host Person", placeholder: "Dr. Sarah Lee", icon: User },
+    { key: "visitTime", label: "Time", placeholder: "10:00 AM", icon: Calendar },
+    { key: "visitDate", label: "Date", placeholder: "2025-04-02", icon: Calendar },
+    { key: "idNumber", label: "Pass No.", placeholder: "VIS-3456", icon: Hash },
+  ],
+  membership: [
+    { key: "fullName", label: "Member Name", placeholder: "John Doe", icon: User },
+    { key: "idNumber", label: "Member ID", placeholder: "MEM-7890", icon: Hash },
+    { key: "role", label: "Tier", placeholder: "Gold / Platinum", icon: PenLine },
+    { key: "organization", label: "Club / Org", placeholder: "Sports Club", icon: Building2 },
+    { key: "expiryDate", label: "Valid Until", placeholder: "2026-12-31", icon: Calendar },
+    { key: "email", label: "Email", placeholder: "john@email.com", icon: QrCode },
+  ],
+  press: [
+    { key: "fullName", label: "Full Name", placeholder: "Reporter Name", icon: User },
+    { key: "role", label: "Publication", placeholder: "Daily News", icon: PenLine },
+    { key: "organization", label: "Media House", placeholder: "News Corp", icon: Building2 },
+    { key: "idNumber", label: "Press ID", placeholder: "PRESS-1234", icon: Hash },
+    { key: "expiryDate", label: "Valid Until", placeholder: "2026-06-30", icon: Calendar },
+    { key: "phone", label: "Phone", placeholder: "+1-555-0123", icon: QrCode },
+  ],
+  freelancer: [
+    { key: "fullName", label: "Full Name", placeholder: "Creator Name", icon: User },
+    { key: "role", label: "Specialization", placeholder: "UI/UX Designer", icon: PenLine },
+    { key: "organization", label: "Brand / Studio", placeholder: "Design Studio", icon: Building2 },
+    { key: "idNumber", label: "ID Number", placeholder: "FRL-5678", icon: Hash },
+    { key: "email", label: "Email / Portfolio", placeholder: "creator@email.com", icon: QrCode },
+    { key: "expiryDate", label: "Valid Until", placeholder: "2026-12-31", icon: Calendar },
+  ],
+};
 
 /* ───── Template configs ───── */
 const TEMPLATES: { value: TemplateName; label: string; pro: boolean; colors: { bg: string; text: string; accent: string; border: string } }[] = [
@@ -209,7 +291,9 @@ const IDCardPro = () => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [data, setData] = useState<CardData>({
-    fullName: "", role: "", organization: "", idNumber: "", expiryDate: "", phone: "", email: ""
+    fullName: "", role: "", organization: "", idNumber: "", expiryDate: "", phone: "", email: "",
+    department: "", session: "", bloodGroup: "", visitReason: "", host: "", visitTime: "", visitDate: "",
+    accessLevel: "", seatZone: "", eventDate: "", designation: "", authority: ""
   });
 
   const photoRef = useRef<HTMLInputElement>(null);
@@ -414,16 +498,9 @@ const IDCardPro = () => {
               </div>
             </div>
 
-            {/* Fields */}
+            {/* Dynamic Fields based on card type */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {([
-                { key: "fullName" as const, label: "Full Name", placeholder: "John Doe", icon: User },
-                { key: "role" as const, label: "Role / Position", placeholder: "Software Engineer", icon: PenLine },
-                { key: "organization" as const, label: "Company / School", placeholder: "Acme Corp", icon: Building2 },
-                { key: "idNumber" as const, label: "ID Number", placeholder: "EMP-001234", icon: Hash },
-                { key: "expiryDate" as const, label: "Expiry Date", placeholder: "2027-12-31", icon: Calendar },
-                { key: "email" as const, label: "Email", placeholder: "john@example.com", icon: QrCode },
-              ]).map(f => (
+              {(CARD_FIELDS[cardType] || CARD_FIELDS.employee).map(f => (
                 <div key={f.key} className="space-y-1">
                   <Label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     <f.icon className="w-3 h-3" /> {f.label}

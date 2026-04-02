@@ -13,9 +13,9 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
 type DressStyle = "suit" | "shirt-tie" | "casual";
-type Background = "white" | "light-gray" | "office" | "studio";
+type Background = "white" | "light-gray" | "light-blue" | "red" | "office" | "studio";
 type Enhancement = "natural" | "medium" | "high";
-type ExportSize = "passport" | "square" | "hd";
+type ExportSize = "passport" | "square" | "hd" | "print-sheet";
 
 const DRESS_OPTIONS: { value: DressStyle; label: string; icon: string }[] = [
   { value: "suit", label: "Formal Suit", icon: "🤵" },
@@ -25,6 +25,8 @@ const DRESS_OPTIONS: { value: DressStyle; label: string; icon: string }[] = [
 
 const BG_OPTIONS: { value: Background; label: string; icon: string; proOnly?: boolean }[] = [
   { value: "white", label: "White (Passport)", icon: "⬜" },
+  { value: "light-blue", label: "Light Blue", icon: "🔵" },
+  { value: "red", label: "Red", icon: "🔴" },
   { value: "light-gray", label: "Light Gray", icon: "🔘" },
   { value: "office", label: "Office Blur", icon: "🏢", proOnly: true },
   { value: "studio", label: "Studio", icon: "📸", proOnly: true },
@@ -40,6 +42,7 @@ const EXPORT_OPTIONS: { value: ExportSize; label: string; dimensions: string }[]
   { value: "passport", label: "Passport Size", dimensions: "413×531" },
   { value: "square", label: "Square (LinkedIn)", dimensions: "800×800" },
   { value: "hd", label: "HD Image", dimensions: "1200×1500" },
+  { value: "print-sheet", label: "Print Sheet (6x)", dimensions: "1800×1200" },
 ];
 
 const FREE_DAILY_LIMIT = 2;
@@ -122,6 +125,8 @@ const PhotoMaker = () => {
       const bgDesc: Record<Background, string> = {
         white: "pure white clean passport-style background",
         "light-gray": "soft light gray gradient studio background",
+        "light-blue": "official light blue passport background (standard government blue)",
+        red: "solid red background for official ID photos",
         office: "professional office environment with soft bokeh blur background",
         studio: "professional photography studio with soft lighting background",
       };
@@ -148,7 +153,7 @@ const PhotoMaker = () => {
         ? "Output in standard quality (720p equivalent)."
         : "Output in maximum HD quality with sharp details.";
 
-      const prompt = `Transform this person's photo into a PROFESSIONAL OFFICIAL PHOTO suitable for CV, LinkedIn, or job applications.
+      const prompt = `Transform this person's photo into a PROFESSIONAL OFFICIAL PHOTO suitable for CV, LinkedIn, passport, or job applications.
 
 ${autoNote}
 ${removeBgNote}
@@ -159,13 +164,22 @@ CRITICAL RULES:
 - Keep the person's natural facial features, skin tone, and identity
 - The result must look like the SAME PERSON
 
+PASSPORT CROP RULES (VERY IMPORTANT):
+- Face must be perfectly centered in the frame
+- Maintain safe margin above forehead (15-20% of image height)
+- Chin spacing balanced with equal space below
+- Both ears should be visible if possible
+- Shoulders aligned and evenly cropped
+- Follow standard passport photo ratio (35mm × 45mm proportions)
+- Head should occupy 70-80% of the frame height
+
 BACKGROUND: ${bgDesc[effectiveBg]}
 CLOTHING: Replace current clothing with ${dressDesc[dressStyle]}. Match lighting and shadows naturally.
 ENHANCEMENT: ${enhanceDesc[isFree ? "natural" : enhancement]}
 ${qualityNote}
 
 ADDITIONAL: Fix lighting, clean hair, remove noise, natural skin tones, professional lighting.
-OUTPUT: A clean, professional headshot photo ready for official use.`;
+OUTPUT: A clean, professional headshot photo ready for official use with perfect passport-standard cropping.`;
 
       const result = await generateContent("photo-enhance", prompt, { image: uploadedImage });
 
