@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { generateContent } from "@/lib/ai";
 import { useAuth } from "@/lib/auth";
 import { useCredits } from "@/hooks/use-credits";
-import { incrementUsage, getDailyUsage } from "@/lib/usage";
+import { incrementUsage, getDailyUsage, saveToHistory } from "@/lib/usage";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
