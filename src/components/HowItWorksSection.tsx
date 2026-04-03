@@ -12,7 +12,7 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 sm:py-32 px-6">
+    <section id="how-it-works" className="py-28 sm:py-36 px-6 section-glow">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -22,14 +22,15 @@ const HowItWorksSection = () => {
           className="text-center mb-16"
         >
           <p className="text-micro font-semibold text-accent uppercase tracking-widest mb-3">{t.howLabel}</p>
-          <h2 className="text-heading sm:text-display text-foreground mb-4">{t.howTitle}</h2>
+          <h2 className="text-heading sm:text-display text-foreground mb-5">{t.howTitle}</h2>
           <p className="text-body-lg text-muted-foreground max-w-md mx-auto">{t.howSubtitle}</p>
         </motion.div>
 
         <div className="relative">
-          {/* Connector line */}
+          {/* Connector line with glow */}
           <div className="hidden md:block absolute top-[44px] left-[16.67%] right-[16.67%] h-px">
-            <div className="h-full bg-gradient-to-r from-primary/30 via-accent/30 to-primary/30" />
+            <div className="h-full bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20 blur-sm" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6">
@@ -43,7 +44,7 @@ const HowItWorksSection = () => {
                 className="text-center relative"
               >
                 <div className="relative inline-block mb-6">
-                  <div className="w-[72px] h-[72px] rounded-2xl glass-card-highlight flex items-center justify-center mx-auto">
+                  <div className="w-[72px] h-[72px] rounded-2xl glass-card-highlight flex items-center justify-center mx-auto transition-all duration-500 hover:glow-violet-sm">
                     <s.icon className="w-7 h-7 text-foreground" />
                   </div>
                   <span className="absolute -top-1.5 -right-1.5 text-micro font-bold bg-gradient-to-br from-primary to-accent text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center shadow-lg shadow-primary/25">

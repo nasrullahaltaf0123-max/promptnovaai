@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
+import { Sparkles, Eye, EyeOff, ArrowRight, Loader2, Shield, Zap, Lock } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import logoFull from "@/assets/logo-full.png";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -25,17 +26,14 @@ const Signup = () => {
     if (error) {
       toast({ title: "Signup failed", description: error, variant: "destructive" });
     } else {
-      // Handle referral after signup
       if (refCode) {
         try {
-          // Find referrer by code
           const { data: referrer } = await (supabase
             .from("profiles")
             .select("id") as any)
             .eq("referral_code", refCode)
             .maybeSingle();
           if (referrer) {
-            // We'll store the ref code in localStorage; the referral is credited on first login
             localStorage.setItem("pn_referral_code", refCode);
           }
         } catch {}
@@ -46,63 +44,100 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6 relative overflow-hidden">
-      <div className="absolute w-[500px] h-[500px] rounded-full opacity-60 pointer-events-none" style={{
-        top: "20%", left: "20%",
-        background: "radial-gradient(circle, hsl(259 75% 62% / 0.04), transparent)",
-        animation: "orb-float-1 20s ease-in-out infinite",
-      }} />
-      <div className="absolute w-[400px] h-[400px] rounded-full opacity-60 pointer-events-none" style={{
-        bottom: "20%", right: "20%",
-        background: "radial-gradient(circle, hsl(187 92% 43% / 0.03), transparent)",
-        animation: "orb-float-2 25s ease-in-out infinite",
-      }} />
-
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm relative"
-      >
-        <div className="text-center mb-10">
-          <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="text-body-lg font-semibold tracking-tight text-foreground">PromptNova AI</span>
-          </Link>
-          <h1 className="text-heading text-foreground">Create your account</h1>
-          <p className="text-caption text-muted-foreground mt-2">Start creating with AI in seconds</p>
+    <div className="min-h-screen bg-background flex items-stretch relative overflow-hidden">
+      {/* Left branding panel — desktop only */}
+      <div className="hidden lg:flex lg:w-[45%] relative items-center justify-center p-12">
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(135deg, hsl(225 20% 5%) 0%, hsl(250 25% 8%) 50%, hsl(225 15% 4%) 100%)"
+        }} />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 80% 60% at 30% 50%, hsl(250 80% 65% / 0.08), transparent)"
+        }} />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 60% 60% at 70% 70%, hsl(200 90% 50% / 0.05), transparent)"
+        }} />
+        <div className="relative z-10 text-center space-y-8">
+          <motion.img
+            src={logoFull}
+            alt="PromptNova AI"
+            className="h-32 mx-auto w-auto object-contain"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            style={{ filter: "drop-shadow(0 0 40px hsl(250 80% 65% / 0.3))" }}
+          />
+          <div className="space-y-4 max-w-xs mx-auto">
+            {[
+              { icon: Zap, text: "Lightning fast AI generation" },
+              { icon: Shield, text: "Trusted by 1,000+ creators" },
+              { icon: Lock, text: "Your data stays encrypted" },
+            ].map((item) => (
+              <div key={item.text} className="flex items-center gap-3 text-caption text-muted-foreground/70">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <item.icon className="w-4 h-4 text-primary/70" />
+                </div>
+                {item.text}
+              </div>
+            ))}
+          </div>
+          <p className="text-micro text-muted-foreground/40">Fast, secure, private AI workspace</p>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="glass-card-highlight rounded-2xl p-6 space-y-5">
-          <div>
-            <label className="text-caption font-medium text-foreground mb-2 block">Full name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" required />
+      {/* Right auth panel */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="absolute w-[500px] h-[500px] rounded-full opacity-60 pointer-events-none lg:hidden" style={{
+          top: "20%", left: "20%",
+          background: "radial-gradient(circle, hsl(259 75% 62% / 0.04), transparent)",
+          animation: "orb-float-1 20s ease-in-out infinite",
+        }} />
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-sm relative"
+        >
+          <div className="text-center mb-10">
+            <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center shadow-lg shadow-primary/20">
+                <Sparkles className="w-4 h-4 text-primary-foreground" />
+              </div>
+              <span className="text-body-lg font-semibold tracking-tight text-foreground">PromptNova AI</span>
+            </Link>
+            <h1 className="text-heading text-foreground">Create your account</h1>
+            <p className="text-caption text-muted-foreground mt-2">Start creating with AI in seconds</p>
           </div>
-          <div>
-            <label className="text-caption font-medium text-foreground mb-2 block">Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" required />
-          </div>
-          <div>
-            <label className="text-caption font-medium text-foreground mb-2 block">Password</label>
-            <div className="relative">
-              <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-2.5 text-caption text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all pr-10" required minLength={6} />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-muted-foreground transition-colors">
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+
+          <form onSubmit={handleSubmit} className="glass-card-premium rounded-2xl p-7 space-y-5">
+            <div>
+              <label className="text-caption font-medium text-foreground mb-2 block">Full name</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-3 text-caption text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200" required />
             </div>
-          </div>
-          <button type="submit" disabled={loading} className="group w-full flex items-center justify-center gap-2 bg-foreground text-background font-medium py-2.5 rounded-xl hover:bg-foreground/90 transition-all duration-200 text-caption disabled:opacity-50">
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Create account <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" /></>}
-          </button>
-        </form>
+            <div>
+              <label className="text-caption font-medium text-foreground mb-2 block">Email</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-3 text-caption text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200" required />
+            </div>
+            <div>
+              <label className="text-caption font-medium text-foreground mb-2 block">Password</label>
+              <div className="relative">
+                <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-secondary/40 border border-border/50 rounded-xl px-4 py-3 text-caption text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all duration-200 pr-10" required minLength={6} />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/40 hover:text-muted-foreground transition-colors">
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <button type="submit" disabled={loading} className="cta-shine group w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold py-3 rounded-xl hover:brightness-110 transition-all duration-300 text-caption disabled:opacity-50 shadow-lg shadow-primary/20 hover:shadow-primary/40">
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Create account <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" /></>}
+            </button>
+          </form>
 
-        <p className="text-center text-caption text-muted-foreground mt-8">
-          Already have an account?{" "}
-          <Link to="/login" className="text-foreground hover:text-primary font-medium transition-colors">Sign in</Link>
-        </p>
-      </motion.div>
+          <p className="text-center text-caption text-muted-foreground mt-8">
+            Already have an account?{" "}
+            <Link to="/login" className="text-primary hover:text-primary/80 font-medium transition-colors">Sign in</Link>
+          </p>
+        </motion.div>
+      </div>
     </div>
   );
 };

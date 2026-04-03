@@ -18,9 +18,9 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="features" className="py-24 sm:py-32 px-6 relative">
+    <section id="features" className="py-28 sm:py-36 px-6 relative section-glow">
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 70% 30% at 50% 0%, hsl(250 80% 65% / 0.04), transparent)"
+        background: "radial-gradient(ellipse 70% 30% at 50% 0%, hsl(250 80% 65% / 0.05), transparent)"
       }} />
 
       <div className="max-w-5xl mx-auto relative">
@@ -32,7 +32,7 @@ const FeaturesSection = () => {
           className="text-center mb-16"
         >
           <p className="text-micro font-semibold text-primary uppercase tracking-widest mb-3">POWERFUL AI TOOLS</p>
-          <h2 className="text-heading sm:text-display text-foreground mb-4">Everything You Need to Create</h2>
+          <h2 className="text-heading sm:text-display text-foreground mb-5">Everything You Need to Create</h2>
           <p className="text-body-lg text-muted-foreground max-w-md mx-auto">8 AI-powered tools to generate content, visuals, and scripts — all in one platform.</p>
         </motion.div>
 
@@ -47,7 +47,7 @@ const FeaturesSection = () => {
             >
               <Link
                 to={tool.path}
-                className="group block glass-card rounded-2xl p-5 h-full transition-all duration-500 hover:glow-violet-sm hover:-translate-y-1"
+                className="group block glass-card hover-lift rounded-2xl p-5 h-full"
               >
                 <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}>
                   <tool.icon className="w-5 h-5 text-foreground" />

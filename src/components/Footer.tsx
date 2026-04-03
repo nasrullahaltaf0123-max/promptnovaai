@@ -12,17 +12,17 @@ const Footer = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="py-24 px-6 text-center relative overflow-hidden"
+        className="py-28 px-6 text-center relative overflow-hidden section-glow"
       >
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse 50% 60% at 50% 100%, hsl(250 80% 65% / 0.06), transparent)"
+          background: "radial-gradient(ellipse 50% 60% at 50% 100%, hsl(250 80% 65% / 0.08), transparent)"
         }} />
         <div className="relative max-w-lg mx-auto">
-          <h2 className="text-heading sm:text-display text-foreground mb-4">Ready to Create?</h2>
-          <p className="text-body-lg text-muted-foreground mb-8">Join 1,000+ creators using AI to produce viral content every day.</p>
+          <h2 className="text-heading sm:text-display text-foreground mb-5">Ready to Create?</h2>
+          <p className="text-body-lg text-muted-foreground mb-10">Join 1,000+ creators using AI to produce viral content every day.</p>
           <Link
             to="/signup"
-            className="group inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 text-body shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02]"
+            className="cta-shine group inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold px-10 py-4 rounded-xl transition-all duration-300 text-body shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.03] hover:brightness-110"
           >
             Start Free Now
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -31,7 +31,7 @@ const Footer = () => {
       </motion.section>
 
       {/* Footer bar */}
-      <div className="border-t border-border/40 py-10 px-6">
+      <div className="border-t border-border/30 py-10 px-6">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <img src={logoFull} alt="PromptNova AI" className="h-7 w-auto object-contain" />

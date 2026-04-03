@@ -32,7 +32,7 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } } };
 
 const TestimonialsSection = () => (
-  <section className="py-20 sm:py-28 px-6 relative overflow-hidden">
+  <section className="py-24 sm:py-32 px-6 relative overflow-hidden section-glow">
     <div className="absolute inset-0 pointer-events-none" style={{
       background: "radial-gradient(ellipse 60% 40% at 50% 50%, hsl(250 80% 65% / 0.04), transparent)"
     }} />
@@ -45,7 +45,7 @@ const TestimonialsSection = () => (
         className="text-center mb-14"
       >
         <span className="text-micro font-semibold tracking-widest uppercase text-primary mb-3 block">Testimonials</span>
-        <h2 className="text-heading sm:text-display-sm leading-tight">
+        <h2 className="text-heading sm:text-display leading-tight">
           <span className="gradient-text">Loved by Creators</span>
         </h2>
         <p className="text-caption sm:text-body text-muted-foreground mt-3 max-w-md mx-auto">
@@ -64,9 +64,9 @@ const TestimonialsSection = () => (
           <motion.div
             key={t.name}
             variants={item}
-            className="glass-card rounded-2xl p-6 relative group hover:-translate-y-1 transition-transform duration-300"
+            className="glass-card-highlight hover-lift rounded-2xl p-6 relative group"
           >
-            <Quote className="w-8 h-8 text-primary/15 absolute top-5 right-5" />
+            <Quote className="w-8 h-8 text-primary/10 absolute top-5 right-5" />
             <div className="flex gap-0.5 mb-3">
               {Array.from({ length: t.rating }).map((_, i) => (
                 <Star key={i} className="w-3.5 h-3.5 fill-primary text-primary" />
