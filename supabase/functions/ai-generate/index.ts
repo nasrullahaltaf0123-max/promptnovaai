@@ -734,6 +734,18 @@ console.log("FINAL STRATEGY:", strategyData);
             ],
           });
         }
+      } else if (toolType === "hair-design") {
+        userPrompt = prompt || "Redesign this person's hairstyle professionally";
+        if (options?.image) {
+          chatMessages.length = 0;
+          chatMessages.push({
+            role: "user",
+            content: [
+              { type: "text", text: userPrompt },
+              { type: "image_url", image_url: { url: options.image } },
+            ],
+          });
+        }
       } else if (toolType === "logo" && options) {
         userPrompt = buildLogoPrompt(prompt, options.industry || "Technology", options.style || "Minimal");
       } else if (isHeadlineSuggest) {
