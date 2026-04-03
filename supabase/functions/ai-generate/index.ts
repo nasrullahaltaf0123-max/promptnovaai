@@ -690,7 +690,7 @@ console.log("FINAL STRATEGY:", strategyData);
     const systemPrompt = systemPrompts[toolType] || systemPrompts.chat;
 
     const chatMessages: any[] = [{ role: "system", content: systemPrompt }];
-    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo" || toolType === "remove-bg" || toolType === "photo-enhance";
+    const isImageGen = toolType === "image" || toolType === "thumbnail-image" || toolType === "logo" || toolType === "remove-bg" || toolType === "photo-enhance" || toolType === "hair-design";
     const isHeadlineSuggest = toolType === "thumbnail-headlines";
     const isThumbnailStructure = toolType === "thumbnail";
 
