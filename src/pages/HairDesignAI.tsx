@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { generateContent } from "@/lib/ai";
 import { useAuth } from "@/lib/auth";
 import { useCredits } from "@/hooks/use-credits";
-import { incrementUsage, getDailyUsage } from "@/lib/usage";
+import { incrementUsage, getDailyUsage, saveToHistory } from "@/lib/usage";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
@@ -148,6 +148,7 @@ OUTPUT: A clean professional photo with only the hairstyle changed.`;
 
   const handleGenerate = useCallback(async (celebrityOverride?: string) => {
     if (!uploadedImage || !user) { toast.error("Please upload a photo first"); return; }
+    if (isProcessing) return; // prevent duplicate clicks
     if (isFree) {
       const used = await getDailyUsage(user.id, "hair");
       if (used >= FREE_DAILY_LIMIT) { toast.error("Daily limit reached (2/day). Upgrade to Pro!"); return; }
@@ -155,32 +156,57 @@ OUTPUT: A clean professional photo with only the hairstyle changed.`;
 
     setIsProcessing(true);
     setResultImage(null);
-    try {
-      setProcessStep("Analyzing face shape...");
-      await new Promise(r => setTimeout(r, 400));
-      setProcessStep("Designing hairstyle...");
 
-      const prompt = buildPrompt(celebrityOverride);
-      const result = await generateContent("hair-design", prompt, { image: uploadedImage });
+    const prompt = buildPrompt(celebrityOverride);
+    const styleName = celebrityOverride || `${hairLength} ${hairType}`;
+    let lastError = "";
 
-      if (result.error) { toast.error(result.error); return; }
-      if (result.images && result.images.length > 0) {
-        let finalImage = result.images[0];
-        if (isFree) finalImage = await applyWatermark(finalImage);
-        setResultImage(finalImage);
-        setSliderPos(50);
-        await incrementUsage(user.id, "hair", isAdmin);
-        toast.success("✨ Hair design complete!");
-      } else {
-        toast.error("Failed to generate. Try again.");
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        if (attempt === 0) {
+          setProcessStep("Analyzing face shape...");
+          await new Promise(r => setTimeout(r, 400));
+          setProcessStep("Designing hairstyle...");
+        } else {
+          setProcessStep("AI styling is taking longer than usual. Retrying...");
+          toast.info("AI styling is taking longer than usual. Retrying...");
+        }
+
+        const result = await generateContent("hair-design", prompt, { image: uploadedImage });
+
+        if (result.error) {
+          lastError = result.error;
+          if (attempt === 0) continue; // retry once
+          break;
+        }
+
+        if (result.images && result.images.length > 0) {
+          let finalImage = result.images[0];
+          if (isFree) finalImage = await applyWatermark(finalImage);
+          setResultImage(finalImage);
+          setSliderPos(50);
+          await incrementUsage(user.id, "hair", isAdmin);
+          // Save to history
+          await saveToHistory(user.id, "hair", `Hair Design: ${styleName}`, prompt, finalImage.slice(0, 200));
+          toast.success("✨ Hair design complete!");
+          setIsProcessing(false);
+          setProcessStep("");
+          return;
+        } else {
+          lastError = "No image returned";
+          if (attempt === 0) continue;
+        }
+      } catch (e) {
+        lastError = e instanceof Error ? e.message : "Something went wrong";
+        if (attempt === 0) continue;
       }
-    } catch {
-      toast.error("Something went wrong.");
-    } finally {
-      setIsProcessing(false);
-      setProcessStep("");
     }
-  }, [uploadedImage, user, isFree, isAdmin, buildPrompt]);
+
+    // Both attempts failed
+    toast.error(lastError || "Failed to generate. Please try again.");
+    setIsProcessing(false);
+    setProcessStep("");
+  }, [uploadedImage, user, isFree, isAdmin, buildPrompt, isProcessing, hairLength, hairType]);
 
   const handleDownload = useCallback(() => {
     if (!resultImage) return;
