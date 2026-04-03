@@ -58,9 +58,9 @@ const PricingSection = () => {
   ];
 
   return (
-    <section id="pricing" className="py-24 sm:py-32 px-6 relative">
+    <section id="pricing" className="py-28 sm:py-36 px-6 relative section-glow">
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 60% 35% at 50% 50%, hsl(250 80% 65% / 0.03), transparent)"
+        background: "radial-gradient(ellipse 60% 35% at 50% 50%, hsl(250 80% 65% / 0.04), transparent)"
       }} />
 
       <div className="max-w-5xl mx-auto relative">
@@ -72,7 +72,7 @@ const PricingSection = () => {
           className="text-center mb-16"
         >
           <p className="text-micro font-semibold text-primary uppercase tracking-widest mb-3">PRICING</p>
-          <h2 className="text-heading sm:text-display text-foreground mb-4">Simple, Transparent Pricing</h2>
+          <h2 className="text-heading sm:text-display text-foreground mb-5">Simple, Transparent Pricing</h2>
           <p className="text-body-lg text-muted-foreground max-w-md mx-auto">Start free, upgrade when you need more power</p>
         </motion.div>
 
@@ -87,7 +87,7 @@ const PricingSection = () => {
           <span>⚡ Limited free credits daily — <span className="text-foreground font-medium">Upgrade to unlock full power</span></span>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
@@ -95,13 +95,13 @@ const PricingSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className={`rounded-2xl p-7 relative flex flex-col ${
-                plan.popular ? "glass-card-highlight stripe-border" : "glass-card"
+              className={`rounded-2xl p-7 relative flex flex-col hover-lift ${
+                plan.popular ? "glass-card-premium stripe-border scale-[1.02]" : "glass-card"
               }`}
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3.5 py-1 rounded-full shadow-lg shadow-primary/25">
+                  <span className="cta-shine bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-4 py-1 rounded-full shadow-lg shadow-primary/30">
                     Most Popular
                   </span>
                 </div>
@@ -140,9 +140,9 @@ const PricingSection = () => {
 
               <Link
                 to="/signup"
-                className={`group flex items-center justify-center gap-2 py-2.5 rounded-xl text-body font-medium transition-all duration-300 ${
+                className={`group flex items-center justify-center gap-2 py-3 rounded-xl text-body font-medium transition-all duration-300 ${
                   plan.popular
-                    ? "bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20"
+                    ? "cta-shine bg-gradient-to-r from-primary to-accent text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/25 hover:shadow-primary/40"
                     : "bg-secondary hover:bg-secondary/80 text-foreground"
                 }`}
               >

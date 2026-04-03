@@ -29,16 +29,16 @@ const faqs = [
 ];
 
 const FAQSection = () => (
-  <section id="faq" className="py-20 sm:py-28 px-6">
+  <section id="faq" className="py-24 sm:py-32 px-6 section-glow">
     <div className="max-w-2xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-12"
+        className="text-center mb-14"
       >
         <span className="text-micro font-semibold tracking-widest uppercase text-primary mb-3 block">FAQ</span>
-        <h2 className="text-heading sm:text-display-sm leading-tight">
+        <h2 className="text-heading sm:text-display leading-tight">
           <span className="gradient-text">Common Questions</span>
         </h2>
       </motion.div>
@@ -49,12 +49,12 @@ const FAQSection = () => (
         viewport={{ once: true }}
         transition={{ delay: 0.15 }}
       >
-        <Accordion type="single" collapsible className="space-y-2">
+        <Accordion type="single" collapsible className="space-y-3">
           {faqs.map((faq, i) => (
             <AccordionItem
               key={i}
               value={`faq-${i}`}
-              className="glass-card rounded-xl border-none px-5"
+              className="glass-card-highlight rounded-xl border-none px-5 hover-lift"
             >
               <AccordionTrigger className="text-caption font-medium text-foreground hover:no-underline py-4">
                 {faq.q}

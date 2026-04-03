@@ -1,12 +1,31 @@
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Zap, Sparkles, Shield, Star } from "lucide-react";
+import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import GradientMeshBackground from "./GradientMeshBackground";
 import logoFull from "@/assets/logo-full.png";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+const AnimatedCounter = memo(({ target, suffix = "" }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let frame: number;
+    const duration = 2000;
+    const start = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [target]);
+  return <>{count.toLocaleString()}{suffix}</>;
+});
+AnimatedCounter.displayName = "AnimatedCounter";
 
 const HeroSection = memo(() => {
   const { t } = useI18n();
@@ -26,39 +45,60 @@ const HeroSection = memo(() => {
       {/* Top/bottom fade */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background pointer-events-none" />
 
+      {/* Extra spotlight behind logo */}
+      <div
+        className="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none will-change-transform"
+        style={{
+          width: "min(90vw, 800px)",
+          height: "min(50vh, 500px)",
+          background: "radial-gradient(ellipse, hsl(var(--glow-violet) / 0.08) 0%, hsl(var(--glow-cyan) / 0.04) 40%, transparent 70%)",
+          animation: "mesh-pulse 8s ease-in-out infinite",
+        }}
+      />
+
       <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-6 text-center pt-28 sm:pt-24 pb-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease }}
         >
-          {/* Logo — large with glow */}
+          {/* Logo — large with animated glow ring */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15, duration: 0.6, ease }}
             className="mb-10 sm:mb-12 relative"
           >
-            {/* Soft glow ring */}
+            {/* Outer glow ring */}
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
               style={{
-                width: "clamp(220px, 50vw, 420px)",
-                height: "clamp(220px, 50vw, 420px)",
+                width: "clamp(260px, 55vw, 480px)",
+                height: "clamp(260px, 55vw, 480px)",
                 background:
-                  "radial-gradient(circle, hsl(var(--glow-violet) / 0.15) 0%, hsl(var(--glow-cyan) / 0.06) 50%, transparent 70%)",
+                  "radial-gradient(circle, hsl(var(--glow-violet) / 0.18) 0%, hsl(var(--glow-cyan) / 0.08) 40%, transparent 70%)",
                 animation: "mesh-pulse 5s ease-in-out infinite",
+              }}
+            />
+            {/* Inner ring shimmer */}
+            <div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
+              style={{
+                width: "clamp(180px, 40vw, 350px)",
+                height: "clamp(180px, 40vw, 350px)",
+                border: "1px solid hsl(var(--glow-violet) / 0.12)",
+                animation: "mesh-drift-1 12s ease-in-out infinite",
               }}
             />
             <motion.img
               src={logoFull}
               alt="PromptNova AI"
-              className="relative h-40 sm:h-56 lg:h-72 mx-auto w-auto object-contain"
+              className="relative h-44 sm:h-60 lg:h-72 mx-auto w-auto object-contain"
               loading="eager"
               fetchPriority="high"
               style={{
                 filter:
-                  "drop-shadow(0 0 60px hsl(250 80% 65% / 0.35)) drop-shadow(0 0 20px hsl(200 90% 50% / 0.15))",
+                  "drop-shadow(0 0 80px hsl(250 80% 65% / 0.4)) drop-shadow(0 0 30px hsl(200 90% 50% / 0.2))",
               }}
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -66,11 +106,11 @@ const HeroSection = memo(() => {
           </motion.div>
 
           {/* Headline */}
-          <h1 className="text-[2.5rem] sm:text-display-lg lg:text-display-xl leading-[0.92] tracking-tighter mb-5">
+          <h1 className="text-[2.6rem] sm:text-display-lg lg:text-display-xl leading-[0.92] tracking-tighter mb-6">
             <span
               className="gradient-text"
               style={{
-                filter: "drop-shadow(0 0 16px hsl(250 80% 65% / 0.25))",
+                filter: "drop-shadow(0 0 20px hsl(250 80% 65% / 0.3))",
               }}
             >
               {t.heroTitle1 as string}
@@ -99,11 +139,11 @@ const HeroSection = memo(() => {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
           >
             <Link
               to="/signup"
-              className="group relative inline-flex items-center gap-2.5 bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground font-bold px-10 sm:px-12 py-4 sm:py-5 rounded-2xl transition-all duration-300 text-body-lg hover:scale-[1.04] hover:brightness-110 shadow-lg shadow-primary/20 animate-glow-pulse"
+              className="cta-shine group relative inline-flex items-center gap-2.5 bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground font-bold px-10 sm:px-12 py-4 sm:py-5 rounded-2xl transition-all duration-300 text-body-lg hover:scale-[1.04] hover:brightness-110 shadow-lg shadow-primary/25 hover:shadow-primary/40 animate-glow-pulse"
             >
               {t.heroCta1 as string}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
@@ -117,11 +157,38 @@ const HeroSection = memo(() => {
             </a>
           </motion.div>
 
+          {/* Live counters */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.55, duration: 0.5 }}
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8"
+          >
+            <div className="glass-card rounded-full px-4 py-2 flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" style={{ animation: "live-pulse 2s ease-in-out infinite" }} />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
+              <span className="text-micro font-semibold text-foreground"><AnimatedCounter target={12847} suffix="+" /></span>
+              <span className="text-micro text-muted-foreground">creations today</span>
+            </div>
+            <div className="glass-card rounded-full px-4 py-2 flex items-center gap-2">
+              <Users className="w-3.5 h-3.5 text-primary" />
+              <span className="text-micro font-semibold text-foreground"><AnimatedCounter target={342} /></span>
+              <span className="text-micro text-muted-foreground">creators online</span>
+            </div>
+            <div className="hidden sm:flex glass-card rounded-full px-4 py-2 items-center gap-2">
+              <Activity className="w-3.5 h-3.5 text-accent" />
+              <span className="text-micro text-muted-foreground">AI generating now</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            </div>
+          </motion.div>
+
           {/* Trust */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
             className="space-y-4"
           >
             <div className="flex items-center justify-center gap-1">
