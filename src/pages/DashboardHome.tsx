@@ -71,9 +71,13 @@ const DashboardHome = () => {
   return (
     <div className="max-w-5xl mx-auto">
       <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
-        <motion.div variants={item} className="glass-card-highlight rounded-2xl p-7 relative overflow-hidden">
-          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30" style={{
-            background: "radial-gradient(circle, hsl(259 75% 62% / 0.15), transparent)"
+        {/* Welcome card */}
+        <motion.div variants={item} className="glass-card-premium rounded-2xl p-7 relative overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-30 pointer-events-none" style={{
+            background: "radial-gradient(circle, hsl(259 75% 62% / 0.2), transparent)"
+          }} />
+          <div className="absolute -bottom-16 -left-16 w-40 h-40 rounded-full opacity-20 pointer-events-none" style={{
+            background: "radial-gradient(circle, hsl(200 90% 50% / 0.15), transparent)"
           }} />
           <div className="relative flex items-center justify-between">
             <div>
@@ -82,14 +86,16 @@ const DashboardHome = () => {
               </h1>
               <p className="text-caption text-muted-foreground">What would you like to create today?</p>
             </div>
-            <Link to="/dashboard/referrals" className="hidden sm:flex items-center gap-2 bg-primary/10 text-primary text-micro font-medium px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
-              <Gift className="w-3.5 h-3.5" /> Refer & Earn
-            </Link>
-            {plan === "free" && (
-              <Link to="/dashboard/upgrade" className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity">
-                <Crown className="w-3.5 h-3.5" /> Upgrade
+            <div className="hidden sm:flex items-center gap-2">
+              <Link to="/dashboard/referrals" className="flex items-center gap-2 bg-primary/10 text-primary text-micro font-medium px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
+                <Gift className="w-3.5 h-3.5" /> Refer & Earn
               </Link>
-            )}
+              {plan === "free" && (
+                <Link to="/dashboard/upgrade" className="cta-shine flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-3 py-1.5 rounded-lg hover:brightness-110 transition-all">
+                  <Crown className="w-3.5 h-3.5" /> Upgrade
+                </Link>
+              )}
+            </div>
           </div>
         </motion.div>
 
@@ -100,7 +106,7 @@ const DashboardHome = () => {
           </motion.div>
           <motion.div variants={item} className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-3 content-start">
             {stats.map((s) => (
-              <div key={s.label} className="glass-card rounded-2xl p-4 flex items-center gap-3">
+              <div key={s.label} className="glass-card-highlight hover-lift rounded-2xl p-4 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <s.icon className="w-4 h-4 text-primary" />
                 </div>
@@ -119,13 +125,14 @@ const DashboardHome = () => {
           </motion.div>
         )}
 
+        {/* Quick tools */}
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Quick tools</h2>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {quickTools.map((tool: any) => (
-              <Link key={tool.path} to={tool.path} className={`group glass-card rounded-2xl p-4 text-center transition-all duration-300 hover:glow-violet-sm hover:-translate-y-0.5 relative ${tool.isNew ? "ring-1 ring-primary/30" : ""}`}>
+              <Link key={tool.path} to={tool.path} className={`group glass-card hover-lift rounded-2xl p-4 text-center relative ${tool.isNew ? "ring-1 ring-primary/30" : ""}`}>
                 {tool.isNew && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">
+                  <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full animate-pulse shadow-md shadow-primary/20">
                     🔥 NEW
                   </span>
                 )}
@@ -138,12 +145,13 @@ const DashboardHome = () => {
           </div>
         </motion.div>
 
+        {/* Recent creations */}
         <motion.div variants={item}>
           <h2 className="text-body-lg font-semibold text-foreground mb-4">Recent creations</h2>
           {recentItems.length > 0 ? (
             <div className="space-y-2">
               {recentItems.map((ri, i) => (
-                <div key={i} className="glass-card rounded-xl px-5 py-3.5 flex items-center justify-between group cursor-pointer hover:-translate-y-0.5 transition-all duration-300">
+                <div key={i} className="glass-card hover-lift rounded-xl px-5 py-3.5 flex items-center justify-between group cursor-pointer">
                   <div className="flex items-center gap-3">
                     <span className="text-micro text-muted-foreground/60 font-medium uppercase w-12">{ri.tool_type}</span>
                     <span className="text-caption font-medium text-foreground">{ri.title}</span>
