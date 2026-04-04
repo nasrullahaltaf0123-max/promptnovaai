@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import MobileStickyCta from "../components/MobileStickyCtA";
+import ScrollProgressCta from "../components/ScrollProgressCta";
 
 const FeaturesSection = lazy(() => import("../components/FeaturesSection"));
 const HowItWorksSection = lazy(() => import("../components/HowItWorksSection"));
@@ -40,6 +41,7 @@ const Index = () => {
         <Footer />
       </Suspense>
       <MobileStickyCta />
+      <ScrollProgressCta />
     </div>
   );
 };
