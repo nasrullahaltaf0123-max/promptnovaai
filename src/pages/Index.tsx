@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
+import MobileStickyCta from "../components/MobileStickyCtA";
 
 const FeaturesSection = lazy(() => import("../components/FeaturesSection"));
 const HowItWorksSection = lazy(() => import("../components/HowItWorksSection"));
@@ -38,6 +39,7 @@ const Index = () => {
       <Suspense fallback={<SectionFallback />}>
         <Footer />
       </Suspense>
+      <MobileStickyCta />
     </div>
   );
 };
