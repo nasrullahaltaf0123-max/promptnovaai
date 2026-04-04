@@ -39,6 +39,7 @@ const Index = () => {
       <Suspense fallback={<SectionFallback />}>
         <Footer />
       </Suspense>
+      <MobileStickyCta />
     </div>
   );
 };

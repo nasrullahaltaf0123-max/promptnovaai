@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, Globe, BarChart3, Users, Award } from "lucide-react";
 
 const testimonials = [
   {
@@ -28,6 +28,13 @@ const testimonials = [
   },
 ];
 
+const stats = [
+  { icon: Users, value: "12,000+", label: "Active Creators" },
+  { icon: Globe, value: "50+", label: "Countries" },
+  { icon: BarChart3, value: "1M+", label: "AI Generations" },
+  { icon: Award, value: "4.9/5", label: "Satisfaction" },
+];
+
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } } };
 
@@ -44,13 +51,29 @@ const TestimonialsSection = () => (
         viewport={{ once: true }}
         className="text-center mb-14"
       >
-        <span className="text-micro font-semibold tracking-widest uppercase text-primary mb-3 block">Testimonials</span>
+        <span className="text-micro font-semibold tracking-widest uppercase text-primary mb-3 block">SOCIAL PROOF</span>
         <h2 className="text-heading sm:text-display leading-tight">
           <span className="gradient-text">Loved by Creators</span>
         </h2>
         <p className="text-caption sm:text-body text-muted-foreground mt-3 max-w-md mx-auto">
           Join thousands of creators who trust PromptNova AI for their content needs.
         </p>
+      </motion.div>
+
+      {/* Stats grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
+      >
+        {stats.map((stat) => (
+          <div key={stat.label} className="glass-card rounded-2xl p-5 text-center hover-lift">
+            <stat.icon className="w-5 h-5 text-primary mx-auto mb-2" />
+            <p className="text-heading font-bold text-foreground">{stat.value}</p>
+            <p className="text-micro text-muted-foreground">{stat.label}</p>
+          </div>
+        ))}
       </motion.div>
 
       <motion.div
@@ -73,33 +96,17 @@ const TestimonialsSection = () => (
               ))}
             </div>
             <p className="text-caption text-muted-foreground leading-relaxed mb-4">"{t.text}"</p>
-            <div>
-              <p className="text-caption font-semibold text-foreground">{t.name}</p>
-              <p className="text-micro text-muted-foreground">{t.role}</p>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center text-[11px] font-bold text-foreground">
+                {t.name.split(" ").map(n => n[0]).join("")}
+              </div>
+              <div>
+                <p className="text-caption font-semibold text-foreground">{t.name}</p>
+                <p className="text-micro text-muted-foreground">{t.role}</p>
+              </div>
             </div>
           </motion.div>
         ))}
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.4 }}
-        className="mt-10 flex flex-wrap items-center justify-center gap-6 text-micro text-muted-foreground/50"
-      >
-        <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-primary/80" />
-          1,000+ active users
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-primary" />
-          50,000+ generations
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-accent" />
-          4.9/5 avg rating
-        </span>
       </motion.div>
     </div>
   </section>

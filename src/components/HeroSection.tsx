@@ -1,7 +1,7 @@
 import { memo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity } from "lucide-react";
+import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity, Play, Crown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import GradientMeshBackground from "./GradientMeshBackground";
 import logoFull from "@/assets/logo-full.png";
@@ -27,6 +27,10 @@ const AnimatedCounter = memo(({ target, suffix = "" }: { target: number; suffix?
 });
 AnimatedCounter.displayName = "AnimatedCounter";
 
+const creatorAvatars = [
+  "RA", "NJ", "IH", "FK", "SA"
+];
+
 const HeroSection = memo(() => {
   const { t } = useI18n();
 
@@ -34,18 +38,14 @@ const HeroSection = memo(() => {
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       <GradientMeshBackground />
 
-      {/* Vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, hsl(var(--background)) 100%)",
+          background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, hsl(var(--background)) 100%)",
         }}
       />
-      {/* Top/bottom fade */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background pointer-events-none" />
 
-      {/* Extra spotlight behind logo */}
       <div
         className="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none will-change-transform"
         style={{
@@ -62,25 +62,37 @@ const HeroSection = memo(() => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease }}
         >
-          {/* Logo — large with animated glow ring */}
+          {/* Urgency strip */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+            className="mb-6"
+          >
+            <span className="inline-flex items-center gap-2 glass-card-highlight rounded-full px-5 py-2 text-micro font-semibold">
+              <Crown className="w-3.5 h-3.5 text-primary" />
+              <span className="text-primary">Launch Offer</span>
+              <span className="text-muted-foreground">— Pro at ৳99 today</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            </span>
+          </motion.div>
+
+          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15, duration: 0.6, ease }}
             className="mb-10 sm:mb-12 relative"
           >
-            {/* Outer glow ring */}
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
               style={{
                 width: "clamp(260px, 55vw, 480px)",
                 height: "clamp(260px, 55vw, 480px)",
-                background:
-                  "radial-gradient(circle, hsl(var(--glow-violet) / 0.18) 0%, hsl(var(--glow-cyan) / 0.08) 40%, transparent 70%)",
+                background: "radial-gradient(circle, hsl(var(--glow-violet) / 0.18) 0%, hsl(var(--glow-cyan) / 0.08) 40%, transparent 70%)",
                 animation: "mesh-pulse 5s ease-in-out infinite",
               }}
             />
-            {/* Inner ring shimmer */}
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
               style={{
@@ -97,41 +109,35 @@ const HeroSection = memo(() => {
               loading="eager"
               fetchPriority="high"
               style={{
-                filter:
-                  "drop-shadow(0 0 80px hsl(250 80% 65% / 0.4)) drop-shadow(0 0 30px hsl(200 90% 50% / 0.2))",
+                filter: "drop-shadow(0 0 80px hsl(250 80% 65% / 0.4)) drop-shadow(0 0 30px hsl(200 90% 50% / 0.2))",
               }}
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
 
-          {/* Headline */}
-          <h1 className="text-[2.6rem] sm:text-display-lg lg:text-display-xl leading-[0.92] tracking-tighter mb-6">
-            <span
-              className="gradient-text"
-              style={{
-                filter: "drop-shadow(0 0 20px hsl(250 80% 65% / 0.3))",
-              }}
-            >
+          {/* Headline — conversion focused */}
+          <h1 className="text-[2.6rem] sm:text-display-lg lg:text-display-xl leading-[0.92] tracking-tighter mb-5">
+            <span className="gradient-text" style={{ filter: "drop-shadow(0 0 20px hsl(250 80% 65% / 0.3))" }}>
               {t.heroTitle1 as string}
             </span>
             <br />
             <span className="text-foreground">{t.heroTitle2 as string}</span>
           </h1>
 
-          {/* Subheadline */}
+          {/* Pain-point subtext */}
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.6 }}
-            className="text-body-lg sm:text-subheading max-w-xl mx-auto mb-4 text-muted-foreground"
+            className="text-body-lg sm:text-subheading max-w-xl mx-auto mb-3 text-muted-foreground"
           >
             {t.heroSubtitle as string}
           </motion.p>
 
-          {/* Micro-text */}
-          <p className="text-micro text-muted-foreground/50 mb-10">
-            AI tools for creators, students & businesses
+          {/* Emotional pain-point line */}
+          <p className="text-caption text-muted-foreground/60 mb-8 max-w-md mx-auto">
+            Stop wasting hours on content. Let AI do the heavy lifting — in seconds.
           </p>
 
           {/* CTAs */}
@@ -139,7 +145,7 @@ const HeroSection = memo(() => {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4"
           >
             <Link
               to="/signup"
@@ -152,9 +158,47 @@ const HeroSection = memo(() => {
               href="#features"
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium px-10 sm:px-12 py-4 sm:py-5 rounded-2xl transition-all duration-200 text-body-lg glass hover:bg-secondary/40 hover:scale-[1.02] active:scale-[0.98]"
             >
+              <Play className="w-4 h-4" />
               {t.heroCta2 as string}
-              <span className="text-muted-foreground/40">↓</span>
             </a>
+          </motion.div>
+
+          {/* Micro trust under CTA */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            className="text-micro text-muted-foreground/50 mb-10"
+          >
+            ✓ Free forever plan &nbsp;·&nbsp; ✓ No credit card needed &nbsp;·&nbsp; ✓ Cancel anytime
+          </motion.p>
+
+          {/* Creator avatars + success badge */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="flex items-center justify-center gap-3 mb-8"
+          >
+            <div className="flex -space-x-2.5">
+              {creatorAvatars.map((initials, i) => (
+                <div
+                  key={initials}
+                  className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 border-2 border-background flex items-center justify-center text-[10px] font-bold text-foreground"
+                  style={{ zIndex: creatorAvatars.length - i }}
+                >
+                  {initials}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3 h-3 text-accent fill-accent" />
+              ))}
+            </div>
+            <span className="text-micro text-muted-foreground">
+              Loved by <span className="text-foreground font-semibold">12,000+</span> creators
+            </span>
           </motion.div>
 
           {/* Live counters */}
@@ -162,7 +206,7 @@ const HeroSection = memo(() => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55, duration: 0.5 }}
-            className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8"
+            className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mb-8"
           >
             <div className="glass-card rounded-full px-4 py-2 flex items-center gap-2">
               <span className="relative flex h-2 w-2">
@@ -184,31 +228,20 @@ const HeroSection = memo(() => {
             </div>
           </motion.div>
 
-          {/* Trust */}
+          {/* Trust badges */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
             className="space-y-4"
           >
-            <div className="flex items-center justify-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 text-accent fill-accent" />
-              ))}
-              <span className="text-micro text-muted-foreground/60 ml-2">
-                Trusted by 1,000+ creators
-              </span>
-            </div>
             <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-7">
               {[
                 { icon: Zap, text: "Lightning Fast" },
                 { icon: Sparkles, text: "No Skills Needed" },
                 { icon: Shield, text: "Free to Start" },
               ].map((item) => (
-                <div
-                  key={item.text}
-                  className="flex items-center gap-2 text-caption text-muted-foreground/50"
-                >
+                <div key={item.text} className="flex items-center gap-2 text-caption text-muted-foreground/50">
                   <item.icon className="w-4 h-4 text-primary/60" />
                   {item.text}
                 </div>

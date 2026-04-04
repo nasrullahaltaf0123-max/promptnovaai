@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, ArrowRight, Zap } from "lucide-react";
+import { Check, ArrowRight, Zap, Crown, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const PricingSection = () => {
@@ -9,6 +9,7 @@ const PricingSection = () => {
       price: "$0",
       period: "forever",
       description: "Get started with limited daily credits",
+      bestFor: "Students & hobbyists",
       features: [
         "100 AI chat messages/day",
         "10 image generations/day",
@@ -26,15 +27,18 @@ const PricingSection = () => {
       oldPrice: "৳299",
       period: "/mo",
       description: "Unlimited creative power for serious creators",
+      bestFor: "YouTubers, freelancers & businesses",
       badge: "🔥 Launch Offer (Limited Time)",
       subBadge: "Only for first 100 users",
       features: [
         "999 credits/day (unlimited use)",
-        "All AI tools unlocked",
-        "Premium AI models",
+        "All 12 AI tools unlocked",
+        "Premium AI models (GPT-4 level)",
         "Priority support",
         "No watermarks",
         "Early access to new tools",
+        "ID Card Pro templates",
+        "Hair Design AI access",
       ],
       cta: "Upgrade to Pro",
       popular: true,
@@ -44,6 +48,7 @@ const PricingSection = () => {
       price: "$49",
       period: "/mo",
       description: "For teams and professional creators",
+      bestFor: "Agencies & teams",
       features: [
         "Everything in Pro",
         "API access",
@@ -51,6 +56,8 @@ const PricingSection = () => {
         "Custom brand presets",
         "Analytics dashboard",
         "Dedicated support",
+        "Bulk ID generation",
+        "White-label exports",
       ],
       cta: "Contact Sales",
       popular: false,
@@ -101,13 +108,14 @@ const PricingSection = () => {
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="cta-shine bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-4 py-1 rounded-full shadow-lg shadow-primary/30">
+                  <span className="cta-shine bg-gradient-to-r from-primary to-accent text-primary-foreground text-micro font-semibold px-4 py-1 rounded-full shadow-lg shadow-primary/30 flex items-center gap-1.5">
+                    <Crown className="w-3 h-3" />
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <div className="mb-6">
+              <div className="mb-4">
                 <h3 className="text-body-lg font-semibold text-foreground mb-1">{plan.name}</h3>
                 <p className="text-caption text-muted-foreground">{plan.description}</p>
               </div>
@@ -119,13 +127,19 @@ const PricingSection = () => {
                 </div>
               )}
 
-              <div className="mb-7 flex items-baseline gap-2">
+              <div className="mb-2 flex items-baseline gap-2">
                 <span className="text-display font-extrabold text-foreground">{plan.price}</span>
                 {"oldPrice" in plan && (plan as any).oldPrice && (
                   <span className="text-body text-muted-foreground/50 line-through">{(plan as any).oldPrice}</span>
                 )}
                 <span className="text-caption text-muted-foreground">{plan.period}</span>
               </div>
+
+              {/* Best for line */}
+              <p className="text-micro text-primary/70 mb-6 flex items-center gap-1.5">
+                <Star className="w-3 h-3" />
+                {plan.bestFor}
+              </p>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {plan.features.map((f) => (
@@ -152,6 +166,16 @@ const PricingSection = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Guarantee */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-center text-micro text-muted-foreground/50 mt-8"
+        >
+          🔒 Secure payment &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; 7-day money-back guarantee
+        </motion.p>
       </div>
     </section>
   );
