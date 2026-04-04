@@ -41,6 +41,7 @@ const Index = () => {
         <Footer />
       </Suspense>
       <MobileStickyCta />
+      <ScrollProgressCta />
     </div>
   );
 };
