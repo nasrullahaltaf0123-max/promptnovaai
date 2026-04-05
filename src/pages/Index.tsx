@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, forwardRef } from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import MobileStickyCta from "../components/MobileStickyCtA";
