@@ -404,6 +404,11 @@
   50% { left: 150%; }
 }
 
+@keyframes cta-glow-pulse {
+  0%, 100% { box-shadow: 0 0 4px 0 hsl(var(--primary) / 0.3), 0 0 12px -2px hsl(var(--primary) / 0.15); }
+  50% { box-shadow: 0 0 10px 2px hsl(var(--primary) / 0.45), 0 0 24px 0 hsl(var(--primary) / 0.25); }
+}
+
 @keyframes live-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.5); opacity: 0; }
