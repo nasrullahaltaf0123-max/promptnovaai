@@ -7,6 +7,12 @@ const DAILY_LIMITS: Record<string, number> = {
   logo: 5,
   script: 10,
   prompt: 20,
+  photo: 5,
+  hair: 5,
+  idcard: 5,
+  caption: 15,
+  tiktok: 10,
+  videoscript: 5,
 };
 
 export const getLimit = (toolType: string) => DAILY_LIMITS[toolType] ?? 50;
@@ -24,13 +30,12 @@ export async function getDailyUsage(userId: string, toolType: string): Promise<n
 }
 
 export async function incrementUsage(userId: string, toolType: string, isAdmin = false): Promise<boolean> {
-  if (isAdmin) return true; // Admin bypasses all limits
+  if (isAdmin) return true;
   const current = await getDailyUsage(userId, toolType);
   const limit = getLimit(toolType);
   if (current >= limit) return false;
 
   const today = new Date().toISOString().split("T")[0];
-  // Upsert: insert or increment
   const { error } = await supabase.from("usage_tracking").upsert(
     { user_id: userId, tool_type: toolType, used_at: today, count: current + 1 },
     { onConflict: "user_id,tool_type,used_at" }

@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { generateContent } from "@/lib/ai";
 import { useAuth } from "@/lib/auth";
 import { useCredits } from "@/hooks/use-credits";
-import { incrementUsage, getDailyUsage } from "@/lib/usage";
+import { incrementUsage, getDailyUsage, saveToHistory } from "@/lib/usage";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
@@ -57,7 +57,6 @@ function applyWatermark(imageSrc: string): Promise<string> {
       canvas.height = img.height;
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(img, 0, 0);
-      // Watermark
       const fontSize = Math.max(14, img.width * 0.03);
       ctx.font = `${fontSize}px sans-serif`;
       ctx.fillStyle = "rgba(255,255,255,0.55)";
@@ -89,7 +88,7 @@ const PhotoMaker = () => {
   const [autoRemoveBg, setAutoRemoveBg] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) { toast.error("Please upload an image file"); return; }
@@ -97,12 +96,12 @@ const PhotoMaker = () => {
     const reader = new FileReader();
     reader.onload = () => { setUploadedImage(reader.result as string); setResultImage(null); };
     reader.readAsDataURL(file);
-  };
+  }, []);
 
-  const handleGenerate = async () => {
+  const handleGenerate = useCallback(async () => {
     if (!uploadedImage || !user) { toast.error("Please upload a photo first"); return; }
+    if (isProcessing) return;
 
-    // Check daily limit for free users
     if (isFree) {
       const used = await getDailyUsage(user.id, "photo");
       if (used >= FREE_DAILY_LIMIT) {
@@ -111,49 +110,43 @@ const PhotoMaker = () => {
       }
     }
 
-    // Free users can't use pro-only backgrounds
     const effectiveBg = (isFree && (background === "office" || background === "studio")) ? "white" : background;
 
     setIsProcessing(true);
     setResultImage(null);
 
-    try {
-      setProcessStep("Analyzing photo...");
-      await new Promise((r) => setTimeout(r, 500));
-      setProcessStep("Enhancing photo professionally...");
+    const bgDesc: Record<Background, string> = {
+      white: "pure white clean passport-style background",
+      "light-gray": "soft light gray gradient studio background",
+      "light-blue": "official light blue passport background (standard government blue)",
+      red: "solid red background for official ID photos",
+      office: "professional office environment with soft bokeh blur background",
+      studio: "professional photography studio with soft lighting background",
+    };
+    const dressDesc: Record<DressStyle, string> = {
+      suit: "formal black or navy business suit with white shirt",
+      "shirt-tie": "professional dress shirt with a matching tie",
+      casual: "smart casual polo or button-up shirt",
+    };
+    const enhanceDesc: Record<Enhancement, string> = {
+      natural: "subtle natural enhancement, minimal retouching, keep original look",
+      medium: "moderate enhancement, smooth skin, good lighting balance, natural colors",
+      high: "high enhancement, perfect skin, studio-quality lighting, sharp details",
+    };
 
-      const bgDesc: Record<Background, string> = {
-        white: "pure white clean passport-style background",
-        "light-gray": "soft light gray gradient studio background",
-        "light-blue": "official light blue passport background (standard government blue)",
-        red: "solid red background for official ID photos",
-        office: "professional office environment with soft bokeh blur background",
-        studio: "professional photography studio with soft lighting background",
-      };
-      const dressDesc: Record<DressStyle, string> = {
-        suit: "formal black or navy business suit with white shirt",
-        "shirt-tie": "professional dress shirt with a matching tie",
-        casual: "smart casual polo or button-up shirt",
-      };
-      const enhanceDesc: Record<Enhancement, string> = {
-        natural: "subtle natural enhancement, minimal retouching, keep original look",
-        medium: "moderate enhancement, smooth skin, good lighting balance, natural colors",
-        high: "high enhancement, perfect skin, studio-quality lighting, sharp details",
-      };
+    const autoNote = aiAutoMode
+      ? "AI AUTO MODE: Automatically choose the best combination of background, outfit and lighting for a professional look."
+      : "Follow the specific user choices below exactly.";
 
-      const autoNote = aiAutoMode
-        ? "AI AUTO MODE: Automatically choose the best combination of background, outfit and lighting for a professional look."
-        : "Follow the specific user choices below exactly.";
+    const removeBgNote = autoRemoveBg
+      ? "IMPORTANT: First remove the existing background completely, then apply the new background."
+      : "";
 
-      const removeBgNote = autoRemoveBg
-        ? "IMPORTANT: First remove the existing background completely, then apply the new background."
-        : "";
+    const qualityNote = isFree
+      ? "Output in standard quality (720p equivalent)."
+      : "Output in maximum HD quality with sharp details.";
 
-      const qualityNote = isFree
-        ? "Output in standard quality (720p equivalent)."
-        : "Output in maximum HD quality with sharp details.";
-
-      const prompt = `Transform this person's photo into a PROFESSIONAL OFFICIAL PHOTO suitable for CV, LinkedIn, passport, or job applications.
+    const prompt = `Transform this person's photo into a PROFESSIONAL OFFICIAL PHOTO suitable for CV, LinkedIn, passport, or job applications.
 
 ${autoNote}
 ${removeBgNote}
@@ -181,47 +174,67 @@ ${qualityNote}
 ADDITIONAL: Fix lighting, clean hair, remove noise, natural skin tones, professional lighting.
 OUTPUT: A clean, professional headshot photo ready for official use with perfect passport-standard cropping.`;
 
-      const result = await generateContent("photo-enhance", prompt, { image: uploadedImage });
+    let lastError = "";
 
-      if (result.error) { toast.error(result.error); return; }
-
-      if (result.images && result.images.length > 0) {
-        let finalImage = result.images[0];
-        // Apply watermark for free users
-        if (isFree) {
-          finalImage = await applyWatermark(finalImage);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        if (attempt === 0) {
+          setProcessStep("Analyzing photo...");
+          await new Promise(r => setTimeout(r, 400));
+          setProcessStep("Enhancing professionally...");
+        } else {
+          setProcessStep("Retrying generation...");
+          toast.info("Taking longer than usual. Retrying...");
         }
-        setResultImage(finalImage);
-        // Track usage
-        await incrementUsage(user.id, "photo", isAdmin);
-        toast.success("Professional photo generated!");
-      } else {
-        toast.error("Failed to generate photo. Please try again.");
-      }
-    } catch (err) {
-      toast.error("Something went wrong. Please try again.");
-      console.error(err);
-    } finally {
-      setIsProcessing(false);
-      setProcessStep("");
-    }
-  };
 
-  const handleDownload = () => {
+        const result = await generateContent("photo-enhance", prompt, { image: uploadedImage });
+
+        if (result.error) {
+          lastError = result.error;
+          if (attempt === 0) continue;
+          break;
+        }
+
+        if (result.images && result.images.length > 0) {
+          let finalImage = result.images[0];
+          if (isFree) finalImage = await applyWatermark(finalImage);
+          setResultImage(finalImage);
+          await incrementUsage(user.id, "photo", isAdmin);
+          await saveToHistory(user.id, "photo", `Photo: ${dressStyle} on ${effectiveBg}`, prompt, finalImage.slice(0, 200));
+          toast.success("✨ Professional photo generated!");
+          setIsProcessing(false);
+          setProcessStep("");
+          return;
+        } else {
+          lastError = "No image returned";
+          if (attempt === 0) continue;
+        }
+      } catch (e) {
+        lastError = e instanceof Error ? e.message : "Something went wrong";
+        if (attempt === 0) continue;
+      }
+    }
+
+    toast.error(lastError || "Failed to generate. Please try again.");
+    setIsProcessing(false);
+    setProcessStep("");
+  }, [uploadedImage, user, isFree, isAdmin, isProcessing, background, dressStyle, enhancement, aiAutoMode, autoRemoveBg]);
+
+  const handleDownload = useCallback(() => {
     if (!resultImage) return;
     const link = document.createElement("a");
     link.href = resultImage;
     link.download = `professional-photo-${exportSize}.png`;
     link.click();
     toast.success("Photo downloaded!");
-  };
+  }, [resultImage, exportSize]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setUploadedImage(null);
     setResultImage(null);
     setProcessStep("");
     if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -245,7 +258,6 @@ OUTPUT: A clean, professional headshot photo ready for official use with perfect
         )}
       </div>
 
-      {/* Plan info banner */}
       {isFree && (
         <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 flex items-center gap-3">
           <Lock className="w-4 h-4 text-primary flex-shrink-0" />
