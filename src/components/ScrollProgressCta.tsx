@@ -103,7 +103,7 @@ const ScrollProgressCta = memo(() => {
             </div>
             <Link
               to="/signup"
-              className="cta-shine inline-flex items-center gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground text-caption font-semibold px-4 py-2 rounded-xl hover:brightness-110 transition-all shadow-md shadow-primary/25 flex-shrink-0"
+              className="cta-shine relative inline-flex items-center gap-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground text-caption font-semibold px-4 py-2 rounded-xl hover:brightness-110 transition-all shadow-md shadow-primary/25 flex-shrink-0 animate-[cta-glow-pulse_2s_ease-in-out_infinite]"
             >
               Try Pro Free
               <ArrowRight className="w-3.5 h-3.5" />
