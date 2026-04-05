@@ -1,12 +1,45 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, ArrowRight } from "lucide-react";
+import { Crown, ArrowRight, Sparkles } from "lucide-react";
+
+const SPARKLE_COUNT = 12;
+
+const SparkleParticle = ({ index }: { index: number }) => {
+  const angle = (index / SPARKLE_COUNT) * 360;
+  const distance = 40 + Math.random() * 30;
+  const size = 4 + Math.random() * 4;
+  const delay = index * 0.04;
+
+  return (
+    <motion.div
+      initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
+      animate={{
+        opacity: [1, 1, 0],
+        scale: [0, 1.2, 0],
+        x: Math.cos((angle * Math.PI) / 180) * distance,
+        y: Math.sin((angle * Math.PI) / 180) * distance,
+      }}
+      transition={{ duration: 0.7, delay, ease: "easeOut" }}
+      className="absolute rounded-full bg-gradient-to-br from-primary to-accent"
+      style={{
+        width: size,
+        height: size,
+        top: "50%",
+        left: "50%",
+        marginLeft: -size / 2,
+        marginTop: -size / 2,
+      }}
+    />
+  );
+};
 
 const ScrollProgressCta = memo(() => {
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [sparkle, setSparkle] = useState(false);
+  const hasSparkled = useRef(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -20,9 +53,16 @@ const ScrollProgressCta = memo(() => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (show && !hasSparkled.current) {
+      hasSparkled.current = true;
+      setSparkle(true);
+      setTimeout(() => setSparkle(false), 1200);
+    }
+  }, [show]);
+
   return (
     <>
-      {/* Progress bar — always visible on desktop */}
       <div className="hidden sm:block fixed top-0 left-0 right-0 z-[60] h-[3px] pointer-events-none">
         <div
           className="h-full bg-gradient-to-r from-primary to-accent transition-[width] duration-150 ease-out"
@@ -30,7 +70,6 @@ const ScrollProgressCta = memo(() => {
         />
       </div>
 
-      {/* CTA reveal at 75% */}
       <AnimatePresence>
         {show && !dismissed && (
           <motion.div
@@ -38,11 +77,26 @@ const ScrollProgressCta = memo(() => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden sm:flex fixed bottom-6 right-6 z-50 items-center gap-3 glass-card-premium rounded-2xl p-4 pr-5 shadow-2xl shadow-primary/20"
+            className="hidden sm:flex fixed bottom-6 right-6 z-50 items-center gap-3 glass-card-premium rounded-2xl p-4 pr-5 shadow-2xl shadow-primary/20 overflow-visible"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-              <Crown className="w-4 h-4 text-primary" />
-            </div>
+            {sparkle && (
+              <div className="absolute inset-0 pointer-events-none">
+                {Array.from({ length: SPARKLE_COUNT }).map((_, i) => (
+                  <SparkleParticle key={i} index={i} />
+                ))}
+              </div>
+            )}
+            <motion.div
+              className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0 relative"
+              animate={sparkle ? { rotate: [0, -10, 10, -5, 0], scale: [1, 1.2, 1] } : {}}
+              transition={{ duration: 0.5 }}
+            >
+              {sparkle ? (
+                <Sparkles className="w-4 h-4 text-primary" />
+              ) : (
+                <Crown className="w-4 h-4 text-primary" />
+              )}
+            </motion.div>
             <div className="mr-2">
               <p className="text-caption font-semibold text-foreground">Unlock all 12 AI tools</p>
               <p className="text-micro text-muted-foreground">Pro at ৳99/mo — limited offer</p>
