@@ -197,14 +197,15 @@ const HeroSection = memo(() => {
             <span className="text-foreground font-bold">{t.heroTitle2 as string}</span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle with typing rotator */}
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.6 }}
             className="text-body-lg sm:text-subheading max-w-xl mx-auto mb-3 text-muted-foreground leading-relaxed"
           >
-            {t.heroSubtitle as string}
+            Create stunning <TypingRotator /> <br className="hidden sm:block" />
+            with AI — in seconds, not hours.
           </motion.p>
 
           {/* Pain-point line */}
