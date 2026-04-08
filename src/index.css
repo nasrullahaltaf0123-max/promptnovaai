@@ -444,3 +444,13 @@
   0%, 100% { text-shadow: 0 0 8px hsl(var(--glow-violet) / 0.3); }
   50% { text-shadow: 0 0 20px hsl(var(--glow-violet) / 0.5); }
 }
+
+@keyframes hero-cta-gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes hero-line-flow {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(calc(100vh + 100%)); }
+}
