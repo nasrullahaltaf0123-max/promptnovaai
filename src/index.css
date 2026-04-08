@@ -162,6 +162,32 @@
     animation: gradient-text-flow 6s ease-in-out infinite;
   }
 
+  /* Hero badge with animated border */
+  .hero-badge {
+    background: linear-gradient(145deg, hsl(var(--card) / 0.8) 0%, hsl(var(--card) / 0.4) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(var(--border) / 0.4);
+    box-shadow: 0 0 20px -8px hsl(var(--glow-violet) / 0.15), 0 4px 16px -4px hsl(0 0% 0% / 0.3);
+  }
+
+  /* Hero primary CTA with animated gradient border */
+  .hero-cta-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--glow-blue)) 50%, hsl(var(--accent)) 100%);
+    background-size: 200% 200%;
+    animation: hero-cta-gradient 4s ease-in-out infinite;
+    box-shadow:
+      0 0 20px -4px hsl(var(--primary) / 0.4),
+      0 0 60px -10px hsl(var(--primary) / 0.2),
+      0 8px 32px -8px hsl(0 0% 0% / 0.4);
+  }
+  .hero-cta-primary:hover {
+    box-shadow:
+      0 0 30px -4px hsl(var(--primary) / 0.5),
+      0 0 80px -10px hsl(var(--primary) / 0.3),
+      0 12px 40px -8px hsl(0 0% 0% / 0.5);
+  }
+
   .gradient-text-subtle {
     background: linear-gradient(
       135deg,
