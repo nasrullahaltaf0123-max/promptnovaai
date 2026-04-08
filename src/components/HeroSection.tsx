@@ -1,5 +1,5 @@
-import { memo, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { memo, useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity, Play, Crown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -7,6 +7,52 @@ import GradientMeshBackground from "./GradientMeshBackground";
 import logoFull from "@/assets/logo-full.png";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+const typingPhrases = [
+  "YouTube Thumbnails",
+  "Blog Posts",
+  "Video Scripts",
+  "AI Captions",
+  "TikTok Scripts",
+  "Pro Headshots",
+  "Logo Designs",
+];
+
+const TypingRotator = memo(() => {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const phrase = typingPhrases[phraseIndex];
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!isDeleting && displayed.length < phrase.length) {
+      timeout = setTimeout(() => setDisplayed(phrase.slice(0, displayed.length + 1)), 80);
+    } else if (!isDeleting && displayed.length === phrase.length) {
+      timeout = setTimeout(() => setIsDeleting(true), 2000);
+    } else if (isDeleting && displayed.length > 0) {
+      timeout = setTimeout(() => setDisplayed(phrase.slice(0, displayed.length - 1)), 40);
+    } else if (isDeleting && displayed.length === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((prev) => (prev + 1) % typingPhrases.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayed, isDeleting, phrase]);
+
+  return (
+    <span className="inline-flex items-baseline">
+      <span className="gradient-text font-semibold">{displayed}</span>
+      <span
+        className="inline-block w-[2px] h-[1.1em] bg-primary ml-0.5 rounded-full"
+        style={{ animation: "cursor-blink 1s steps(1) infinite" }}
+      />
+    </span>
+  );
+});
+TypingRotator.displayName = "TypingRotator";
 
 const AnimatedCounter = memo(({ target, suffix = "" }: { target: number; suffix?: string }) => {
   const [count, setCount] = useState(0);
@@ -151,14 +197,15 @@ const HeroSection = memo(() => {
             <span className="text-foreground font-bold">{t.heroTitle2 as string}</span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle with typing rotator */}
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.6 }}
             className="text-body-lg sm:text-subheading max-w-xl mx-auto mb-3 text-muted-foreground leading-relaxed"
           >
-            {t.heroSubtitle as string}
+            Create stunning <TypingRotator /> <br className="hidden sm:block" />
+            with AI — in seconds, not hours.
           </motion.p>
 
           {/* Pain-point line */}
