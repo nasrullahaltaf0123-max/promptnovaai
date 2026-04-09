@@ -14,6 +14,46 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+// Each tool gets a unique idle animation type
+type IconAnim = "float" | "pulse" | "rotate" | "wiggle" | "bounce" | "breathe" | "tilt" | "morph";
+
+const iconAnimations: Record<IconAnim, object> = {
+  float: {
+    y: [0, -3, 0],
+    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+  },
+  pulse: {
+    scale: [1, 1.12, 1],
+    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+  },
+  rotate: {
+    rotate: [0, 8, -8, 0],
+    transition: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+  },
+  wiggle: {
+    rotate: [0, -6, 6, -3, 0],
+    transition: { duration: 2, repeat: Infinity, ease: "easeInOut", repeatDelay: 1 },
+  },
+  bounce: {
+    y: [0, -4, 0],
+    transition: { duration: 1.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.8 },
+  },
+  breathe: {
+    scale: [1, 1.08, 1],
+    opacity: [0.85, 1, 0.85],
+    transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+  },
+  tilt: {
+    rotate: [0, 12, 0],
+    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+  },
+  morph: {
+    scale: [1, 1.1, 0.95, 1],
+    rotate: [0, 5, -5, 0],
+    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+  },
+};
+
 const tools = [
   {
     icon: Image,
@@ -23,6 +63,8 @@ const tools = [
     gradient: "from-primary/20 to-primary/5",
     iconColor: "text-primary",
     accentBorder: "group-hover:border-primary/40",
+    glowColor: "hsl(var(--primary) / 0.25)",
+    anim: "float" as IconAnim,
   },
   {
     icon: FileText,
@@ -32,6 +74,8 @@ const tools = [
     gradient: "from-accent/20 to-accent/5",
     iconColor: "text-accent",
     accentBorder: "group-hover:border-accent/40",
+    glowColor: "hsl(var(--accent) / 0.25)",
+    anim: "wiggle" as IconAnim,
   },
   {
     icon: Video,
@@ -41,6 +85,8 @@ const tools = [
     gradient: "from-primary/15 to-accent/10",
     iconColor: "text-primary",
     accentBorder: "group-hover:border-primary/40",
+    glowColor: "hsl(var(--primary) / 0.2)",
+    anim: "pulse" as IconAnim,
   },
   {
     icon: MessageSquare,
@@ -50,6 +96,8 @@ const tools = [
     gradient: "from-accent/20 to-primary/5",
     iconColor: "text-accent",
     accentBorder: "group-hover:border-accent/40",
+    glowColor: "hsl(var(--accent) / 0.2)",
+    anim: "bounce" as IconAnim,
   },
   {
     icon: Sparkles,
@@ -59,6 +107,8 @@ const tools = [
     gradient: "from-primary/20 to-accent/10",
     iconColor: "text-primary",
     accentBorder: "group-hover:border-primary/40",
+    glowColor: "hsl(var(--primary) / 0.25)",
+    anim: "morph" as IconAnim,
   },
   {
     icon: Camera,
@@ -68,6 +118,8 @@ const tools = [
     gradient: "from-accent/15 to-primary/5",
     iconColor: "text-accent",
     accentBorder: "group-hover:border-accent/40",
+    glowColor: "hsl(var(--accent) / 0.2)",
+    anim: "rotate" as IconAnim,
   },
   {
     icon: Palette,
@@ -77,6 +129,8 @@ const tools = [
     gradient: "from-primary/15 to-accent/5",
     iconColor: "text-primary",
     accentBorder: "group-hover:border-primary/40",
+    glowColor: "hsl(var(--primary) / 0.2)",
+    anim: "breathe" as IconAnim,
   },
   {
     icon: Wand2,
@@ -86,6 +140,8 @@ const tools = [
     gradient: "from-accent/20 to-primary/10",
     iconColor: "text-accent",
     accentBorder: "group-hover:border-accent/40",
+    glowColor: "hsl(var(--accent) / 0.25)",
+    anim: "tilt" as IconAnim,
   },
 ];
 
@@ -159,14 +215,24 @@ const ToolShowcase = memo(() => {
                     className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
                   />
 
-                  {/* Icon */}
+                  {/* Icon with unique animation */}
                   <div className="relative z-10 mb-4">
-                    <div
-                      className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-muted/40 group-hover:bg-muted/60 transition-colors duration-300`}
-                    >
-                      <Icon
-                        className={`w-5 h-5 ${tool.iconColor} transition-transform duration-300 group-hover:scale-110`}
+                    <div className="relative inline-flex items-center justify-center w-11 h-11 rounded-xl bg-muted/40 group-hover:bg-muted/60 transition-colors duration-300">
+                      {/* Glow ring behind icon */}
+                      <div
+                        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{
+                          boxShadow: `0 0 16px 2px ${tool.glowColor}, inset 0 0 8px 1px ${tool.glowColor}`,
+                        }}
                       />
+                      <motion.div
+                        animate={iconAnimations[tool.anim]}
+                        className="flex items-center justify-center"
+                      >
+                        <Icon
+                          className={`w-5 h-5 ${tool.iconColor}`}
+                        />
+                      </motion.div>
                     </div>
                   </div>
 
