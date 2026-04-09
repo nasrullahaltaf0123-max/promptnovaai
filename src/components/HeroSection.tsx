@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity, Play, Crown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import GradientMeshBackground from "./GradientMeshBackground";
+import HeroDemoMockup from "./HeroDemoMockup";
 import logoFull from "@/assets/logo-full.png";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -247,6 +248,11 @@ const HeroSection = memo(() => {
           >
             ✓ Free forever plan &nbsp;·&nbsp; ✓ No credit card needed &nbsp;·&nbsp; ✓ Cancel anytime
           </motion.p>
+
+          {/* Animated demo mockup */}
+          <div className="mb-12">
+            <HeroDemoMockup />
+          </div>
 
           {/* Creator avatars + stars */}
           <motion.div
