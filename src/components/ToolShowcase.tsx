@@ -17,7 +17,7 @@ import {
 // Each tool gets a unique idle animation type
 type IconAnim = "float" | "pulse" | "rotate" | "wiggle" | "bounce" | "breathe" | "tilt" | "morph";
 
-const iconAnimations: Record<IconAnim, object> = {
+const iconAnimations: Record<IconAnim, { [key: string]: number[] | { duration: number; repeat: number; ease: string; repeatDelay?: number } }> = {
   float: {
     y: [0, -3, 0],
     transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
