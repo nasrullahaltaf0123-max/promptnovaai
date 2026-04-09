@@ -4,6 +4,7 @@ import HeroSection from "../components/HeroSection";
 import MobileStickyCta from "../components/MobileStickyCtA";
 import ScrollProgressCta from "../components/ScrollProgressCta";
 
+const ToolShowcase = lazy(() => import("../components/ToolShowcase"));
 const FeaturesSection = lazy(() => import("../components/FeaturesSection"));
 const HowItWorksSection = lazy(() => import("../components/HowItWorksSection"));
 const TestimonialsSection = lazy(() => import("../components/TestimonialsSection"));
@@ -22,6 +23,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      <Suspense fallback={<SectionFallback />}>
+        <ToolShowcase />
+      </Suspense>
       <Suspense fallback={<SectionFallback />}>
         <FeaturesSection />
       </Suspense>

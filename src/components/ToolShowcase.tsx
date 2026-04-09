@@ -1,0 +1,197 @@
+import { memo } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  Image,
+  FileText,
+  Video,
+  Sparkles,
+  MessageSquare,
+  Camera,
+  Palette,
+  Scissors,
+  Wand2,
+  ArrowRight,
+} from "lucide-react";
+
+const tools = [
+  {
+    icon: Image,
+    title: "Thumbnail Generator",
+    desc: "Eye-catching YouTube thumbnails that boost your CTR instantly.",
+    to: "/thumbnail-generator",
+    gradient: "from-primary/20 to-primary/5",
+    iconColor: "text-primary",
+    accentBorder: "group-hover:border-primary/40",
+  },
+  {
+    icon: FileText,
+    title: "Blog Writer",
+    desc: "SEO-optimized blog posts written in seconds, not hours.",
+    to: "/blog-writer",
+    gradient: "from-accent/20 to-accent/5",
+    iconColor: "text-accent",
+    accentBorder: "group-hover:border-accent/40",
+  },
+  {
+    icon: Video,
+    title: "Video Script",
+    desc: "Viral-ready scripts with hooks, structure & CTAs built in.",
+    to: "/video-script-writer",
+    gradient: "from-primary/15 to-accent/10",
+    iconColor: "text-primary",
+    accentBorder: "group-hover:border-primary/40",
+  },
+  {
+    icon: MessageSquare,
+    title: "Caption Generator",
+    desc: "Scroll-stopping captions with trending hashtags for any platform.",
+    to: "/caption-generator",
+    gradient: "from-accent/20 to-primary/5",
+    iconColor: "text-accent",
+    accentBorder: "group-hover:border-accent/40",
+  },
+  {
+    icon: Sparkles,
+    title: "Logo Generator",
+    desc: "Professional brand logos with multiple variations in one click.",
+    to: "/logo-generator",
+    gradient: "from-primary/20 to-accent/10",
+    iconColor: "text-primary",
+    accentBorder: "group-hover:border-primary/40",
+  },
+  {
+    icon: Camera,
+    title: "Photo Maker",
+    desc: "Studio-quality headshots and portraits — no photographer needed.",
+    to: "/photo-maker",
+    gradient: "from-accent/15 to-primary/5",
+    iconColor: "text-accent",
+    accentBorder: "group-hover:border-accent/40",
+  },
+  {
+    icon: Palette,
+    title: "Hair Design AI",
+    desc: "Try new hairstyles and colors virtually before committing.",
+    to: "/hair-design-ai",
+    gradient: "from-primary/15 to-accent/5",
+    iconColor: "text-primary",
+    accentBorder: "group-hover:border-primary/40",
+  },
+  {
+    icon: Wand2,
+    title: "AI Chat",
+    desc: "Your creative co-pilot — brainstorm, refine & create anything.",
+    to: "/ai-chat",
+    gradient: "from-accent/20 to-primary/10",
+    iconColor: "text-accent",
+    accentBorder: "group-hover:border-accent/40",
+  },
+];
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const ToolShowcase = memo(() => {
+  return (
+    <section className="relative py-20 sm:py-28 overflow-hidden">
+      {/* Ambient glow */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none opacity-20 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse, hsl(var(--primary) / 0.4), transparent 70%)",
+        }}
+      />
+
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-14 sm:mb-16"
+        >
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4 border border-primary/20">
+            <Sparkles className="w-3 h-3" />
+            AI-Powered Suite
+          </span>
+          <h2 className="text-heading sm:text-display font-bold text-foreground mb-3">
+            Every Tool You Need
+          </h2>
+          <p className="text-body text-muted-foreground max-w-lg mx-auto">
+            One platform, unlimited creativity. Pick a tool and start creating in seconds.
+          </p>
+        </motion.div>
+
+        {/* Tool grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
+        >
+          {tools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <motion.div key={tool.title} variants={cardVariants}>
+                <Link
+                  to={tool.to}
+                  className={`group relative flex flex-col p-5 sm:p-6 rounded-2xl border border-border/40 ${tool.accentBorder} bg-card/60 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 h-full`}
+                >
+                  {/* Gradient bg on hover */}
+                  <div
+                    className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
+                  />
+
+                  {/* Icon */}
+                  <div className="relative z-10 mb-4">
+                    <div
+                      className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-muted/40 group-hover:bg-muted/60 transition-colors duration-300`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${tool.iconColor} transition-transform duration-300 group-hover:scale-110`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Text */}
+                  <h3 className="relative z-10 text-body font-semibold text-foreground mb-1.5 group-hover:text-foreground transition-colors">
+                    {tool.title}
+                  </h3>
+                  <p className="relative z-10 text-caption text-muted-foreground leading-relaxed mb-4 flex-1">
+                    {tool.desc}
+                  </p>
+
+                  {/* Arrow indicator */}
+                  <div className="relative z-10 flex items-center gap-1 text-xs font-medium text-muted-foreground/50 group-hover:text-primary transition-colors duration-300">
+                    Try it free
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-200" />
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+});
+
+ToolShowcase.displayName = "ToolShowcase";
+export default ToolShowcase;
