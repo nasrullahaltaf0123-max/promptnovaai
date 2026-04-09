@@ -1,11 +1,12 @@
 import { memo, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity, Play, Crown } from "lucide-react";
+import { ArrowRight, Zap, Sparkles, Shield, Star, Users, Activity, Play, Crown, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import GradientMeshBackground from "./GradientMeshBackground";
 import HeroDemoMockup from "./HeroDemoMockup";
 import logoFull from "@/assets/logo-full.png";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -78,8 +79,23 @@ const creatorAvatars = ["RA", "NJ", "IH", "FK", "SA"];
 
 const HeroSection = memo(() => {
   const { t } = useI18n();
+  const [showDemo, setShowDemo] = useState(false);
 
   return (
+    <>
+    <Dialog open={showDemo} onOpenChange={setShowDemo}>
+      <DialogContent className="max-w-3xl p-0 overflow-hidden bg-black border-border/30">
+        <div className="aspect-video w-full">
+          <iframe
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0"
+            title="PromptNova AI Demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       <GradientMeshBackground />
 
@@ -230,13 +246,13 @@ const HeroSection = memo(() => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-200" />
               </span>
             </Link>
-            <a
-              href="#features"
+            <button
+              onClick={() => setShowDemo(true)}
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium px-10 sm:px-12 py-4 sm:py-5 rounded-2xl transition-all duration-200 text-body-lg glass hover:bg-secondary/40 hover:scale-[1.02] active:scale-[0.98] border border-border/50"
             >
               <Play className="w-4 h-4" />
-              {t.heroCta2 as string}
-            </a>
+              Watch Demo
+            </button>
           </motion.div>
 
           {/* Micro trust */}
@@ -333,6 +349,7 @@ const HeroSection = memo(() => {
 
       <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
     </section>
+    </>
   );
 });
 
