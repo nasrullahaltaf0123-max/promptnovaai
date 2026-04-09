@@ -226,7 +226,7 @@ const ToolShowcase = memo(() => {
                         }}
                       />
                       <motion.div
-                        animate={iconAnimations[tool.anim]}
+                        animate={iconAnimations[tool.anim] as any}
                         className="flex items-center justify-center"
                       >
                         <Icon
