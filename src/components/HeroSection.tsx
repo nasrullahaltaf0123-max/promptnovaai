@@ -249,6 +249,11 @@ const HeroSection = memo(() => {
             ✓ Free forever plan &nbsp;·&nbsp; ✓ No credit card needed &nbsp;·&nbsp; ✓ Cancel anytime
           </motion.p>
 
+          {/* Animated demo mockup */}
+          <div className="mb-12">
+            <HeroDemoMockup />
+          </div>
+
           {/* Creator avatars + stars */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
