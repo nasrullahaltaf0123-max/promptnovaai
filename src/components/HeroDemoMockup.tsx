@@ -8,12 +8,16 @@ const tools = [
   { icon: Image, label: "Thumbnail", color: "hsl(var(--primary))" },
   { icon: FileText, label: "Blog Post", color: "hsl(var(--accent))" },
   { icon: Video, label: "Video Script", color: "hsl(var(--glow-violet))" },
+  { icon: Sparkles, label: "Logo", color: "hsl(var(--primary))" },
+  { icon: Wand2, label: "Caption", color: "hsl(var(--accent))" },
 ];
 
 const mockOutputLines = [
   ["🎨 Generating eye-catching thumbnail...", "✅ Thumbnail ready — 1920×1080"],
   ["✍️ Writing engaging blog intro...", "✅ 800-word blog post generated"],
   ["🎬 Crafting viral video script...", "✅ Script with hooks & CTAs ready"],
+  ["✨ Designing unique brand logo...", "✅ Logo with 4 variations ready"],
+  ["💬 Generating viral captions...", "✅ 5 captions with hashtags ready"],
 ];
 
 const HeroDemoMockup = memo(() => {
@@ -25,6 +29,8 @@ const HeroDemoMockup = memo(() => {
     "Make a thumbnail for my cooking vlog",
     "Write a blog about productivity tips",
     "Create a script for tech review video",
+    "Design a logo for my coffee brand",
+    "Write captions for my travel photos",
   ];
 
   const prompt = prompts[activeToolIndex];
