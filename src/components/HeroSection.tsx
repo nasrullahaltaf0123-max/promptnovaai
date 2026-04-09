@@ -79,8 +79,23 @@ const creatorAvatars = ["RA", "NJ", "IH", "FK", "SA"];
 
 const HeroSection = memo(() => {
   const { t } = useI18n();
+  const [showDemo, setShowDemo] = useState(false);
 
   return (
+    <>
+    <Dialog open={showDemo} onOpenChange={setShowDemo}>
+      <DialogContent className="max-w-3xl p-0 overflow-hidden bg-black border-border/30">
+        <div className="aspect-video w-full">
+          <iframe
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0"
+            title="PromptNova AI Demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       <GradientMeshBackground />
 
