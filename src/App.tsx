@@ -23,6 +23,7 @@ import PhotoMaker from "./pages/PhotoMaker";
 import IDCardPro from "./pages/IDCardPro";
 import HairDesignAI from "./pages/HairDesignAI";
 import ScriptToPrompt from "./pages/ScriptToPrompt";
+import PromptToVideo from "./pages/PromptToVideo";
 import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
@@ -66,6 +67,7 @@ const App = () => (
               <Route path="/dashboard/id-card" element={<ProtectedRoute><DashboardLayout><IDCardPro /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/hair-design" element={<ProtectedRoute><DashboardLayout><HairDesignAI /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/script-to-prompt" element={<ProtectedRoute><DashboardLayout><ScriptToPrompt /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/prompt-to-video" element={<ProtectedRoute><DashboardLayout><PromptToVideo /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/upgrade" element={<ProtectedRoute><DashboardLayout><Upgrade /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />

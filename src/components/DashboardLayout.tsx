@@ -24,6 +24,7 @@ const navItems = [
   { icon: Clapperboard, label: "TikTok Scripts", path: "/dashboard/tiktok-script" },
   { icon: Camera, label: "Photo Maker", path: "/dashboard/photo-maker" },
   { icon: FileCode, label: "Script to Prompt", path: "/dashboard/script-to-prompt" },
+  { icon: Video, label: "Prompt to Video", path: "/dashboard/prompt-to-video" },
   { icon: Gift, label: "Refer & Earn", path: "/dashboard/referrals" },
   { icon: Crown, label: "Upgrade to Pro", path: "/dashboard/upgrade" },
   { icon: Clock, label: "History", path: "/dashboard/history" },
