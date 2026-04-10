@@ -65,6 +65,7 @@ const App = () => (
               <Route path="/dashboard/photo-maker" element={<ProtectedRoute><DashboardLayout><PhotoMaker /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/id-card" element={<ProtectedRoute><DashboardLayout><IDCardPro /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/hair-design" element={<ProtectedRoute><DashboardLayout><HairDesignAI /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/script-to-prompt" element={<ProtectedRoute><DashboardLayout><ScriptToPrompt /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/upgrade" element={<ProtectedRoute><DashboardLayout><Upgrade /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />
