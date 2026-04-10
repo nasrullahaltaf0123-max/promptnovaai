@@ -23,6 +23,7 @@ import PhotoMaker from "./pages/PhotoMaker";
 import IDCardPro from "./pages/IDCardPro";
 import HairDesignAI from "./pages/HairDesignAI";
 import ScriptToPrompt from "./pages/ScriptToPrompt";
+import ScriptToPrompt from "./pages/ScriptToPrompt";
 import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
