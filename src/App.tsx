@@ -22,6 +22,7 @@ import TikTokScriptGenerator from "./pages/TikTokScriptGenerator";
 import PhotoMaker from "./pages/PhotoMaker";
 import IDCardPro from "./pages/IDCardPro";
 import HairDesignAI from "./pages/HairDesignAI";
+import ScriptToPrompt from "./pages/ScriptToPrompt";
 import Referrals from "./pages/Referrals";
 import History from "./pages/History";
 import Account from "./pages/Account";
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/dashboard/photo-maker" element={<ProtectedRoute><DashboardLayout><PhotoMaker /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/id-card" element={<ProtectedRoute><DashboardLayout><IDCardPro /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/hair-design" element={<ProtectedRoute><DashboardLayout><HairDesignAI /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/script-to-prompt" element={<ProtectedRoute><DashboardLayout><ScriptToPrompt /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/referrals" element={<ProtectedRoute><DashboardLayout><Referrals /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/upgrade" element={<ProtectedRoute><DashboardLayout><Upgrade /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />

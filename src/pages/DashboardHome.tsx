@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown, Camera, CreditCard, Scissors } from "lucide-react";
+import { MessageSquare, Image, FileText, Palette, Video, Wand2, Film, ImageIcon, Zap, Clock, Sparkles, ArrowUpRight, Type, Clapperboard, Gift, Crown, Camera, CreditCard, Scissors, FileCode } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/use-credits";
@@ -22,6 +22,7 @@ const quickTools = [
   { icon: ImageIcon, title: "Thumbnails", path: "/dashboard/thumbnail", gradient: "from-emerald-500/20 to-emerald-500/5" },
   { icon: Type, title: "Viral Captions", path: "/dashboard/caption", gradient: "from-rose-500/20 to-rose-500/5" },
   { icon: Clapperboard, title: "TikTok Script", path: "/dashboard/tiktok-script", gradient: "from-fuchsia-500/20 to-fuchsia-500/5" },
+  { icon: FileCode, title: "Script to Prompt", path: "/dashboard/script-to-prompt", gradient: "from-indigo-500/20 to-blue-500/5", isNew: true },
 ];
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
