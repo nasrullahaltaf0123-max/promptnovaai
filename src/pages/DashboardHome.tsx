@@ -23,6 +23,7 @@ const quickTools = [
   { icon: Type, title: "Viral Captions", path: "/dashboard/caption", gradient: "from-rose-500/20 to-rose-500/5" },
   { icon: Clapperboard, title: "TikTok Script", path: "/dashboard/tiktok-script", gradient: "from-fuchsia-500/20 to-fuchsia-500/5" },
   { icon: FileCode, title: "Script to Prompt", path: "/dashboard/script-to-prompt", gradient: "from-indigo-500/20 to-blue-500/5", isNew: true },
+  { icon: Film, title: "Prompt to Video", path: "/dashboard/prompt-to-video", gradient: "from-rose-500/20 to-purple-500/5", isNew: true },
 ];
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
