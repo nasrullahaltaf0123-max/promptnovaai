@@ -6,6 +6,7 @@ import {
   FileText,
   Video,
   Film,
+  FileCode,
   Sparkles,
   MessageSquare,
   Camera,
