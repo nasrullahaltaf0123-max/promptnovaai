@@ -143,6 +143,17 @@ const tools = [
     glowColor: "hsl(var(--accent) / 0.25)",
     anim: "tilt" as IconAnim,
   },
+  {
+    icon: Film,
+    title: "Prompt to Video",
+    desc: "Transform ideas into detailed AI video prompts for Runway, Sora & more.",
+    to: "/prompt-to-video",
+    gradient: "from-primary/20 to-accent/15",
+    iconColor: "text-primary",
+    accentBorder: "group-hover:border-primary/40",
+    glowColor: "hsl(var(--primary) / 0.25)",
+    anim: "float" as IconAnim,
+  },
 ];
 
 const containerVariants = {
