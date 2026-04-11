@@ -156,6 +156,17 @@ const tools = [
     glowColor: "hsl(var(--primary) / 0.25)",
     anim: "float" as IconAnim,
   },
+  {
+    icon: FileCode,
+    title: "Script to Prompt",
+    desc: "Convert scripts into optimized coding, video & image AI prompts.",
+    to: "/script-to-prompt",
+    gradient: "from-accent/15 to-primary/10",
+    iconColor: "text-accent",
+    accentBorder: "group-hover:border-accent/40",
+    glowColor: "hsl(var(--accent) / 0.2)",
+    anim: "wiggle" as IconAnim,
+  },
 ];
 
 const containerVariants = {
