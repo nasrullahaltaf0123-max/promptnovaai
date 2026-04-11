@@ -5,6 +5,7 @@ import {
   Image,
   FileText,
   Video,
+  Film,
   Sparkles,
   MessageSquare,
   Camera,
