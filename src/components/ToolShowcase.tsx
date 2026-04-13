@@ -213,12 +213,19 @@ const cardVariants = {
 };
 
 const ToolShowcase = memo(() => {
+  const [soundOn, setSoundOn] = useState(isSoundEnabled);
+
   const handleHover = useCallback(() => {
     playClickSound();
   }, []);
 
   const handleTap = useCallback(() => {
     triggerHaptic(10);
+  }, []);
+
+  const handleToggleSound = useCallback(() => {
+    const next = toggleSound();
+    setSoundOn(next);
   }, []);
 
   return (
