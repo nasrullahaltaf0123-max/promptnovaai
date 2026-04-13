@@ -1,7 +1,7 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { playClickSound, triggerHaptic } from "@/lib/feedback";
+import { playClickSound, triggerHaptic, isSoundEnabled, toggleSound } from "@/lib/feedback";
 import {
   Image,
   FileText,
@@ -17,6 +17,8 @@ import {
   Wand2,
   ImagePlus,
   ArrowRight,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 // Each tool gets a unique idle animation type
@@ -211,12 +213,19 @@ const cardVariants = {
 };
 
 const ToolShowcase = memo(() => {
+  const [soundOn, setSoundOn] = useState(isSoundEnabled);
+
   const handleHover = useCallback(() => {
     playClickSound();
   }, []);
 
   const handleTap = useCallback(() => {
     triggerHaptic(10);
+  }, []);
+
+  const handleToggleSound = useCallback(() => {
+    const next = toggleSound();
+    setSoundOn(next);
   }, []);
 
   return (
@@ -246,9 +255,17 @@ const ToolShowcase = memo(() => {
           <h2 className="text-heading sm:text-display font-bold text-foreground mb-3">
             Every Tool You Need
           </h2>
-          <p className="text-body text-muted-foreground max-w-lg mx-auto">
+          <p className="text-body text-muted-foreground max-w-lg mx-auto mb-4">
             One platform, unlimited creativity. Pick a tool and start creating in seconds.
           </p>
+          <button
+            onClick={handleToggleSound}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground text-xs font-medium transition-colors duration-200 border border-border/30"
+            aria-label={soundOn ? "Mute hover sounds" : "Enable hover sounds"}
+          >
+            {soundOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+            {soundOn ? "Sound on" : "Sound off"}
+          </button>
         </motion.div>
 
         {/* Tool grid */}
