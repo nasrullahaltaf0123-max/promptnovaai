@@ -12,6 +12,7 @@ import {
   Camera,
   Palette,
   Scissors,
+  Clapperboard,
   Wand2,
   ArrowRight,
 } from "lucide-react";
