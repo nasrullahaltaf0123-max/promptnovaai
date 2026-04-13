@@ -1,9 +1,31 @@
 // Lightweight hover sound + haptic feedback utilities
 
+const STORAGE_KEY = "sound-enabled";
+
 let audioCtx: AudioContext | null = null;
+
+/** Check if sound is enabled (defaults to true) */
+export const isSoundEnabled = (): boolean => {
+  try {
+    const val = localStorage.getItem(STORAGE_KEY);
+    return val === null ? true : val === "true";
+  } catch {
+    return true;
+  }
+};
+
+/** Toggle sound on/off, returns new state */
+export const toggleSound = (): boolean => {
+  const next = !isSoundEnabled();
+  try {
+    localStorage.setItem(STORAGE_KEY, String(next));
+  } catch {}
+  return next;
+};
 
 /** Play a subtle click/pop sound using Web Audio API */
 export const playClickSound = () => {
+  if (!isSoundEnabled()) return;
   try {
     if (!audioCtx) {
       audioCtx = new AudioContext();
