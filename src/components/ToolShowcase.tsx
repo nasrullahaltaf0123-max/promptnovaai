@@ -12,6 +12,7 @@ import {
   Camera,
   Palette,
   Scissors,
+  Clapperboard,
   Wand2,
   ArrowRight,
 } from "lucide-react";
@@ -166,6 +167,17 @@ const tools = [
     accentBorder: "group-hover:border-accent/40",
     glowColor: "hsl(var(--accent) / 0.2)",
     anim: "wiggle" as IconAnim,
+  },
+  {
+    icon: Clapperboard,
+    title: "TikTok Script",
+    desc: "Viral TikTok scripts with hooks, transitions & trending formats.",
+    to: "/tiktok-script-generator",
+    gradient: "from-primary/15 to-accent/15",
+    iconColor: "text-primary",
+    accentBorder: "group-hover:border-primary/40",
+    glowColor: "hsl(var(--primary) / 0.2)",
+    anim: "bounce" as IconAnim,
   },
 ];
 
