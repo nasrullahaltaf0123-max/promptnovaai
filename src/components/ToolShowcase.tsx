@@ -211,6 +211,14 @@ const cardVariants = {
 };
 
 const ToolShowcase = memo(() => {
+  const handleHover = useCallback(() => {
+    playClickSound();
+  }, []);
+
+  const handleTap = useCallback(() => {
+    triggerHaptic(10);
+  }, []);
+
   return (
     <section className="relative py-20 sm:py-28 overflow-hidden">
       {/* Ambient glow */}
