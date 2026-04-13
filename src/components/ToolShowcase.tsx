@@ -14,6 +14,7 @@ import {
   Scissors,
   Clapperboard,
   Wand2,
+  ImagePlus,
   ArrowRight,
 } from "lucide-react";
 
