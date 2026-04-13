@@ -17,6 +17,8 @@ import {
   Wand2,
   ImagePlus,
   ArrowRight,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 // Each tool gets a unique idle animation type
