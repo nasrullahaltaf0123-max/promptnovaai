@@ -248,7 +248,7 @@ const ToolShowcase = memo(() => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
+          className="flex flex-wrap justify-center gap-4 sm:gap-5 [&>*]:w-full [&>*]:sm:w-[calc(50%-0.625rem)] [&>*]:lg:w-[calc(25%-0.9375rem)]"
         >
           {tools.map((tool) => {
             const Icon = tool.icon;
