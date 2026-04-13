@@ -1,6 +1,7 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { playClickSound, triggerHaptic } from "@/lib/feedback";
 import {
   Image,
   FileText,
@@ -210,6 +211,14 @@ const cardVariants = {
 };
 
 const ToolShowcase = memo(() => {
+  const handleHover = useCallback(() => {
+    playClickSound();
+  }, []);
+
+  const handleTap = useCallback(() => {
+    triggerHaptic(10);
+  }, []);
+
   return (
     <section className="relative py-20 sm:py-28 overflow-hidden">
       {/* Ambient glow */}
@@ -256,6 +265,8 @@ const ToolShowcase = memo(() => {
               <motion.div key={tool.title} variants={cardVariants}>
                 <Link
                   to={tool.to}
+                  onMouseEnter={handleHover}
+                  onClick={handleTap}
                   className={`group relative flex flex-col p-5 sm:p-6 rounded-2xl border border-border/40 ${tool.accentBorder} bg-card/60 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 h-full`}
                 >
                   {/* Gradient bg on hover */}
