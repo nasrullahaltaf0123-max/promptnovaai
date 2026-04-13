@@ -14,6 +14,7 @@ import {
   Scissors,
   Clapperboard,
   Wand2,
+  ImagePlus,
   ArrowRight,
 } from "lucide-react";
 
@@ -178,6 +179,17 @@ const tools = [
     accentBorder: "group-hover:border-primary/40",
     glowColor: "hsl(var(--primary) / 0.2)",
     anim: "bounce" as IconAnim,
+  },
+  {
+    icon: ImagePlus,
+    title: "Image Generator",
+    desc: "Create stunning AI images from text — art, mockups & visuals in seconds.",
+    to: "/image-generator",
+    gradient: "from-accent/20 to-primary/10",
+    iconColor: "text-accent",
+    accentBorder: "group-hover:border-accent/40",
+    glowColor: "hsl(var(--accent) / 0.25)",
+    anim: "breathe" as IconAnim,
   },
 ];
 
