@@ -1,6 +1,7 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { playClickSound, triggerHaptic } from "@/lib/feedback";
 import {
   Image,
   FileText,
